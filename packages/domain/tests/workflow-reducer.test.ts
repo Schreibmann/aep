@@ -278,14 +278,11 @@ describe("workflow reducer terminals", () => {
             : status === "interrupted"
               ? reduceWorkflow(base, { type: "run_interrupted", at: NOW })
               : status === "failed"
-                ? reduceWorkflow(
-                    happyPathTo("implementing"),
-                    {
-                      type: "agent_execution_failed",
-                      at: NOW,
-                      roleId: "implementer",
-                    },
-                  )
+                ? reduceWorkflow(happyPathTo("implementing"), {
+                    type: "agent_execution_failed",
+                    at: NOW,
+                    roleId: "implementer",
+                  })
                 : happyPathTo("completed");
 
       expect(terminal.run.status).toBe(status);
@@ -303,12 +300,12 @@ describe("workflow reducer terminals", () => {
   it("maps policy and budget events to blocked", () => {
     const state = happyPathTo("implementing");
     expect(
-      reduceWorkflow(state, { type: "policy_violation_detected", at: NOW, reason: "sandbox" })
-        .run.status,
+      reduceWorkflow(state, { type: "policy_violation_detected", at: NOW, reason: "sandbox" }).run
+        .status,
     ).toBe("blocked");
-    expect(
-      reduceWorkflow(state, { type: "budget_threshold_reached", at: NOW }).run.status,
-    ).toBe("blocked");
+    expect(reduceWorkflow(state, { type: "budget_threshold_reached", at: NOW }).run.status).toBe(
+      "blocked",
+    );
   });
 });
 

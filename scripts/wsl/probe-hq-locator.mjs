@@ -77,10 +77,7 @@ console.log(
 console.log(
   "pkg_has_platform",
   fs.existsSync(
-    path.join(
-      repo,
-      "packages/runtime-cursor/node_modules/@cursor/sdk-linux-x64/bin/cursorsandbox",
-    ),
+    path.join(repo, "packages/runtime-cursor/node_modules/@cursor/sdk-linux-x64/bin/cursorsandbox"),
   ),
 );
 console.log(

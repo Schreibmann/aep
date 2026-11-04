@@ -94,7 +94,9 @@ export async function runDoctor(app: AepApplication): Promise<DoctorReport> {
   });
 
   return {
-    ok: checks.every((check) => check.ok || check.name === "sqlite" || check.name === "cursor_sdk_live"),
+    ok: checks.every(
+      (check) => check.ok || check.name === "sqlite" || check.name === "cursor_sdk_live",
+    ),
     checks,
   };
 }

@@ -30,9 +30,7 @@ describe("@aep/application", () => {
     });
     const report = await runDoctor(app);
     expect(report.ok).toBe(true);
-    expect(report.checks.some((check) => check.name === "agent_runtime" && check.ok)).toBe(
-      true,
-    );
+    expect(report.checks.some((check) => check.name === "agent_runtime" && check.ok)).toBe(true);
   });
 
   it("initializes .aep/config.yaml once without overwrite", async () => {

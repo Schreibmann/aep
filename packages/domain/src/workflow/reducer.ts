@@ -4,8 +4,8 @@ import type { RoleId, WorkflowRunStatus } from "../statuses.js";
 import { isTerminalWorkflowRunStatus } from "../statuses.js";
 import type { WorkflowEvent } from "./events.js";
 import {
-  hasRequiredCompletionEvidence,
   type CompletionEvidence,
+  hasRequiredCompletionEvidence,
   type WorkflowAggregate,
 } from "./state.js";
 
@@ -72,14 +72,14 @@ function expectStatus(
   eventType: string,
 ): void {
   if (!allowed.includes(state.run.status)) {
-    reject(
-      "invalid_transition",
-      `Event ${eventType} is not valid from status ${state.run.status}`,
-    );
+    reject("invalid_transition", `Event ${eventType} is not valid from status ${state.run.status}`);
   }
 }
 
-function incrementRoleCount(state: WorkflowAggregate, roleId: RoleId): WorkflowAggregate["roleExecutionCounts"] {
+function incrementRoleCount(
+  state: WorkflowAggregate,
+  roleId: RoleId,
+): WorkflowAggregate["roleExecutionCounts"] {
   const next = state.roleExecutionCounts[roleId] + 1;
   if (next > state.limits.maxRoleExecutions[roleId]) {
     reject(
@@ -116,10 +116,7 @@ function releaseWriter(state: WorkflowAggregate): number {
  * Pure deterministic workflow reducer. Application services emit normalized
  * events only; model output never mutates state directly.
  */
-export function reduceWorkflow(
-  state: WorkflowAggregate,
-  event: WorkflowEvent,
-): WorkflowAggregate {
+export function reduceWorkflow(state: WorkflowAggregate, event: WorkflowEvent): WorkflowAggregate {
   const at = requireIsoTimestamp(event.at, "WorkflowEvent.at");
 
   switch (event.type) {

@@ -24,25 +24,25 @@ Never print `CURSOR_API_KEY`. Live tests use a disposable git repo under the OS 
 
 ## Results
 
-| Case                                                   | Environment            | Result        | Notes                                                              |
-| ------------------------------------------------------ | ---------------------- | ------------- | ------------------------------------------------------------------ |
-| SDK package install + pin                              | win32 / Node 26.1.0    | PASS          | `@cursor/sdk@1.3.1` in `@aep/runtime-cursor`                       |
-| SDK TypeScript import / declarations                   | win32 / Node 26.1.0    | PASS          | Offline import of `Agent` / `Cursor`                               |
-| Node minimum documented                                | docs + package engines | PASS          | `>=22.13` / `22.13.0` floor                                        |
-| Platform helper package present                        | win32-x64              | PASS          | `@cursor/sdk-win32-x64@1.3.1` present beside SDK                   |
-| `Cursor.models.list()`                                 | live win32             | PASS          | `modelCount=48` (ids not logged)                                   |
-| `Agent.create` local handle                            | live win32             | PASS          | `agentId` prefix returned                                          |
+| Case                                                   | Environment            | Result        | Notes                                                               |
+| ------------------------------------------------------ | ---------------------- | ------------- | ------------------------------------------------------------------- |
+| SDK package install + pin                              | win32 / Node 26.1.0    | PASS          | `@cursor/sdk@1.3.1` in `@aep/runtime-cursor`                        |
+| SDK TypeScript import / declarations                   | win32 / Node 26.1.0    | PASS          | Offline import of `Agent` / `Cursor`                                |
+| Node minimum documented                                | docs + package engines | PASS          | `>=22.13` / `22.13.0` floor                                         |
+| Platform helper package present                        | win32-x64              | PASS          | `@cursor/sdk-win32-x64@1.3.1` present beside SDK                    |
+| `Cursor.models.list()`                                 | live win32             | PASS          | `modelCount=48` (ids not logged)                                    |
+| `Agent.create` local handle                            | live win32             | PASS          | `agentId` prefix returned                                           |
 | First `agent.send` with `sandboxOptions.enabled: true` | win32 native           | **FAIL**      | Native Windows has no FS sandbox; Cursor runs Linux sandbox in WSL2 |
-| `send` / `stream` / `wait` / `cancel` happy path       | win32 native           | FAIL          | Blocked by sandbox unsupported                                     |
-| WSL2 Ubuntu sandboxed `agent.send`                     | Ubuntu-24.04 / Node 26 | **PASS**      | After public-hoist of `@cursor/sdk-linux-x64` (see below)          |
-| `Agent.resume` across process restart                  | live                   | NOT RUN       | Follow-up once Implementer path needs it                           |
-| Reviewer read-only tools (no shell/edit)               | live WSL               | PARTIAL       | validate-live allowlists read/ls; deeper policy cases TBD          |
-| Writes outside cwd blocked by sandbox                  | helper preflight WSL   | PASS          | Manual `cursorsandbox` exec OK with outside-cwd policy             |
-| Network denied by default in sandbox                   | live                   | NOT RUN       | Policy default; dedicated probe TBD                                |
-| Reads outside workspace not assumed blocked            | docs                   | DOCUMENTED    | Official docs: sandbox bounds writes; reads are not workspace-only |
-| Sandbox missing → fail closed                          | win32 + WSL            | **CONFIRMED** | AEP did **not** retry with sandbox disabled                        |
-| Drizzle + `better-sqlite3` smoke                       | win32 / Node 26.1.0    | PASS          | WAL + foreign_keys OK                                              |
-| `node:sqlite` experimental driver                      | —                      | DEFERRED      | Do not adopt without ADR-005                                       |
+| `send` / `stream` / `wait` / `cancel` happy path       | win32 native           | FAIL          | Blocked by sandbox unsupported                                      |
+| WSL2 Ubuntu sandboxed `agent.send`                     | Ubuntu-24.04 / Node 26 | **PASS**      | After public-hoist of `@cursor/sdk-linux-x64` (see below)           |
+| `Agent.resume` across process restart                  | live                   | NOT RUN       | Follow-up once Implementer path needs it                            |
+| Reviewer read-only tools (no shell/edit)               | live WSL               | PARTIAL       | validate-live allowlists read/ls; deeper policy cases TBD           |
+| Writes outside cwd blocked by sandbox                  | helper preflight WSL   | PASS          | Manual `cursorsandbox` exec OK with outside-cwd policy              |
+| Network denied by default in sandbox                   | live                   | NOT RUN       | Policy default; dedicated probe TBD                                 |
+| Reads outside workspace not assumed blocked            | docs                   | DOCUMENTED    | Official docs: sandbox bounds writes; reads are not workspace-only  |
+| Sandbox missing → fail closed                          | win32 + WSL            | **CONFIRMED** | AEP did **not** retry with sandbox disabled                         |
+| Drizzle + `better-sqlite3` smoke                       | win32 / Node 26.1.0    | PASS          | WAL + foreign_keys OK                                               |
+| `node:sqlite` experimental driver                      | —                      | DEFERRED      | Do not adopt without ADR-005                                        |
 
 ## Live command evidence
 

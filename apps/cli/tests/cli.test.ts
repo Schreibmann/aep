@@ -1,8 +1,8 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, describe, expect, it, vi } from "vitest";
 import { createApp } from "@aep/application";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildProgram } from "../src/program.js";
 
 const tempDirs: string[] = [];
@@ -17,7 +17,10 @@ afterEach(async () => {
   vi.restoreAllMocks();
 });
 
-async function runCli(args: string[], app = createApp()): Promise<{
+async function runCli(
+  args: string[],
+  app = createApp(),
+): Promise<{
   code: number;
   stdout: string;
   stderr: string;

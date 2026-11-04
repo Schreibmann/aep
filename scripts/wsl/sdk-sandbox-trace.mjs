@@ -1,8 +1,8 @@
-import { mkdtemp, rm, writeFile, mkdir } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { spawnSync } from "node:child_process";
-import { createRequire } from "node:module";
 import { Agent, Cursor } from "@cursor/sdk";
 import { loadRepoEnvFile } from "../../packages/runtime-cursor/scripts/load-env.mts";
 

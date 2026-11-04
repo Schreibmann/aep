@@ -1,0 +1,15 @@
+---
+description: Always run pnpm lint:fix before creating a git commit
+alwaysApply: true
+---
+
+# Lint before commit
+
+Before every `git commit` in this repository:
+
+1. Run `pnpm lint:fix` (Biome `check --write`).
+2. If anything remains unclean, run `pnpm lint` and resolve failures.
+3. Stage the formatter/linter edits together with the intentional change set.
+4. Only then create the commit.
+
+Do not commit with a red `pnpm lint`. Prefer fixing via `lint:fix` over disabling rules.

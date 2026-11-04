@@ -29,8 +29,7 @@ export function createWorkflowLimits(
     throw new DomainError("invalid_max_fix_cycles", "maxFixCycles must be a non-negative integer");
   }
 
-  const maxParallelWriters =
-    input.maxParallelWriters ?? DEFAULT_WORKFLOW_LIMITS.maxParallelWriters;
+  const maxParallelWriters = input.maxParallelWriters ?? DEFAULT_WORKFLOW_LIMITS.maxParallelWriters;
   if (!Number.isInteger(maxParallelWriters) || maxParallelWriters < 1) {
     throw new DomainError(
       "invalid_max_parallel_writers",

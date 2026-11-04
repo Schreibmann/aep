@@ -1,17 +1,17 @@
-import { Command, InvalidArgumentError } from "commander";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
+  type AepApplication,
   ApplicationError,
   createApp,
   getRunStatus,
   initProject,
   runDoctor,
   runTask,
-  type AepApplication,
 } from "@aep/application";
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { writeError, writeSuccess, type OutputMode } from "./output.js";
+import { Command, InvalidArgumentError } from "commander";
+import { type OutputMode, writeError, writeSuccess } from "./output.js";
 
 function readCliVersion(): string {
   const here = dirname(fileURLToPath(import.meta.url));

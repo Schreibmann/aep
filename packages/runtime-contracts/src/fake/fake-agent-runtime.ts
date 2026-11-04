@@ -233,9 +233,7 @@ export class FakeAgentRuntime implements AgentRuntime {
   }
 }
 
-export function createFeatureUnavailableUsage(
-  tokens: UsageTokenCounts = {},
-): UsageResult {
+export function createFeatureUnavailableUsage(tokens: UsageTokenCounts = {}): UsageResult {
   return {
     status: "feature_unavailable",
     costStatus: "unknown",

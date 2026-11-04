@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
-  createFeatureUnavailableUsage,
-  FakeAgentRuntime,
   type AgentEvent,
   type AgentExecutionInput,
+  createFeatureUnavailableUsage,
+  FakeAgentRuntime,
   type FakeExecutionScript,
 } from "../src/index.js";
 

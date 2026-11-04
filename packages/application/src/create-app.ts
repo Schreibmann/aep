@@ -1,4 +1,4 @@
-import { FakeAgentRuntime, type AgentRuntime } from "@aep/runtime-contracts";
+import { type AgentRuntime, FakeAgentRuntime } from "@aep/runtime-contracts";
 import { InMemoryRunStore } from "./run-store.js";
 
 export type AppDependencies = {

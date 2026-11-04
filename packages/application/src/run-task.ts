@@ -27,10 +27,7 @@ export type RunTaskResult = {
  * Skeleton `aep run`: advances a workflow aggregate through plan approval
  * placeholders and executes one FakeAgentRuntime planner session.
  */
-export async function runTask(
-  app: AepApplication,
-  input: RunTaskInput,
-): Promise<RunTaskResult> {
+export async function runTask(app: AepApplication, input: RunTaskInput): Promise<RunTaskResult> {
   const task = input.task.trim();
   if (task.length === 0) {
     throw new ApplicationError("invalid_task", "Task description must be non-empty");
@@ -58,10 +55,7 @@ export async function runTask(
 
   const health = await app.runtime.checkAvailability();
   if (!health.ok || !health.sandboxReady) {
-    throw new ApplicationError(
-      "runtime_unavailable",
-      `Agent runtime not ready: ${health.detail}`,
-    );
+    throw new ApplicationError("runtime_unavailable", `Agent runtime not ready: ${health.detail}`);
   }
 
   const catalog = await app.runtime.discoverModels();
