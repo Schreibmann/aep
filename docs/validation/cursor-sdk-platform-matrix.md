@@ -23,26 +23,26 @@ Never print `CURSOR_API_KEY`. Live tests use a disposable git repo under the OS 
 
 ## Results
 
-| Case                                                   | Environment            | Result        | Notes                                                                   |
-| ------------------------------------------------------ | ---------------------- | ------------- | ----------------------------------------------------------------------- |
-| SDK package install + pin                              | win32 / Node 26.1.0    | PASS          | `@cursor/sdk@1.3.1` in `@aep/runtime-cursor`                            |
-| SDK TypeScript import / declarations                   | win32 / Node 26.1.0    | PASS          | Offline import of `Agent` / `Cursor`                                    |
-| Node minimum documented                                | docs + package engines | PASS          | `>=22.13` / `22.13.0` floor                                             |
-| Platform helper package present                        | win32-x64              | PASS          | `@cursor/sdk-win32-x64@1.3.1` present beside SDK                        |
-| `Cursor.models.list()`                                 | live win32             | PASS          | `modelCount=48` (ids not logged)                                        |
-| `Agent.create` local handle                            | live win32             | PASS          | `agentId` prefix returned                                               |
-| First `agent.send` with `sandboxOptions.enabled: true` | win32 native           | **FAIL**      | `ConfigurationError`: sandboxing not supported in this environment      |
-| `send` / `stream` / `wait` / `cancel` happy path       | win32 native           | FAIL          | Blocked by sandbox unsupported                                          |
-| `Agent.resume` across process restart                  | live                   | NOT RUN       | Depends on sandboxed host                                               |
-| Reviewer read-only tools (no shell/edit)               | live                   | NOT RUN       | Script configures allowlist; needs sandboxed host                       |
-| Writes outside cwd blocked by sandbox                  | live                   | NOT RUN       | Needs sandboxed host                                                    |
-| Network denied by default in sandbox                   | live                   | NOT RUN       | Needs sandboxed host                                                    |
-| Reads outside workspace not assumed blocked            | docs                   | DOCUMENTED    | Official docs: sandbox bounds writes; reads are not workspace-only      |
-| Sandbox missing → fail closed                          | win32 live             | **CONFIRMED** | AEP did **not** retry with sandbox disabled                             |
-| Ubuntu / Linux sandbox (bubblewrap)                    | CI / WSL2              | NOT RUN HERE  | Required next proof target                                              |
-| WSL2 Ubuntu sandbox                                    | local                  | **REQUIRED**  | Only `docker-desktop` WSL distro seen (Stopped); need Ubuntu/Linux host |
-| Drizzle + `better-sqlite3` smoke                       | win32 / Node 26.1.0    | PASS          | WAL + foreign_keys OK                                                   |
-| `node:sqlite` experimental driver                      | —                      | DEFERRED      | Do not adopt without ADR-005                                            |
+| Case                                                   | Environment            | Result        | Notes                                                              |
+| ------------------------------------------------------ | ---------------------- | ------------- | ------------------------------------------------------------------ |
+| SDK package install + pin                              | win32 / Node 26.1.0    | PASS          | `@cursor/sdk@1.3.1` in `@aep/runtime-cursor`                       |
+| SDK TypeScript import / declarations                   | win32 / Node 26.1.0    | PASS          | Offline import of `Agent` / `Cursor`                               |
+| Node minimum documented                                | docs + package engines | PASS          | `>=22.13` / `22.13.0` floor                                        |
+| Platform helper package present                        | win32-x64              | PASS          | `@cursor/sdk-win32-x64@1.3.1` present beside SDK                   |
+| `Cursor.models.list()`                                 | live win32             | PASS          | `modelCount=48` (ids not logged)                                   |
+| `Agent.create` local handle                            | live win32             | PASS          | `agentId` prefix returned                                          |
+| First `agent.send` with `sandboxOptions.enabled: true` | win32 native           | **FAIL**      | `ConfigurationError`: sandboxing not supported in this environment |
+| `send` / `stream` / `wait` / `cancel` happy path       | win32 native           | FAIL          | Blocked by sandbox unsupported                                     |
+| `Agent.resume` across process restart                  | live                   | NOT RUN       | Depends on sandboxed host                                          |
+| Reviewer read-only tools (no shell/edit)               | live                   | NOT RUN       | Script configures allowlist; needs sandboxed host                  |
+| Writes outside cwd blocked by sandbox                  | live                   | NOT RUN       | Needs sandboxed host                                               |
+| Network denied by default in sandbox                   | live                   | NOT RUN       | Needs sandboxed host                                               |
+| Reads outside workspace not assumed blocked            | docs                   | DOCUMENTED    | Official docs: sandbox bounds writes; reads are not workspace-only |
+| Sandbox missing → fail closed                          | win32 live             | **CONFIRMED** | AEP did **not** retry with sandbox disabled                        |
+| Ubuntu / Linux sandbox (bubblewrap)                    | WSL2 Ubuntu-24.04      | PARTIAL       | `bwrap` works; Cursor helper/SDK still reports unsupported         |
+| WSL2 Ubuntu sandbox live `agent.send`                  | Ubuntu-24.04 / Node 26 | **FAIL**      | `sandbox_unsupported_on_host` despite landlock LSM + linux helper  |
+| Drizzle + `better-sqlite3` smoke                       | win32 / Node 26.1.0    | PASS          | WAL + foreign_keys OK                                              |
+| `node:sqlite` experimental driver                      | —                      | DEFERRED      | Do not adopt without ADR-005                                       |
 
 ## Live command evidence (2026-11-04)
 
