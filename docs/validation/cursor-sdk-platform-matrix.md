@@ -14,59 +14,68 @@ pnpm validate:sdk:offline
 pnpm --filter @aep/runtime-cursor test
 pnpm validate:sqlite
 
-# Live / billable (explicit opt-in only)
-# AEP_LIVE_CURSOR_SDK=1 CURSOR_API_KEY=… pnpm validate:sdk:live
+# Live / billable (explicit opt-in; key from env or gitignored .env)
+AEP_LIVE_CURSOR_SDK=1 pnpm validate:sdk:auth
+AEP_LIVE_CURSOR_SDK=1 pnpm validate:sdk:live
 ```
 
 Never print `CURSOR_API_KEY`. Live tests use a disposable git repo under the OS temp directory.
 
 ## Results
 
-| Case                                                  | Environment            | Result       | Notes                                                              |
-| ----------------------------------------------------- | ---------------------- | ------------ | ------------------------------------------------------------------ |
-| SDK package install + pin                             | win32 / Node 26.1.0    | PASS         | `@cursor/sdk@1.3.1` in `@aep/runtime-cursor`                       |
-| SDK TypeScript import / declarations                  | win32 / Node 26.1.0    | PASS         | Offline import of `Agent` / `Cursor`                               |
-| Node minimum documented                               | docs + package engines | PASS         | `>=22.13` / `22.13.0` floor                                        |
-| Platform helper package present                       | win32-x64              | PASS         | `@cursor/sdk-win32-x64@1.3.1` present beside SDK in pnpm store     |
-| `Cursor.models.list()`                                | live                   | BLOCKED      | `CURSOR_API_KEY` unset during AEP-002                              |
-| `Agent.create` local + `sandboxOptions.enabled: true` | win32 native           | BLOCKED      | Needs live opt-in + key                                            |
-| `send` / `stream` / `wait` / `cancel`                 | live                   | BLOCKED      | Needs live opt-in + key                                            |
-| `Agent.resume` across process restart                 | live                   | BLOCKED      | Needs live opt-in + key                                            |
-| Reviewer read-only tools (no shell/edit)              | live                   | BLOCKED      | Script configures allowlist; needs live proof                      |
-| Writes outside cwd blocked by sandbox                 | live                   | BLOCKED      | Needs live opt-in + key                                            |
-| Network denied by default in sandbox                  | live                   | BLOCKED      | Needs live opt-in + key                                            |
-| Reads outside workspace not assumed blocked           | docs                   | DOCUMENTED   | Official docs: sandbox bounds writes; reads are not workspace-only |
-| Sandbox missing → fail closed                         | policy                 | ACCEPTED     | AEP must not retry with sandbox disabled                           |
-| Ubuntu / Linux sandbox (bubblewrap)                   | CI / WSL2              | NOT RUN HERE | Use WSL2 path in `docs/development/wsl2-validation.md`             |
-| WSL2 Ubuntu sandbox                                   | local                  | NOT RUN HERE | Required fallback if Windows native sandbox fails                  |
-| Drizzle + `better-sqlite3` smoke                      | win32 / Node 26.1.0    | PASS         | WAL + foreign_keys OK; preferred AEP DB driver                     |
-| `node:sqlite` experimental driver                     | —                      | DEFERRED     | Do not adopt without ADR-005                                       |
+| Case                                                   | Environment            | Result        | Notes                                                                   |
+| ------------------------------------------------------ | ---------------------- | ------------- | ----------------------------------------------------------------------- |
+| SDK package install + pin                              | win32 / Node 26.1.0    | PASS          | `@cursor/sdk@1.3.1` in `@aep/runtime-cursor`                            |
+| SDK TypeScript import / declarations                   | win32 / Node 26.1.0    | PASS          | Offline import of `Agent` / `Cursor`                                    |
+| Node minimum documented                                | docs + package engines | PASS          | `>=22.13` / `22.13.0` floor                                             |
+| Platform helper package present                        | win32-x64              | PASS          | `@cursor/sdk-win32-x64@1.3.1` present beside SDK                        |
+| `Cursor.models.list()`                                 | live win32             | PASS          | `modelCount=48` (ids not logged)                                        |
+| `Agent.create` local handle                            | live win32             | PASS          | `agentId` prefix returned                                               |
+| First `agent.send` with `sandboxOptions.enabled: true` | win32 native           | **FAIL**      | `ConfigurationError`: sandboxing not supported in this environment      |
+| `send` / `stream` / `wait` / `cancel` happy path       | win32 native           | FAIL          | Blocked by sandbox unsupported                                          |
+| `Agent.resume` across process restart                  | live                   | NOT RUN       | Depends on sandboxed host                                               |
+| Reviewer read-only tools (no shell/edit)               | live                   | NOT RUN       | Script configures allowlist; needs sandboxed host                       |
+| Writes outside cwd blocked by sandbox                  | live                   | NOT RUN       | Needs sandboxed host                                                    |
+| Network denied by default in sandbox                   | live                   | NOT RUN       | Needs sandboxed host                                                    |
+| Reads outside workspace not assumed blocked            | docs                   | DOCUMENTED    | Official docs: sandbox bounds writes; reads are not workspace-only      |
+| Sandbox missing → fail closed                          | win32 live             | **CONFIRMED** | AEP did **not** retry with sandbox disabled                             |
+| Ubuntu / Linux sandbox (bubblewrap)                    | CI / WSL2              | NOT RUN HERE  | Required next proof target                                              |
+| WSL2 Ubuntu sandbox                                    | local                  | **REQUIRED**  | Only `docker-desktop` WSL distro seen (Stopped); need Ubuntu/Linux host |
+| Drizzle + `better-sqlite3` smoke                       | win32 / Node 26.1.0    | PASS          | WAL + foreign_keys OK                                                   |
+| `node:sqlite` experimental driver                      | —                      | DEFERRED      | Do not adopt without ADR-005                                            |
 
-## Offline command evidence (2026-11-04)
+## Live command evidence (2026-11-04)
 
 ```text
-pnpm validate:sdk:offline → 8/8 passed
-pnpm validate:sqlite → {"ok":true,"driver":"better-sqlite3",...}
-pnpm test → root 2 passed; @aep/runtime-cursor 3 passed
+AEP_LIVE_CURSOR_SDK=1 pnpm validate:sdk:auth
+→ authStatus=catalog_ok modelCount=48
+
+AEP_LIVE_CURSOR_SDK=1 pnpm validate:sdk:live
+→ models.list count=48
+→ agent created
+→ code=sandbox_unsupported_on_host
+→ retriedWithoutSandbox=false
 ```
 
 ## Security decisions recorded
 
 1. Local sessions MUST set `local.sandboxOptions.enabled: true`.
 2. If sandbox helper/`ConfigurationError` occurs, stop. Do **not** disable sandbox.
-3. If Windows native sandbox cannot be proven live, supported secure target is **WSL2/Linux**.
-4. Auto-review is optional best-effort only; not a security boundary.
-5. Live SDK validation is opt-in via `AEP_LIVE_CURSOR_SDK=1` and never required by PR CI.
+3. **Windows native is not a verified sandboxed execution host** for AEP local agents on this machine.
+4. Supported secure target until proven otherwise: **WSL2 Ubuntu/Linux** (or other approved Linux host with working helper).
+5. Auto-review is optional best-effort only; not a security boundary.
+6. Live SDK validation is opt-in via `AEP_LIVE_CURSOR_SDK=1` and never required by PR CI.
 
 ## Blockers for implementer workflow
 
-Until at least one sandboxed live local session succeeds on a supported OS:
+Until at least one sandboxed live local session succeeds on WSL2/Linux (or a future verified Windows sandbox):
 
 - Do not mark AEP-002 live sandbox acceptance as complete.
 - Do not proceed to writing Implementer flows that assume a verified sandbox host.
-- Offline pin/import/SQLite work may continue; live Cursor adapter integration remains gated on credentials + sandbox proof.
+- Auth/catalog are unblocked; sandboxed execution remains gated.
 
 ## Credential handling
 
+- API key used from gitignored `.env` only.
 - No API keys were written to tracked files.
-- `.env` remains gitignored; `.env.example` has no secret values.
+- `.env.example` has no secret values.
