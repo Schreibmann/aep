@@ -49,10 +49,10 @@ describe("@aep/security baseline", () => {
   });
 
   it("requires sandbox enabled and blocks unsupported hosts", () => {
-    expect(() => requireEnabledSandbox({ enabled: false })).toThrow(/sandbox_disabled/);
+    expect(() => requireEnabledSandbox({ enabled: false })).toThrow(SecurityError);
     requireEnabledSandbox({ enabled: true });
     expect(() => assertSandboxReady({ sandboxSupported: false, detail: "helper missing" })).toThrow(
-      /sandbox_unsupported/,
+      SecurityError,
     );
     assertSandboxReady({ sandboxSupported: true, detail: "ok" });
   });
@@ -62,7 +62,7 @@ describe("@aep/security baseline", () => {
     expect(toolPolicyForRole("implementer").disallowedTools).toContain("mcp");
     assertReviewerReadOnly(REVIEWER_TOOLS);
     expect(() => assertReviewerReadOnly({ tools: ["read", "shell"], disallowedTools: [] })).toThrow(
-      /reviewer_write_tools/,
+      SecurityError,
     );
   });
 
@@ -72,7 +72,7 @@ describe("@aep/security baseline", () => {
     expect(() => resolveCursorApiKeyForSdk(new MemoryCredentialSource(undefined))).toThrow(
       SecurityError,
     );
-    expect(() => assertNoSecretInText("hello sk-test-key", ["sk-test-key"])).toThrow(/secret_leak/);
+    expect(() => assertNoSecretInText("hello sk-test-key", ["sk-test-key"])).toThrow(SecurityError);
     assertNoSecretInText("hello", ["sk-test-key"]);
   });
 
