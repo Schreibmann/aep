@@ -1,9 +1,9 @@
 # Validation evidence
 
-Platform and Cursor SDK validation artifacts belong here.
+## AEP-002
 
-Expected after **AEP-002**:
-
-- `cursor-sdk-platform-matrix.md` — OS, Node, SDK version, cases, results
+- Matrix: [`cursor-sdk-platform-matrix.md`](./cursor-sdk-platform-matrix.md)
+- Offline scripts: `pnpm validate:sdk:offline`, `pnpm validate:sqlite`
+- Live opt-in: `pnpm validate:sdk:live` (requires `AEP_LIVE_CURSOR_SDK=1` and `CURSOR_API_KEY`)
 
 Do not commit API keys, account secrets, or raw credential material.
