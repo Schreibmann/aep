@@ -10,7 +10,7 @@
 | ADR-006                                          | AEP DB vs Cursor SDK session store         | Pending (AEP-020+)              |
 | ADR-007                                          | Roles, sessions, reviewer assurance        | Pending                         |
 | [ADR-021](./ADR-021-worktree-manager.md)         | Git worktree lifecycle (AEP-031)           | Accepted (was ADR-008)          |
-| ADR-009                                          | Command runner and security policy         | Pending (AEP-032)               |
+| [ADR-022](./ADR-022-safe-command-runner.md)      | Safe command runner (AEP-032)              | Accepted (was ADR-009)          |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |
