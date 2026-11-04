@@ -20,6 +20,7 @@ This repository is the **Agent Engineering Platform (AEP)**. Before changing cod
 10. Do not print or commit secrets, API keys, `.env` contents, or credentials.
 11. Prefer FakeAgentRuntime tests; live Cursor SDK tests are opt-in and billable.
 12. End each task with evidence: changed files, decisions, commands run, results, limits, and remaining risks.
+13. Git branches: `main` is the stable/release line; `develop` is the repository default and the **only** PR base for task branches (`aep/AEP-*`, etc.).
 
 ## Recommended first sequence
 
