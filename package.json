@@ -1,0 +1,26 @@
+{
+  "name": "agent-engineering-platform",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Local TypeScript platform for deterministic AI engineering workflows powered by Cursor Agent SDK",
+  "type": "module",
+  "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "node": ">=22.13.0",
+    "pnpm": ">=10.20.0"
+  },
+  "scripts": {
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "node --experimental-strip-types ./scripts/clean.mts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.5",
+    "@types/node": "26.6.6",
+    "typescript": "6.0.3",
+    "vitest": "5.1.0"
+  }
+}
