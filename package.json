@@ -12,14 +12,20 @@
   "scripts": {
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm --filter @aep/runtime-cursor typecheck",
+    "test": "vitest run && pnpm --filter @aep/runtime-cursor test",
     "build": "tsc -p tsconfig.build.json",
-    "clean": "node --experimental-strip-types ./scripts/clean.mts"
+    "clean": "node --experimental-strip-types ./scripts/clean.mts",
+    "validate:sdk:offline": "pnpm --filter @aep/runtime-cursor validate:offline",
+    "validate:sdk:live": "pnpm --filter @aep/runtime-cursor validate:live",
+    "validate:sqlite": "node --experimental-strip-types ./scripts/validation/sqlite-smoke.mts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.5",
+    "@types/better-sqlite3": "7.6.13",
     "@types/node": "26.6.6",
+    "better-sqlite3": "13.0.3",
+    "drizzle-orm": "0.45.4",
     "typescript": "6.0.3",
     "vitest": "5.1.0"
   }

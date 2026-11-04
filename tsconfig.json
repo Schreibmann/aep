@@ -4,6 +4,12 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.mts", "vitest.config.ts"],
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "scripts/**/*.mts",
+    "scripts/validation/**/*.mts",
+    "vitest.config.ts"
+  ],
   "exclude": ["node_modules", "dist", "apps", "packages"]
 }
