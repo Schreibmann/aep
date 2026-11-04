@@ -7,7 +7,9 @@ AEP local agent sessions require Cursor SDK `local.sandboxOptions.enabled: true`
 Use **WSL2 Ubuntu** (or another approved Linux host with a working sandbox helper) when:
 
 - native Windows sandbox support is unavailable, flaky, or unverified; or
-- AEP-002 records Windows native sandbox as blocked.
+- AEP-002 / live validation records Windows native sandbox as blocked.
+
+**Current maintainer evidence (2026-11-04):** Cursor SDK local sandbox is **not supported on native win32** (`sandbox_unsupported_on_host`). AEP fails closed and does not disable sandbox. Live sandboxed validation must be completed inside WSL2 Ubuntu/Linux.
 
 Do **not** disable sandbox to keep native Windows execution.
 

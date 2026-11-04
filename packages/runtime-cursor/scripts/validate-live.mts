@@ -3,16 +3,20 @@
  *
  * Required:
  *   AEP_LIVE_CURSOR_SDK=1
- *   CURSOR_API_KEY set (value never printed)
+ *   CURSOR_API_KEY set (or present in repo-root `.env`; value never printed)
  *
  * Creates a disposable git repo under the OS temp directory, runs a minimal
  * local sandboxed session, then deletes the disposable tree.
+ *
+ * Sandbox is mandatory. If the host cannot sandbox, this script fails closed
+ * and does not retry with sandbox disabled.
  */
 import { spawnSync } from "node:child_process";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Agent, Cursor } from "@cursor/sdk";
+import { classifySdkErrorMessage, loadRepoEnvFile } from "./load-env.mts";
 
 function requireLiveOptIn(): string {
   if (process.env.AEP_LIVE_CURSOR_SDK !== "1") {
@@ -48,6 +52,9 @@ function hasAsyncDispose(
   const dispose = Reflect.get(value, Symbol.asyncDispose);
   return typeof dispose === "function";
 }
+
+const envLoad = loadRepoEnvFile();
+console.log(`env_file_loaded=${envLoad.loaded}`);
 
 const apiKey = requireLiveOptIn();
 const workRoot = await mkdtemp(join(tmpdir(), "aep-cursor-sdk-"));
@@ -108,10 +115,7 @@ try {
       console.log(`getUsage.hasCost=${usage.cost !== undefined && usage.cost !== null}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : "unknown";
-      const safe = message.toLowerCase().includes("feature_unavailable")
-        ? "feature_unavailable"
-        : "error_redacted";
-      console.log(`getUsage=${safe}`);
+      console.log(`getUsage=${classifySdkErrorMessage(message)}`);
     }
 
     console.log("LIVE_VALIDATION_OK");
@@ -120,6 +124,24 @@ try {
       await agent[Symbol.asyncDispose]();
     }
   }
+} catch (error) {
+  const message = error instanceof Error ? error.message : "unknown";
+  const code = classifySdkErrorMessage(message);
+  console.error(
+    JSON.stringify({
+      ok: false,
+      code,
+      sandboxRequired: true,
+      retriedWithoutSandbox: false,
+      platform: process.platform,
+      arch: process.arch,
+      guidance:
+        code === "sandbox_unsupported_on_host"
+          ? "Use WSL2/Linux with a working sandbox helper; do not disable sandboxOptions."
+          : "See docs/validation/cursor-sdk-platform-matrix.md",
+    }),
+  );
+  process.exitCode = 1;
 } finally {
   await rm(workRoot, { recursive: true, force: true });
 }
