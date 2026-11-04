@@ -59,6 +59,8 @@ describe("@aep/cli", () => {
     expect(result.stdout).toContain("init");
     expect(result.stdout).toContain("run");
     expect(result.stdout).toContain("status");
+    expect(result.stdout).toContain("resume");
+    expect(result.stdout).toContain("recoveries");
   });
 
   it("prints version", async () => {

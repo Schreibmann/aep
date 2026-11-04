@@ -1,14 +1,18 @@
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
+import { classifyRunForRecovery } from "./recovery.js";
 
 export type RunStatusView = {
   readonly runId: string;
   readonly taskDescription: string;
   readonly status: string;
   readonly fixCycleCount: number;
+  readonly executionLifecycle: string;
+  readonly recoveryClassification: string;
   readonly executionId?: string;
   readonly agentId?: string;
   readonly lastResultText?: string;
+  readonly recoveryOutcome?: string;
   readonly createdAt: string;
   readonly updatedAt: string;
 };
@@ -22,14 +26,18 @@ export function getRunStatus(app: AepApplication, runId: string): RunStatusView 
   if (stored === undefined) {
     throw new ApplicationError("run_not_found", `No run found for id ${trimmed}`);
   }
+  const classification = classifyRunForRecovery(stored);
   return {
     runId: stored.runId,
     taskDescription: stored.taskDescription,
     status: stored.aggregate.run.status,
     fixCycleCount: stored.aggregate.run.fixCycleCount,
+    executionLifecycle: stored.executionLifecycle,
+    recoveryClassification: classification.kind,
     ...(stored.executionId === undefined ? {} : { executionId: stored.executionId }),
     ...(stored.agentId === undefined ? {} : { agentId: stored.agentId }),
     ...(stored.lastResultText === undefined ? {} : { lastResultText: stored.lastResultText }),
+    ...(stored.recoveryOutcome === undefined ? {} : { recoveryOutcome: stored.recoveryOutcome }),
     createdAt: stored.createdAt,
     updatedAt: stored.updatedAt,
   };

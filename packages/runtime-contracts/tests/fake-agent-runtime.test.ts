@@ -159,6 +159,8 @@ describe("FakeAgentRuntime", () => {
     });
     expect(handle.agentId.length).toBeGreaterThan(0);
     expect(runtime.wasResumed("exec-resume")).toBe(true);
+    expect(runtime.getLastResumeInput()?.opaqueAgentId).toBe("agent-opaque-1");
+    expect(runtime.getLastResumeInput()?.sandbox.enabled).toBe(true);
     const result = await handle.wait();
     expect(result.status).toBe("completed");
   });
