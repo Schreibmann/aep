@@ -3,7 +3,8 @@
 Research / validation date: **2026-11-04**  
 Pinned package: `@cursor/sdk@1.3.1` (engines: `node >=22.13`)  
 Docs checked: https://cursor.com/docs/sdk/typescript  
-Host under test: Windows 11 (`win32-x64`), Node `26.1.0`
+Host under test: Windows 11 (`win32-x64`), Node `26.1.0`  
+Pavan reference pin (AEP-003): tag `v3.8.0` → `8c017953d09f3cec4a32e391b2243a8b01dc5a77` (see ADR-010)
 
 ## How to reproduce
 
