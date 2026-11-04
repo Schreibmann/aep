@@ -9,7 +9,7 @@
 | [ADR-005](./ADR-005-sqlite-driver.md)            | SQLite driver and migrations               | Accepted                        |
 | ADR-006                                          | AEP DB vs Cursor SDK session store         | Pending (AEP-020+)              |
 | ADR-007                                          | Roles, sessions, reviewer assurance        | Pending                         |
-| ADR-008                                          | Git worktree lifecycle                     | Pending (AEP-031)               |
+| [ADR-021](./ADR-021-worktree-manager.md)         | Git worktree lifecycle (AEP-031)           | Accepted (was ADR-008)          |
 | ADR-009                                          | Command runner and security policy         | Pending (AEP-032)               |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |

@@ -1,3 +1,4 @@
+export { buildAepBranchName, buildWorktreeDirectoryName } from "./branch-names.js";
 export { GitWorkspacesError } from "./errors.js";
 export { runGit } from "./git-exec.js";
 export {
@@ -15,3 +16,11 @@ export type {
   SubmoduleEntry,
   SymlinkEntry,
 } from "./types.js";
+export type { CreateManagedWorktreeInput, RemoveManagedWorktreeInput } from "./worktree-manager.js";
+export {
+  createManagedWorktree,
+  removeManagedWorktree,
+  validateWorktreeBelongsToRepo,
+} from "./worktree-manager.js";
+export type { ManagedWorktreeMetadata } from "./worktree-meta.js";
+export { WorktreeMetadataStore } from "./worktree-meta.js";

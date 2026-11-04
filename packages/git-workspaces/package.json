@@ -2,7 +2,7 @@
   "name": "@aep/git-workspaces",
   "version": "0.0.0",
   "private": true,
-  "description": "AEP Git repository inspection and worktree lifecycle (read-only inspection in AEP-030)",
+  "description": "AEP Git repository inspection and managed worktree lifecycle",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
