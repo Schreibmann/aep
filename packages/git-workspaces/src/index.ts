@@ -8,6 +8,13 @@ export {
   resolveGitRoot,
 } from "./inspect.js";
 export type {
+  PathPolicyInput,
+  PathPolicyLimits,
+  PathPolicyResult,
+  PathPolicyViolation,
+} from "./path-policy.js";
+export { evaluatePathPolicy, normalizeWorktreeRelativePath } from "./path-policy.js";
+export type {
   DirtyEntry,
   GitRemote,
   GitWorktreeInfo,
