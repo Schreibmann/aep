@@ -1,0 +1,14 @@
+{
+  "name": "@aep/domain",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pure AEP domain types, invariants, and value objects",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  }
+}
