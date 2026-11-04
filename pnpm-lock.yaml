@@ -32,6 +32,12 @@ importers:
 
   packages/domain: {}
 
+  packages/runtime-contracts:
+    dependencies:
+      '@aep/domain':
+        specifier: workspace:*
+        version: link:../domain
+
   packages/runtime-cursor:
     dependencies:
       '@cursor/sdk':
