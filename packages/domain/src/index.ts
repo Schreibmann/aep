@@ -85,3 +85,20 @@ export {
   TERMINAL_WORKFLOW_RUN_STATUSES,
   WORKFLOW_RUN_STATUSES,
 } from "./statuses.js";
+export type {
+  CompletionEvidence,
+  RoleExecutionCounts,
+  WorkflowAggregate,
+  WorkflowEvent,
+  WorkflowEventType,
+  WorkflowLimits,
+} from "./workflow/index.js";
+export {
+  createInitialWorkflowAggregate,
+  createWorkflowLimits,
+  DEFAULT_WORKFLOW_LIMITS,
+  hasRequiredCompletionEvidence,
+  reduceWorkflow,
+  reduceWorkflowAll,
+  WORKFLOW_EVENT_TYPES,
+} from "./workflow/index.js";
