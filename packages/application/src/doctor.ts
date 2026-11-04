@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import type { AepApplication } from "./create-app.js";
+import { listNonTerminalRuns } from "./recovery.js";
 
 export type DoctorCheck = {
   readonly name: string;
@@ -84,7 +85,17 @@ export async function runDoctor(app: AepApplication): Promise<DoctorReport> {
   checks.push({
     name: "sqlite",
     ok: false,
-    detail: "persistence not wired yet (AEP-020)",
+    detail: "CLI doctor does not open SQLite yet (persistence package exists; wiring later)",
+  });
+
+  const nonTerminal = listNonTerminalRuns(app);
+  checks.push({
+    name: "recoverable_runs",
+    ok: true,
+    detail:
+      nonTerminal.length === 0
+        ? "no non-terminal workflow runs"
+        : `${nonTerminal.length} non-terminal run(s); use aep recoveries / aep resume`,
   });
 
   checks.push({

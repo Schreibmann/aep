@@ -8,7 +8,7 @@ import {
 } from "@aep/domain";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
-import type { StoredRun } from "./run-store.js";
+import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
 
 export type RunTaskInput = {
   readonly task: string;
@@ -23,9 +23,15 @@ export type RunTaskResult = {
   readonly resultText?: string;
 };
 
+const PLANNER_TOOLS = {
+  tools: ["read", "grep", "glob", "ls"],
+  disallowedTools: ["shell", "edit", "mcp", "task"],
+} as const;
+
 /**
  * Skeleton `aep run`: advances a workflow aggregate through plan approval
  * placeholders and executes one FakeAgentRuntime planner session.
+ * Checkpoints a running execution snapshot before wait so AEP-022 can resume after crash.
  */
 export async function runTask(app: AepApplication, input: RunTaskInput): Promise<RunTaskResult> {
   const task = input.task.trim();
@@ -71,12 +77,34 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     prompt: task,
     modelId: model.id,
     cwd: input.cwd,
-    tools: {
-      tools: ["read", "grep", "glob", "ls"],
-      disallowedTools: ["shell", "edit", "mcp", "task"],
-    },
+    tools: PLANNER_TOOLS,
     sandbox: { enabled: true },
   });
+
+  const startedAt = app.now();
+  const execution: ExecutionSnapshot = {
+    executionId,
+    opaqueAgentId: handle.agentId,
+    roleId: "planner",
+    modelId: model.id,
+    cwd: input.cwd,
+    tools: PLANNER_TOOLS,
+    startedAt,
+  };
+
+  // Crash window: non-terminal + running snapshot persisted before wait completes.
+  const checkpoint: StoredRun = {
+    runId,
+    taskDescription: task,
+    aggregate,
+    executionLifecycle: "running",
+    execution,
+    executionId,
+    agentId: handle.agentId,
+    createdAt: at,
+    updatedAt: startedAt,
+  };
+  app.runs.save(checkpoint);
 
   const result = await handle.wait();
   if (result.status === "failed") {
@@ -99,6 +127,8 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     runId,
     taskDescription: task,
     aggregate,
+    executionLifecycle: "settled",
+    execution,
     executionId,
     agentId: handle.agentId,
     ...(result.resultText === undefined ? {} : { lastResultText: result.resultText }),

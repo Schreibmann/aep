@@ -5,7 +5,18 @@ export { runDoctor } from "./doctor.js";
 export { ApplicationError } from "./errors.js";
 export type { InitProjectResult } from "./init-project.js";
 export { initProject } from "./init-project.js";
-export type { StoredRun } from "./run-store.js";
+export type {
+  RecoveryClassification,
+  ResumeRunInput,
+  ResumeRunResult,
+} from "./recovery.js";
+export { classifyRunForRecovery, listNonTerminalRuns, resumeRun } from "./recovery.js";
+export type {
+  ExecutionLifecycle,
+  ExecutionSnapshot,
+  RecoveryOutcome,
+  StoredRun,
+} from "./run-store.js";
 export { InMemoryRunStore } from "./run-store.js";
 export type { RunTaskInput, RunTaskResult } from "./run-task.js";
 export { runTask } from "./run-task.js";

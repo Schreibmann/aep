@@ -15,6 +15,11 @@ export type FakeExecutionScript = {
   readonly usage: UsageResult;
   /** If set, startExecution/resumeExecution reject before streaming. */
   readonly startError?: { readonly code: string; readonly message: string };
+  /**
+   * When true, wait() blocks until {@link FakeAgentRuntime.releaseWait} for this executionId.
+   * Used to simulate process crash mid-execution in recovery tests.
+   */
+  readonly holdWait?: boolean;
 };
 
 export type FakeAgentRuntimeOptions = {
@@ -33,6 +38,7 @@ class FakeExecutionHandle implements AgentExecutionHandle {
   private readonly events: ReadonlyArray<AgentEvent>;
   private readonly result: AgentExecutionResult;
   private readonly cancelled: () => boolean;
+  private readonly beforeWait: (() => Promise<void>) | undefined;
   private readonly markConsumed: () => void;
 
   constructor(input: {
@@ -42,6 +48,7 @@ class FakeExecutionHandle implements AgentExecutionHandle {
     events: ReadonlyArray<AgentEvent>;
     result: AgentExecutionResult;
     cancelled: () => boolean;
+    beforeWait?: () => Promise<void>;
     markConsumed: () => void;
   }) {
     this.executionId = input.executionId;
@@ -50,6 +57,7 @@ class FakeExecutionHandle implements AgentExecutionHandle {
     this.events = input.events;
     this.result = input.result;
     this.cancelled = input.cancelled;
+    this.beforeWait = input.beforeWait;
     this.markConsumed = input.markConsumed;
   }
 
@@ -64,6 +72,9 @@ class FakeExecutionHandle implements AgentExecutionHandle {
   }
 
   async wait(): Promise<AgentExecutionResult> {
+    if (this.beforeWait !== undefined) {
+      await this.beforeWait();
+    }
     // Drain stream semantics: consumers may call wait without stream.
     for await (const _event of this.stream()) {
       // intentionally drain
@@ -121,6 +132,11 @@ export class FakeAgentRuntime implements AgentRuntime {
   private readonly cancelledIds = new Set<string>();
   private readonly usageByExecution = new Map<string, UsageResult>();
   private readonly resumedIds = new Set<string>();
+  private readonly waitGates = new Map<
+    string,
+    { readonly promise: Promise<void>; resolve: () => void }
+  >();
+  private lastResumeInput: ResumeExecutionInput | undefined;
 
   constructor(options: FakeAgentRuntimeOptions = {}) {
     this.health = options.health ?? {
@@ -161,8 +177,26 @@ export class FakeAgentRuntime implements AgentRuntime {
     if (input.opaqueAgentId.trim().length === 0) {
       throw new Error("resumeExecution requires opaqueAgentId");
     }
+    this.lastResumeInput = input;
     this.resumedIds.add(input.executionId);
+    // A resumed session must not stay blocked on a pre-crash wait gate.
+    this.releaseWait(input.executionId);
     return this.createHandle(input.executionId, true);
+  }
+
+  /**
+   * Release a held wait() for crash-simulation scripts (`holdWait: true`).
+   */
+  releaseWait(executionId: string): void {
+    const gate = this.waitGates.get(executionId);
+    if (gate !== undefined) {
+      gate.resolve();
+      this.waitGates.delete(executionId);
+    }
+  }
+
+  getLastResumeInput(): ResumeExecutionInput | undefined {
+    return this.lastResumeInput;
   }
 
   async cancelExecution(executionId: string): Promise<void> {
@@ -207,6 +241,16 @@ export class FakeAgentRuntime implements AgentRuntime {
     }
     this.usageByExecution.set(executionId, script.usage);
 
+    if (script.holdWait === true && !resumed && !this.waitGates.has(executionId)) {
+      let resolveGate = () => {
+        // placeholder replaced below
+      };
+      const promise = new Promise<void>((resolve) => {
+        resolveGate = resolve;
+      });
+      this.waitGates.set(executionId, { promise, resolve: resolveGate });
+    }
+
     const started = script.events.find((event) => event.type === "started");
     const agentId =
       started !== undefined && started.type === "started"
@@ -219,6 +263,8 @@ export class FakeAgentRuntime implements AgentRuntime {
         ? started.runId
         : `fake-run-${executionId}`;
 
+    const gatePromise = this.waitGates.get(executionId)?.promise;
+
     return new FakeExecutionHandle({
       executionId,
       agentId,
@@ -226,6 +272,13 @@ export class FakeAgentRuntime implements AgentRuntime {
       events: script.events,
       result: script.result,
       cancelled: () => this.cancelledIds.has(executionId),
+      ...(gatePromise === undefined
+        ? {}
+        : {
+            beforeWait: async () => {
+              await gatePromise;
+            },
+          }),
       markConsumed: () => {
         // reserved for future bookkeeping
       },

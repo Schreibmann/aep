@@ -7,6 +7,8 @@ import {
   createApp,
   getRunStatus,
   initProject,
+  listNonTerminalRuns,
+  resumeRun,
   runDoctor,
   runTask,
 } from "@aep/application";
@@ -151,7 +153,63 @@ export function buildProgram(options: BuildProgramOptions = {}): Command {
         writeSuccess(
           mode,
           status,
-          `runId=${status.runId} status=${status.status} task=${status.taskDescription}`,
+          `runId=${status.runId} status=${status.status} recovery=${status.recoveryClassification} task=${status.taskDescription}`,
+        );
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  program
+    .command("resume")
+    .description("Resume or close a non-terminal workflow run after process restart")
+    .argument("<run-id>", "Workflow run id")
+    .option("--json", "Machine-readable JSON output")
+    .option(
+      "--confirm-uncertain",
+      "Acknowledge uncertain side effects (marks interrupted under current policy)",
+    )
+    .option("--mark-interrupted", "Mark the run interrupted without resuming the agent")
+    .option("--cancel", "Cancel a safely resumable in-flight agent execution")
+    .action(async function resumeAction(this: Command, runIdArg: string) {
+      const mode = resolveMode(program, this);
+      const opts = this.opts();
+      try {
+        const result = await resumeRun(app, {
+          runId: requireNonEmpty(runIdArg, "run-id"),
+          confirmUncertainRetry: opts.confirmUncertain === true,
+          markInterrupted: opts.markInterrupted === true,
+          cancel: opts.cancel === true,
+        });
+        writeSuccess(
+          mode,
+          result,
+          `runId=${result.runId} disposition=${result.disposition} status=${result.status}`,
+        );
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  program
+    .command("recoveries")
+    .description("List non-terminal workflow runs detected after restart")
+    .option("--json", "Machine-readable JSON output")
+    .action(async function recoveriesAction(this: Command) {
+      const mode = resolveMode(program, this);
+      try {
+        const runs = listNonTerminalRuns(app).map((run) => getRunStatus(app, run.runId));
+        writeSuccess(
+          mode,
+          { count: runs.length, runs },
+          runs.length === 0
+            ? "No non-terminal runs"
+            : runs
+                .map(
+                  (run) =>
+                    `${run.runId} status=${run.status} recovery=${run.recoveryClassification}`,
+                )
+                .join("\n"),
         );
       } catch (error) {
         reportFailure(mode, error);
