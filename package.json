@@ -12,8 +12,8 @@
   "scripts": {
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm --filter @aep/runtime-cursor typecheck",
-    "test": "vitest run && pnpm --filter @aep/runtime-cursor test",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm -r --filter \"./packages/*\" typecheck",
+    "test": "vitest run && pnpm -r --filter \"./packages/*\" test",
     "build": "tsc -p tsconfig.build.json",
     "clean": "node --experimental-strip-types ./scripts/clean.mts",
     "validate:sdk:offline": "pnpm --filter @aep/runtime-cursor validate:offline",
