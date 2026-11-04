@@ -105,12 +105,15 @@ export const workflowEvents = sqliteTable(
     eventVersion: integer("event_version").notNull().default(1),
     schemaVersion: integer("schema_version").notNull().default(1),
     actor: text("actor").notNull(),
+    operationOrigin: text("operation_origin").notNull().default("aep"),
     payloadJson: text("payload_json").notNull(),
     createdAt: text("created_at").notNull(),
   },
   (table) => [
     index("workflow_events_workflow_run_id_idx").on(table.workflowRunId),
     uniqueIndex("workflow_events_run_sequence_uidx").on(table.workflowRunId, table.sequence),
+    index("workflow_events_actor_idx").on(table.actor),
+    index("workflow_events_operation_origin_idx").on(table.operationOrigin),
   ],
 );
 

@@ -19,3 +19,4 @@
 | [ADR-015](./ADR-015-runtime-contracts.md)        | AgentRuntime + FakeAgentRuntime (AEP-012)  | Accepted                        |
 | [ADR-016](./ADR-016-cli-bootstrap.md)            | CLI + application DI (AEP-013)             | Accepted                        |
 | [ADR-017](./ADR-017-persistence-sqlite.md)       | Persistence package / migrations (AEP-020) | Accepted                        |
+| [ADR-018](./ADR-018-event-journal.md)            | Event journal + projections (AEP-021)      | Accepted                        |
