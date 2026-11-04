@@ -23,6 +23,10 @@ fi
 cd "${DEST}"
 pnpm install --frozen-lockfile
 
+# Belt-and-suspenders: ensure cursorsandbox is on the path SDK's locator walks.
+# See docs/validation/cursor-sdk-platform-matrix.md (pnpm + platform binary).
+bash "${DEST}/scripts/wsl/hoist-sdk-linux-x64.sh" "${DEST}"
+
 echo "synced_to=${DEST}"
 echo "node=$(node -v)"
 echo "pnpm=$(pnpm -v)"

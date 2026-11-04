@@ -7,6 +7,7 @@ This repository is the **Agent Engineering Platform (AEP)**. Before changing cod
 
 ## Mandatory rules
 
+0. Run `pnpm lint:fix` before every git commit; do not commit with a failing `pnpm lint`.
 1. Execute **only the assigned roadmap task** and its declared dependencies. Do not start later phases on your own.
 2. Start with **AEP-001** unless the maintainer explicitly assigns a different task ID.
 3. Treat `MUST` / `MUST NOT` / `SHOULD` / `MAY` in the architecture as normative.
@@ -19,6 +20,7 @@ This repository is the **Agent Engineering Platform (AEP)**. Before changing cod
 10. Do not print or commit secrets, API keys, `.env` contents, or credentials.
 11. Prefer FakeAgentRuntime tests; live Cursor SDK tests are opt-in and billable.
 12. End each task with evidence: changed files, decisions, commands run, results, limits, and remaining risks.
+13. Git branches: `main` is the stable/release line; `develop` is the repository default and the **only** PR base for task branches (`aep/AEP-*`, etc.).
 
 ## Recommended first sequence
 

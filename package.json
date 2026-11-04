@@ -12,10 +12,11 @@
   "scripts": {
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm -r --filter \"./packages/*\" typecheck",
-    "test": "vitest run && pnpm -r --filter \"./packages/*\" test",
+    "typecheck": "tsc -p tsconfig.json --noEmit && pnpm -r --filter \"./packages/*\" --filter \"./apps/*\" typecheck",
+    "test": "vitest run && pnpm -r --filter \"./packages/*\" --filter \"./apps/*\" test",
     "build": "tsc -p tsconfig.build.json",
     "clean": "node --experimental-strip-types ./scripts/clean.mts",
+    "aep": "pnpm --filter @aep/cli start",
     "validate:sdk:offline": "pnpm --filter @aep/runtime-cursor validate:offline",
     "validate:sdk:auth": "pnpm --filter @aep/runtime-cursor validate:auth",
     "validate:sdk:live": "pnpm --filter @aep/runtime-cursor validate:live",

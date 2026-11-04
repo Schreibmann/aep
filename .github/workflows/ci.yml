@@ -23,7 +23,9 @@ jobs:
           - ubuntu-latest
           - windows-latest
         node-version:
-          - "22.13.0"
+          # Floor remains engines >=22.13.0; pin a current 22.x because 22.13.0
+          # + better-sqlite3 under Vitest forks SIGSEGVs on ubuntu/windows runners.
+          - "22"
           - "26"
     steps:
       - name: Checkout

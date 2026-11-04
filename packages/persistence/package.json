@@ -1,0 +1,22 @@
+{
+  "name": "@aep/persistence",
+  "version": "0.0.0",
+  "private": true,
+  "description": "AEP SQLite persistence (Drizzle + better-sqlite3); separate from Cursor SDK session store",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aep/domain": "workspace:*",
+    "better-sqlite3": "13.0.3",
+    "drizzle-orm": "0.45.4"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "7.6.13"
+  }
+}
