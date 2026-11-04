@@ -1,19 +1,14 @@
 # Cursor auth, entitlement, and billing probe (AEP-004)
 
-Date: **2026-11-04** (live re-run after `.env` key added)  
+Date: **2026-11-04** (live re-run; `.env` holds key + opt-in)  
 Related: ADR-003, ADR-011, `docs/validation/cursor-sdk-platform-matrix.md`
 
 ## Commands
 
 ```bash
-# Loads CURSOR_API_KEY from environment or repo-root .env (gitignored)
+# Both CURSOR_API_KEY and AEP_LIVE_CURSOR_SDK may live in gitignored `.env`
 pnpm validate:sdk:auth
-
-# Live catalog
-AEP_LIVE_CURSOR_SDK=1 pnpm validate:sdk:auth
-
-# Minimal sandboxed agent + usage
-AEP_LIVE_CURSOR_SDK=1 pnpm validate:sdk:live
+pnpm validate:sdk:live
 ```
 
 ## Maintainer run (live)
@@ -21,7 +16,7 @@ AEP_LIVE_CURSOR_SDK=1 pnpm validate:sdk:live
 | Check                             | Result                                                 |
 | --------------------------------- | ------------------------------------------------------ |
 | `CURSOR_API_KEY` present          | **Yes** (via gitignored `.env`; not committed)         |
-| `AEP_LIVE_CURSOR_SDK`             | `1`                                                    |
+| `AEP_LIVE_CURSOR_SDK`             | **Yes** (`=1` in `.env`; loaded by scripts)            |
 | `pnpm validate:sdk:auth`          | **PASS** — `authStatus=catalog_ok`, `modelCount=48`    |
 | Catalog / plan entitlement        | **PASS** (catalog reachable for this user key)         |
 | `run.usage` token capture         | **Blocked by sandbox** — live send failed before usage |
