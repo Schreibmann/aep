@@ -30,6 +30,24 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6))
 
+  apps/cli:
+    dependencies:
+      '@aep/application':
+        specifier: workspace:*
+        version: link:../../packages/application
+      commander:
+        specifier: 13.1.0
+        version: 13.1.0
+
+  packages/application:
+    dependencies:
+      '@aep/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@aep/runtime-contracts':
+        specifier: workspace:*
+        version: link:../runtime-contracts
+
   packages/domain: {}
 
   packages/runtime-contracts:
@@ -312,6 +330,10 @@ packages:
 
   chai@6.3.0:
     resolution: {integrity: sha512-XWAtwJ6OHO+tj0EKCs0Y2UamnyOxseZWltU4x2U2wh8g4AigdjwvtUjvLP2tqkA/avxHEtzxNaqGq/YGNwckKg==}
+    engines: {node: '>=18'}
+
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
     engines: {node: '>=18'}
 
   detect-libc@2.1.2:
@@ -842,6 +864,8 @@ snapshots:
       node-addon-api: 8.9.2
 
   chai@6.3.0: {}
+
+  commander@13.1.0: {}
 
   detect-libc@2.1.2: {}
 

@@ -17,3 +17,4 @@
 | ADR-013                                          | Concurrency policy                        | Pending                               |
 | [ADR-014](./ADR-014-workflow-reducer.md)         | Deterministic workflow reducer (AEP-011)  | Accepted                              |
 | [ADR-015](./ADR-015-runtime-contracts.md)        | AgentRuntime + FakeAgentRuntime (AEP-012) | Accepted                              |
+| [ADR-016](./ADR-016-cli-bootstrap.md)            | CLI + application DI (AEP-013)            | Accepted                              |
