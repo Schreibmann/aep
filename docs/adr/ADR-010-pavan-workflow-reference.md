@@ -7,14 +7,14 @@
 
 ## Source snapshot (pinned)
 
-| Field | Value |
-| --- | --- |
-| Project | [Pavan's Workflow](https://github.com/Pavan-Gopa/Pavans-Workflow) |
-| Tag | `v3.8.0` |
-| Full commit SHA | `8c017953d09f3cec4a32e391b2243a8b01dc5a77` |
-| Committer date | `2026-10-19T04:19:10Z` |
-| License | MIT (Copyright (c) 2026 Pavan Gopa) |
-| Host runtime of reference | Oh My Pi (OMP) |
+| Field                     | Value                                                             |
+| ------------------------- | ----------------------------------------------------------------- |
+| Project                   | [Pavan's Workflow](https://github.com/Pavan-Gopa/Pavans-Workflow) |
+| Tag                       | `v3.8.0`                                                          |
+| Full commit SHA           | `8c017953d09f3cec4a32e391b2243a8b01dc5a77`                        |
+| Committer date            | `2026-10-19T04:19:10Z`                                            |
+| License                   | MIT (Copyright (c) 2026 Pavan Gopa)                               |
+| Host runtime of reference | Oh My Pi (OMP)                                                    |
 
 Resolved via `git ls-remote` / GitHub API for `refs/tags/v3.8.0` → commit object. Do not substitute floating `main` for this audit.
 
@@ -44,22 +44,22 @@ It is **not** a standalone IDE, LLM, or universal SDK. AEP studies it as an idea
 
 ## Concept mapping
 
-| Reference concept | AEP design | Decision |
-| --- | --- | --- |
-| Main Orchestrator | Deterministic TypeScript Workflow Engine | **Accepted** (reimplement; AI does not own transitions) |
-| Fresh specialized workers | Separate Cursor SDK top-level sessions per role | **Accepted** (reimplement) |
-| Role / model mappings | Cursor catalog + allowlisted role policy | **Accepted** (Cursor-only v1) |
-| Primary/backup provider failover | Bounded retry inside Cursor runtime | **Simplified** — no second provider in v1 |
-| Independent Reviewer | Fresh read-only Cursor session + assurance label | **Accepted** with honest assurance semantics |
-| Tester worker | Deterministic Quality Gate Engine | **Simplified** — no AI Tester in MVP |
-| Objective Gates | Evidence-backed gate runner | **Accepted** (reimplement) |
-| Workflow Guard | Policy + worktree + sandbox + OS isolation | **Accepted** (strengthen; do not port OMP guard) |
-| File-backed state | SQLite event journal | **Accepted** (replace implementation) |
-| Fast Coder routing | Measured task/model routing | **Deferred** |
-| Graphify | Optional context index | **Deferred** |
-| Ponytail / design skills | Optional capabilities | **Deferred** |
-| OMP dashboard / Agent Hub | AEP dashboard after CLI MVP | **Deferred** (rebuild, do not reuse OMP) |
-| `.omp/` config/hooks/extensions | — | **Rejected** as runtime basis |
+| Reference concept                | AEP design                                       | Decision                                                |
+| -------------------------------- | ------------------------------------------------ | ------------------------------------------------------- |
+| Main Orchestrator                | Deterministic TypeScript Workflow Engine         | **Accepted** (reimplement; AI does not own transitions) |
+| Fresh specialized workers        | Separate Cursor SDK top-level sessions per role  | **Accepted** (reimplement)                              |
+| Role / model mappings            | Cursor catalog + allowlisted role policy         | **Accepted** (Cursor-only v1)                           |
+| Primary/backup provider failover | Bounded retry inside Cursor runtime              | **Simplified** — no second provider in v1               |
+| Independent Reviewer             | Fresh read-only Cursor session + assurance label | **Accepted** with honest assurance semantics            |
+| Tester worker                    | Deterministic Quality Gate Engine                | **Simplified** — no AI Tester in MVP                    |
+| Objective Gates                  | Evidence-backed gate runner                      | **Accepted** (reimplement)                              |
+| Workflow Guard                   | Policy + worktree + sandbox + OS isolation       | **Accepted** (strengthen; do not port OMP guard)        |
+| File-backed state                | SQLite event journal                             | **Accepted** (replace implementation)                   |
+| Fast Coder routing               | Measured task/model routing                      | **Deferred**                                            |
+| Graphify                         | Optional context index                           | **Deferred**                                            |
+| Ponytail / design skills         | Optional capabilities                            | **Deferred**                                            |
+| OMP dashboard / Agent Hub        | AEP dashboard after CLI MVP                      | **Deferred** (rebuild, do not reuse OMP)                |
+| `.omp/` config/hooks/extensions  | —                                                | **Rejected** as runtime basis                           |
 
 ## Guard / security observations affecting AEP
 
