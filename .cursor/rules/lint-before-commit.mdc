@@ -13,3 +13,5 @@ Before every `git commit` in this repository:
 4. Only then create the commit.
 
 Do not commit with a red `pnpm lint`. Prefer fixing via `lint:fix` over disabling rules.
+
+Line endings are LF-only (`biome.json` `formatter.lineEnding=lf` + `.gitattributes`). Do not introduce CRLF.
