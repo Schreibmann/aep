@@ -1,5 +1,6 @@
 import type { PlannerPlan } from "@aep/agent-profiles";
 import type { RoleId, WorkflowAggregate } from "@aep/domain";
+import type { RiskPolicyResult } from "@aep/policy";
 import type { AgentToolPolicy, ModelParamSelection } from "@aep/runtime-contracts";
 
 /**
@@ -46,6 +47,8 @@ export type StoredRun = {
   readonly plan?: PlannerPlan;
   readonly plannerProfileVersionHash?: string;
   readonly planSchemaVersion?: string;
+  /** Deterministic risk/policy evaluation (AEP-051). */
+  readonly policy?: RiskPolicyResult;
   readonly recoveryOutcome?: RecoveryOutcome;
   readonly createdAt: string;
   readonly updatedAt: string;

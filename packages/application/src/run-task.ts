@@ -20,6 +20,7 @@ import {
   type ModelSelectionResult,
   resolveModelForRole,
 } from "@aep/model-routing";
+import { classifyRisk, evaluateRiskPolicy, type RiskPolicyResult } from "@aep/policy";
 import { assertPlannerReadOnly } from "@aep/security";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
@@ -39,6 +40,7 @@ export type RunTaskResult = {
   readonly plan?: PlannerPlan;
   readonly plannerProfileVersionHash?: string;
   readonly planSchemaVersion?: string;
+  readonly policy?: RiskPolicyResult;
 };
 
 /**
@@ -213,11 +215,28 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     throw new ApplicationError("internal_error", "Planner checkpoint was not saved");
   }
 
-  aggregate = reduceWorkflowAll(aggregate, [
+  const policy = evaluateRiskPolicy(
+    classifyRisk({
+      taskDescription: task,
+      touchedPaths: parsed.plan.touchedPaths,
+      mayTouchSecretsOrAuth: parsed.plan.approvalFlags.mayTouchSecretsOrAuth,
+      mayNeedNetwork: parsed.plan.approvalFlags.mayNeedNetwork,
+    }),
+  );
+
+  const workflowEvents: WorkflowEvent[] = [
     { type: "agent_execution_started", at: app.now(), roleId: "planner" },
     { type: "agent_execution_completed", at: app.now(), roleId: "planner" },
     { type: "plan_proposed", at: app.now() },
-  ]);
+  ];
+  if (policy.verdict.decision === "deny" || !policy.requirements.allowAgentWriteExecution) {
+    workflowEvents.push({
+      type: "policy_violation_detected",
+      at: app.now(),
+      reason: policy.verdict.reason,
+    });
+  }
+  aggregate = reduceWorkflowAll(aggregate, workflowEvents);
 
   const stored = app.runs.get(runId);
   const execution = stored?.execution;
@@ -233,6 +252,7 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     plan: parsed.plan,
     plannerProfileVersionHash: profile.profileVersionHash,
     planSchemaVersion: profile.schemaVersion,
+    policy,
     createdAt: at,
     updatedAt: app.now(),
   };
@@ -247,5 +267,6 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     plan: parsed.plan,
     plannerProfileVersionHash: profile.profileVersionHash,
     planSchemaVersion: profile.schemaVersion,
+    policy,
   };
 }

@@ -57,6 +57,8 @@ describe("@aep/application", () => {
     expect(result.plan?.touchedPaths.length).toBeGreaterThan(0);
     expect(result.plan?.validationCommands.length).toBeGreaterThan(0);
     expect(result.plannerProfileVersionHash?.length).toBe(16);
+    expect(result.policy?.verdict.decision).toBe("require_approval");
+    expect(result.policy?.classification.risk).not.toBe("low");
 
     const status = getRunStatus(app, result.runId);
     expect(status.taskDescription).toContain("registration");
@@ -65,5 +67,6 @@ describe("@aep/application", () => {
     const stored = app.runs.get(result.runId);
     expect(stored?.plan?.objective.length).toBeGreaterThan(0);
     expect(stored?.planSchemaVersion).toBe(result.planSchemaVersion);
+    expect(stored?.policy?.requirements.requireHumanApproval).toBe(true);
   });
 });

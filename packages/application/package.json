@@ -15,6 +15,7 @@
     "@aep/agent-profiles": "workspace:*",
     "@aep/domain": "workspace:*",
     "@aep/model-routing": "workspace:*",
+    "@aep/policy": "workspace:*",
     "@aep/runtime-contracts": "workspace:*",
     "@aep/security": "workspace:*"
   }
