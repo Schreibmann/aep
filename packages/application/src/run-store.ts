@@ -1,6 +1,7 @@
 import type { PlannerPlan } from "@aep/agent-profiles";
 import type { RoleId, WorkflowAggregate } from "@aep/domain";
 import type { PendingApproval, RecordedApproval, RiskPolicyResult } from "@aep/policy";
+import type { GateEngineResult } from "@aep/quality-gates";
 import type { AgentToolPolicy, ModelParamSelection } from "@aep/runtime-contracts";
 
 /**
@@ -52,6 +53,8 @@ export type StoredRun = {
   /** Pending human approval bound to a subject hash (AEP-052). */
   readonly pendingApproval?: PendingApproval;
   readonly approvals?: ReadonlyArray<RecordedApproval>;
+  /** Quality gate evidence for Reviewer / reports (AEP-053). */
+  readonly gateResults?: GateEngineResult;
   readonly recoveryOutcome?: RecoveryOutcome;
   readonly createdAt: string;
   readonly updatedAt: string;

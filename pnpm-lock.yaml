@@ -68,6 +68,12 @@ importers:
       '@aep/policy':
         specifier: workspace:*
         version: link:../policy
+      '@aep/process':
+        specifier: workspace:*
+        version: link:../process
+      '@aep/quality-gates':
+        specifier: workspace:*
+        version: link:../quality-gates
       '@aep/runtime-contracts':
         specifier: workspace:*
         version: link:../runtime-contracts
@@ -114,6 +120,15 @@ importers:
         version: link:../domain
 
   packages/process: {}
+
+  packages/quality-gates:
+    dependencies:
+      '@aep/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@aep/process':
+        specifier: workspace:*
+        version: link:../process
 
   packages/runtime-contracts:
     dependencies:

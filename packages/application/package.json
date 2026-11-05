@@ -16,6 +16,8 @@
     "@aep/domain": "workspace:*",
     "@aep/model-routing": "workspace:*",
     "@aep/policy": "workspace:*",
+    "@aep/process": "workspace:*",
+    "@aep/quality-gates": "workspace:*",
     "@aep/runtime-contracts": "workspace:*",
     "@aep/security": "workspace:*"
   }

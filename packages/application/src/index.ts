@@ -17,6 +17,8 @@ export type {
   ResumeRunResult,
 } from "./recovery.js";
 export { classifyRunForRecovery, listNonTerminalRuns, resumeRun } from "./recovery.js";
+export type { RunGatesInput, RunGatesResult } from "./run-gates.js";
+export { runGatesForRun } from "./run-gates.js";
 export type {
   ExecutionLifecycle,
   ExecutionSnapshot,
