@@ -63,6 +63,9 @@ export type StoredRun = {
   /** Per-run budget tracker (AEP-056). */
   readonly budget?: RunBudgetState;
   readonly budgetPolicy?: RunBudgetPolicy;
+  /** Isolated worktree created for writing agents (AEP-057). */
+  readonly worktreePath?: string;
+  readonly worktreeBranch?: string;
   readonly recoveryOutcome?: RecoveryOutcome;
   readonly createdAt: string;
   readonly updatedAt: string;

@@ -25,6 +25,7 @@
 | [ADR-034](./ADR-034-reviewer-role.md)            | Reviewer role / findings (AEP-054)         | Accepted                        |
 | [ADR-035](./ADR-035-bounded-fix-cycle.md)        | Bounded fix cycle (AEP-055)                | Accepted                        |
 | [ADR-036](./ADR-036-cost-budget-enforcement.md)  | Cost / budget enforcement (AEP-056)        | Accepted                        |
+| [ADR-037](./ADR-037-e2e-mvp.md)                  | End-to-end MVP scenario (AEP-057)          | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |

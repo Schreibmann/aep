@@ -24,6 +24,11 @@ export { initProject } from "./init-project.js";
 export type { ListedModel, ModelsReport } from "./list-models.js";
 export { listAccountModels } from "./list-models.js";
 export type {
+  PrepareWorkspaceInput,
+  PrepareWorkspaceResult,
+} from "./prepare-workspace.js";
+export { prepareWorkspace } from "./prepare-workspace.js";
+export type {
   RecoveryClassification,
   ResumeRunInput,
   ResumeRunResult,
@@ -31,6 +36,8 @@ export type {
 export { classifyRunForRecovery, listNonTerminalRuns, resumeRun } from "./recovery.js";
 export type { RunGatesInput, RunGatesResult } from "./run-gates.js";
 export { runGatesForRun } from "./run-gates.js";
+export type { RunImplementInput, RunImplementResult } from "./run-implement.js";
+export { runImplementer } from "./run-implement.js";
 export type { RunReviewInput, RunReviewResult } from "./run-review.js";
 export { runReview } from "./run-review.js";
 export type {

@@ -22,7 +22,8 @@ export type RunBudgetPolicy = {
 export const DEFAULT_RUN_BUDGET_POLICY: RunBudgetPolicy = {
   maxTotalRoleExecutions: 12,
   maxExecutionsPerRole: 4,
-  onUnknownCost: "require_approval",
+  /** Opt into require_approval/block_next_role when the project configures stricter cost gates. */
+  onUnknownCost: "continue",
   allowPotentialExtraCharge: false,
 };
 

@@ -23,17 +23,21 @@ describe("AEP-056 run budget and cost policy", () => {
   });
 
   it("marks unknown cost as visible and blocks next role when configured", () => {
-    const after = reconcileUsage(EMPTY_RUN_BUDGET_STATE, DEFAULT_RUN_BUDGET_POLICY, {
+    const strict = {
+      ...DEFAULT_RUN_BUDGET_POLICY,
+      onUnknownCost: "require_approval" as const,
+    };
+    const after = reconcileUsage(EMPTY_RUN_BUDGET_STATE, strict, {
       status: "unknown",
       costStatus: "unknown",
       tokens: { inputTokens: 10, outputTokens: 2 },
     });
     expect(after.unknownCostObserved).toBe(true);
     expect(after.blockedForApproval).toBe(true);
-    const denied = authorizeRoleStart(after, DEFAULT_RUN_BUDGET_POLICY, "reviewer");
+    const denied = authorizeRoleStart(after, strict, "reviewer");
     expect(denied.ok).toBe(false);
     const cleared = clearBudgetApprovalBlock(after);
-    expect(authorizeRoleStart(cleared, DEFAULT_RUN_BUDGET_POLICY, "reviewer").ok).toBe(true);
+    expect(authorizeRoleStart(cleared, strict, "reviewer").ok).toBe(true);
   });
 
   it("never allows unapproved paid model fallback", () => {

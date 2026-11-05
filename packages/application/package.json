@@ -14,6 +14,7 @@
   "dependencies": {
     "@aep/agent-profiles": "workspace:*",
     "@aep/domain": "workspace:*",
+    "@aep/git-workspaces": "workspace:*",
     "@aep/model-routing": "workspace:*",
     "@aep/policy": "workspace:*",
     "@aep/process": "workspace:*",

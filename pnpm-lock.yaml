@@ -62,6 +62,9 @@ importers:
       '@aep/domain':
         specifier: workspace:*
         version: link:../domain
+      '@aep/git-workspaces':
+        specifier: workspace:*
+        version: link:../git-workspaces
       '@aep/model-routing':
         specifier: workspace:*
         version: link:../model-routing
