@@ -1,10 +1,10 @@
 import { createFeatureUnavailableUsage, FakeAgentRuntime } from "@aep/runtime-contracts";
 import { describe, expect, it } from "vitest";
-import { getAuthStatus } from "../src/auth-status.js";
-import { createApp } from "../src/create-app.js";
-import { listAccountModels } from "../src/list-models.js";
-import { runTask } from "../src/run-task.js";
-import { formatUsageDisplay, redactProviderError } from "../src/usage-ledger.js";
+import { getAuthStatus } from "../src/auth-status.ts";
+import { createApp } from "../src/create-app.ts";
+import { listAccountModels } from "../src/list-models.ts";
+import { runTask } from "../src/run-task.ts";
+import { formatUsageDisplay, redactProviderError } from "../src/usage-ledger.ts";
 
 describe("AEP-044 usage metering and diagnostics", () => {
   it("never displays unknown cost as $0", () => {

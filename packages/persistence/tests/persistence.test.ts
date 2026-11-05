@@ -13,7 +13,7 @@ import {
   seedRoleExecution,
   seedWorkflowRun,
   tasks,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const tempDirs: string[] = [];
 

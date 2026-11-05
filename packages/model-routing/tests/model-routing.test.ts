@@ -1,9 +1,9 @@
 import type { ModelCatalogSnapshot } from "@aep/runtime-contracts";
 import { describe, expect, it } from "vitest";
-import { ModelCatalogCache } from "../src/catalog-cache.js";
-import { DEFAULT_COST_POLICY } from "../src/cost-policy.js";
-import { ModelRoutingError } from "../src/errors.js";
-import { listOptimizeForValues, resolveModelForRole } from "../src/resolve-model.js";
+import { ModelCatalogCache } from "../src/catalog-cache.ts";
+import { DEFAULT_COST_POLICY } from "../src/cost-policy.ts";
+import { ModelRoutingError } from "../src/errors.ts";
+import { listOptimizeForValues, resolveModelForRole } from "../src/resolve-model.ts";
 
 const catalog: ModelCatalogSnapshot = {
   snapshotId: "snap_test_1",

@@ -1,6 +1,6 @@
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
-import { classifyRunForRecovery } from "./recovery.js";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
+import { classifyRunForRecovery } from "./recovery.ts";
 
 export type RunStatusView = {
   readonly runId: string;

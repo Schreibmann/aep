@@ -10,7 +10,7 @@ import {
   QualityGatesError,
   runQualityGates,
   selectGatesForPhase,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const tempDirs: string[] = [];
 

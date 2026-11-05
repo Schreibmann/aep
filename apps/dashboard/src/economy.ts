@@ -1,4 +1,4 @@
-import type { UsageEntry } from "./api/client.js";
+import type { UsageEntry } from "./api/client.ts";
 
 export type EconomyCategory =
   | "tokens"

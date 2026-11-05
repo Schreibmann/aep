@@ -20,7 +20,7 @@ import {
   runTask,
 } from "@aep/application";
 import { Command, InvalidArgumentError } from "commander";
-import { type OutputMode, writeError, writeSuccess } from "./output.js";
+import { type OutputMode, writeError, writeSuccess } from "./output.ts";
 
 function readCliVersion(): string {
   const here = dirname(fileURLToPath(import.meta.url));

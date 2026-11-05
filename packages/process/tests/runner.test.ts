@@ -2,7 +2,7 @@ import { access, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { type ProcessError, SafeCommandRunner, TrustedCommandRegistry } from "../src/index.js";
+import { type ProcessError, SafeCommandRunner, TrustedCommandRegistry } from "../src/index.ts";
 
 const tempDirs: string[] = [];
 

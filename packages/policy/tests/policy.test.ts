@@ -5,7 +5,7 @@ import {
   evaluateRiskPolicy,
   hashApprovalSubject,
   pathMatchesAny,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 describe("AEP-051 risk and policy engine", () => {
   it("classifies auth/secret/payment/migration/CI/infra paths as high", () => {

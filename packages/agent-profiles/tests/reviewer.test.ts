@@ -9,7 +9,7 @@ import {
   parseReviewReport,
   parseReviewReportWithBoundedRetry,
   withReviewAssurance,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const validReport = {
   verdict: "request_changes" as const,

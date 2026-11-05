@@ -1,7 +1,7 @@
 import { type AuditActor, DomainError } from "@aep/domain";
 import { asc, desc, eq } from "drizzle-orm";
-import type { AepDatabase } from "./open-database.js";
-import { evidence, tasks, workflowEvents, workflowRuns } from "./schema.js";
+import type { AepDatabase } from "./open-database.ts";
+import { evidence, tasks, workflowEvents, workflowRuns } from "./schema.ts";
 
 export type TimelineEntry = {
   readonly id: string;

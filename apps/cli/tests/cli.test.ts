@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createApp } from "@aep/application";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { buildProgram } from "../src/program.js";
+import { buildProgram } from "../src/program.ts";
 
 const tempDirs: string[] = [];
 

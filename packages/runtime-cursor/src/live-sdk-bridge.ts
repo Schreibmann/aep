@@ -1,5 +1,5 @@
 import { Agent, Cursor, type SDKAgent, type ToolName } from "@cursor/sdk";
-import { parseUnknownSdkMessage } from "./normalize.js";
+import { parseUnknownSdkMessage } from "./normalize.ts";
 import type {
   CursorSdkBridge,
   SdkAgentHandle,
@@ -10,7 +10,7 @@ import type {
   SdkRunResult,
   SdkSandboxProbe,
   SdkStreamEvent,
-} from "./sdk-bridge.js";
+} from "./sdk-bridge.ts";
 
 function toToolNames(names: ReadonlyArray<string>): ToolName[] {
   const out: ToolName[] = [];

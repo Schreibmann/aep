@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { RunCommandInput, RunCommandResult } from "@aep/process";
 import { afterEach, describe, expect, it } from "vitest";
-import { createApp, runGatesForRun, runTask } from "../src/index.js";
+import { createApp, runGatesForRun, runTask } from "../src/index.ts";
 
 const tempDirs: string[] = [];
 

@@ -3,7 +3,7 @@ import {
   buildFixPromptFromFindings,
   createImplementerProfile,
   detectRepeatedFindings,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 describe("AEP-055 implementer fix prompts", () => {
   it("builds a scoped fix prompt from blocking findings", () => {

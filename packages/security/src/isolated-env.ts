@@ -1,7 +1,7 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { SecurityError } from "./errors.js";
+import { SecurityError } from "./errors.ts";
 
 const BLOCKED_ENV_KEYS = [
   "SSH_AUTH_SOCK",

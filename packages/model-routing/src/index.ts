@@ -1,20 +1,20 @@
-export type { CatalogCacheOptions } from "./catalog-cache.js";
-export { ModelCatalogCache } from "./catalog-cache.js";
-export type { CostPolicy } from "./cost-policy.js";
-export { DEFAULT_COST_POLICY, isModelCostAllowed } from "./cost-policy.js";
-export type { ModelRoutingErrorCode } from "./errors.js";
-export { ModelRoutingError } from "./errors.js";
-export type { ModelSelectionResult, ResolveModelInput } from "./resolve-model.js";
-export { listOptimizeForValues, resolveModelForRole } from "./resolve-model.js";
-export type { ModelRoutingConfig, RoleModelPreference } from "./role-policy.js";
-export { preferenceForRole } from "./role-policy.js";
+export type { CatalogCacheOptions } from "./catalog-cache.ts";
+export { ModelCatalogCache } from "./catalog-cache.ts";
+export type { CostPolicy } from "./cost-policy.ts";
+export { DEFAULT_COST_POLICY, isModelCostAllowed } from "./cost-policy.ts";
+export type { ModelRoutingErrorCode } from "./errors.ts";
+export { ModelRoutingError } from "./errors.ts";
+export type { ModelSelectionResult, ResolveModelInput } from "./resolve-model.ts";
+export { listOptimizeForValues, resolveModelForRole } from "./resolve-model.ts";
+export type { ModelRoutingConfig, RoleModelPreference } from "./role-policy.ts";
+export { preferenceForRole } from "./role-policy.ts";
 export type {
   BudgetAuthorization,
   RoleExecutionBudgetCounts,
   RunBudgetPolicy,
   RunBudgetState,
   UnknownCostAction,
-} from "./run-budget.js";
+} from "./run-budget.ts";
 export {
   authorizeRoleStart,
   clearBudgetApprovalBlock,
@@ -22,4 +22,4 @@ export {
   EMPTY_RUN_BUDGET_STATE,
   reconcileUsage,
   recordRoleStart,
-} from "./run-budget.js";
+} from "./run-budget.ts";

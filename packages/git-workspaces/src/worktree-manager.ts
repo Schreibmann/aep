@@ -1,10 +1,10 @@
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { buildAepBranchName, buildWorktreeDirectoryName } from "./branch-names.js";
-import { GitWorkspacesError } from "./errors.js";
-import { runGit } from "./git-exec.js";
-import { inspectRepository } from "./inspect.js";
-import type { ManagedWorktreeMetadata, WorktreeMetadataStore } from "./worktree-meta.js";
+import { buildAepBranchName, buildWorktreeDirectoryName } from "./branch-names.ts";
+import { GitWorkspacesError } from "./errors.ts";
+import { runGit } from "./git-exec.ts";
+import { inspectRepository } from "./inspect.ts";
+import type { ManagedWorktreeMetadata, WorktreeMetadataStore } from "./worktree-meta.ts";
 
 export type CreateManagedWorktreeInput = {
   readonly repoPath: string;

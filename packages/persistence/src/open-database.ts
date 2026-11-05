@@ -2,8 +2,8 @@ import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
-import { migrate } from "./migrate.js";
-import { aepSchema } from "./schema.js";
+import { migrate } from "./migrate.ts";
+import { aepSchema } from "./schema.ts";
 
 export type OpenDatabaseOptions = {
   readonly readonly?: boolean;

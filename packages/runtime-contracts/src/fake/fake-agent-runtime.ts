@@ -1,13 +1,13 @@
-import type { AgentRuntime } from "../agent-runtime.js";
-import type { AgentEvent } from "../events.js";
+import type { AgentRuntime } from "../agent-runtime.ts";
+import type { AgentEvent } from "../events.ts";
 import type {
   AgentExecutionHandle,
   AgentExecutionInput,
   AgentExecutionResult,
   ResumeExecutionInput,
-} from "../execution.js";
-import type { ModelCatalogSnapshot, RuntimeHealth } from "../models.js";
-import type { UsageResult, UsageTokenCounts } from "../usage.js";
+} from "../execution.ts";
+import type { ModelCatalogSnapshot, RuntimeHealth } from "../models.ts";
+import type { UsageResult, UsageTokenCounts } from "../usage.ts";
 
 export type FakeExecutionScript = {
   readonly events: ReadonlyArray<AgentEvent>;

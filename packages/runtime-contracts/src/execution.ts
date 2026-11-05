@@ -1,6 +1,6 @@
 import type { RoleId } from "@aep/domain";
-import type { AgentEvent } from "./events.js";
-import type { ModelParamSelection } from "./models.js";
+import type { AgentEvent } from "./events.ts";
+import type { ModelParamSelection } from "./models.ts";
 
 export type AgentToolPolicy = {
   readonly tools: ReadonlyArray<string>;

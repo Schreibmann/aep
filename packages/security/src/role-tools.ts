@@ -1,6 +1,6 @@
 import type { RoleId } from "@aep/domain";
 import type { AgentToolPolicy } from "@aep/runtime-contracts";
-import { SecurityError } from "./errors.js";
+import { SecurityError } from "./errors.ts";
 
 /**
  * Role tool allowlists (architecture §7.5 / AEP-034).

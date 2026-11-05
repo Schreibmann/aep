@@ -1,6 +1,6 @@
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import type { IncomingMessage } from "node:http";
-import { LocalApiError } from "./errors.js";
+import { LocalApiError } from "./errors.ts";
 
 export type LocalApiAuth = {
   readonly tokenHash: string;

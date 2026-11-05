@@ -1,6 +1,6 @@
 {
   "name": "@aep/project-profiles",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Stack detection, project profiles, and knowledge packs",
   "type": "module",

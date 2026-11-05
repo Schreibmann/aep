@@ -1,5 +1,5 @@
-import { DomainError } from "../ids.js";
-import type { RoleId } from "../statuses.js";
+import { DomainError } from "../ids.ts";
+import type { RoleId } from "../statuses.ts";
 
 export type WorkflowLimits = {
   readonly maxFixCycles: number;

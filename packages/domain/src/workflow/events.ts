@@ -1,4 +1,4 @@
-import type { RoleId } from "../statuses.js";
+import type { RoleId } from "../statuses.ts";
 
 /**
  * Normalized workflow events. Provider/SDK statuses MUST be mapped into these

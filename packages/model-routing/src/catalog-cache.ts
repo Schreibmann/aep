@@ -1,5 +1,5 @@
 import type { ModelCatalogSnapshot } from "@aep/runtime-contracts";
-import { ModelRoutingError } from "./errors.js";
+import { ModelRoutingError } from "./errors.ts";
 
 export type CatalogCacheOptions = {
   /** Time-to-live for a cached snapshot. Default 5 minutes. */

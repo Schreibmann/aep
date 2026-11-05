@@ -1,6 +1,6 @@
 {
   "name": "agent-engineering-platform",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Local TypeScript platform for deterministic AI engineering workflows powered by Cursor Agent SDK",
   "type": "module",
@@ -28,7 +28,7 @@
     "@types/node": "26.6.6",
     "better-sqlite3": "13.0.3",
     "drizzle-orm": "0.45.4",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vitest": "5.1.0"
   }
 }

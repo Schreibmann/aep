@@ -1,14 +1,14 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
-import { ProjectProfilesError } from "../errors.js";
+import { ProjectProfilesError } from "../errors.ts";
 import {
   isExcludedKnowledgePath,
   KNOWLEDGE_SOURCE_CANDIDATES,
   knowledgePackPath,
   knowledgePacksDir,
-} from "./paths.js";
-import { KNOWLEDGE_PACK_SCHEMA_VERSION, type KnowledgePack, parseKnowledgePack } from "./schema.js";
+} from "./paths.ts";
+import { KNOWLEDGE_PACK_SCHEMA_VERSION, type KnowledgePack, parseKnowledgePack } from "./schema.ts";
 
 const MAX_PACK_CHARS = 8_000;
 

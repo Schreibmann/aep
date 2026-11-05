@@ -7,7 +7,7 @@ import {
   renderProjectConfigYaml,
   type StackDetectionReport,
 } from "@aep/project-profiles";
-import { ApplicationError } from "./errors.js";
+import { ApplicationError } from "./errors.ts";
 
 export type InitProjectInput = {
   readonly targetPath: string;

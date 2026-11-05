@@ -8,7 +8,7 @@ import {
   ProjectProfilesError,
   updateKnowledgePack,
 } from "@aep/project-profiles";
-import { ApplicationError } from "./errors.js";
+import { ApplicationError } from "./errors.ts";
 
 function rethrow(error: unknown): never {
   if (error instanceof ProjectProfilesError) {

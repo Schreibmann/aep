@@ -1,5 +1,5 @@
-export type { AgentRuntime } from "./agent-runtime.js";
-export type { AgentEvent } from "./events.js";
+export type { AgentRuntime } from "./agent-runtime.ts";
+export type { AgentEvent } from "./events.ts";
 export type {
   AgentExecutionHandle,
   AgentExecutionInput,
@@ -8,12 +8,12 @@ export type {
   AgentSettingSource,
   AgentToolPolicy,
   ResumeExecutionInput,
-} from "./execution.js";
-export type { FakeAgentRuntimeOptions, FakeExecutionScript } from "./fake/fake-agent-runtime.js";
+} from "./execution.ts";
+export type { FakeAgentRuntimeOptions, FakeExecutionScript } from "./fake/fake-agent-runtime.ts";
 export {
   createFeatureUnavailableUsage,
   FakeAgentRuntime,
-} from "./fake/fake-agent-runtime.js";
+} from "./fake/fake-agent-runtime.ts";
 export type {
   ModelCatalogEntry,
   ModelCatalogSnapshot,
@@ -22,5 +22,5 @@ export type {
   ModelParamSelection,
   ModelVariantInfo,
   RuntimeHealth,
-} from "./models.js";
-export type { UsageResult, UsageTokenCounts } from "./usage.js";
+} from "./models.ts";
+export type { UsageResult, UsageTokenCounts } from "./usage.ts";

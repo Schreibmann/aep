@@ -6,8 +6,8 @@ import type {
   ModelVariantInfo,
 } from "@aep/runtime-contracts";
 import { desc, eq } from "drizzle-orm";
-import type { AepDatabase } from "./open-database.js";
-import { modelCatalogSnapshots } from "./schema.js";
+import type { AepDatabase } from "./open-database.ts";
+import { modelCatalogSnapshots } from "./schema.ts";
 
 export type InsertCatalogSnapshotInput = {
   readonly snapshot: ModelCatalogSnapshot;

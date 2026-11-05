@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { UsageEntry } from "../src/api/client.js";
-import { aggregateEconomy } from "../src/economy.js";
+import type { UsageEntry } from "../src/api/client.ts";
+import { aggregateEconomy } from "../src/economy.ts";
 
 describe("AEP-073 economy aggregation", () => {
   it("keeps billed, plan-included, unknown, and estimated categories separate", () => {

@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
-import { ProjectProfilesError } from "./errors.js";
+import { ProjectProfilesError } from "./errors.ts";
 import type {
   DetectedFramework,
   DetectedScript,
@@ -9,7 +9,7 @@ import type {
   InstructionFileHit,
   PackageManagerId,
   StackDetectionReport,
-} from "./types.js";
+} from "./types.ts";
 
 const SENSITIVE_HINTS = [
   ".env",

@@ -6,10 +6,10 @@ import {
   type ModelSelectionResult,
   resolveModelForRole,
 } from "@aep/model-routing";
-import { beginRoleUnderBudget, finishRoleUsage } from "./budget.js";
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
-import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
+import { beginRoleUnderBudget, finishRoleUsage } from "./budget.ts";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
+import type { ExecutionSnapshot, StoredRun } from "./run-store.ts";
 
 export type RunImplementInput = {
   readonly runId: string;

@@ -1,9 +1,9 @@
 import { spawnSync } from "node:child_process";
-import { getAuthStatus } from "./auth-status.js";
-import type { AepApplication } from "./create-app.js";
-import { listAccountModels } from "./list-models.js";
-import { listNonTerminalRuns } from "./recovery.js";
-import { formatUsageDisplay } from "./usage-ledger.js";
+import { getAuthStatus } from "./auth-status.ts";
+import type { AepApplication } from "./create-app.ts";
+import { listAccountModels } from "./list-models.ts";
+import { listNonTerminalRuns } from "./recovery.ts";
+import { formatUsageDisplay } from "./usage-ledger.ts";
 
 export type DoctorCheck = {
   readonly name: string;

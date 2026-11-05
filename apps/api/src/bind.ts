@@ -1,4 +1,4 @@
-import { LocalApiError } from "./errors.js";
+import { LocalApiError } from "./errors.ts";
 
 export type BindOptions = {
   readonly host: string;

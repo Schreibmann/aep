@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isModelCostAllowed } from "../src/cost-policy.js";
+import { isModelCostAllowed } from "../src/cost-policy.ts";
 import {
   authorizeRoleStart,
   clearBudgetApprovalBlock,
@@ -7,7 +7,7 @@ import {
   EMPTY_RUN_BUDGET_STATE,
   reconcileUsage,
   recordRoleStart,
-} from "../src/run-budget.js";
+} from "../src/run-budget.ts";
 
 describe("AEP-056 run budget and cost policy", () => {
   it("stops scheduling new roles at execution threshold", () => {

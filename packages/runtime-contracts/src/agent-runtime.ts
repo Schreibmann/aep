@@ -2,9 +2,9 @@ import type {
   AgentExecutionHandle,
   AgentExecutionInput,
   ResumeExecutionInput,
-} from "./execution.js";
-import type { ModelCatalogSnapshot, RuntimeHealth } from "./models.js";
-import type { UsageResult } from "./usage.js";
+} from "./execution.ts";
+import type { ModelCatalogSnapshot, RuntimeHealth } from "./models.ts";
+import type { UsageResult } from "./usage.ts";
 
 /**
  * Minimal runtime boundary (architecture §8).

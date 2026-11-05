@@ -1,3 +1,3 @@
-import { buildProgram } from "./program.js";
+import { buildProgram } from "./program.ts";
 
 await buildProgram().parseAsync(process.argv);

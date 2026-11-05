@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { createApiClient } from "./api/client.js";
-import { ApprovalsPage } from "./pages/ApprovalsPage.js";
-import { EconomyPage } from "./pages/EconomyPage.js";
-import { ModelsPage } from "./pages/ModelsPage.js";
-import { ProjectsPage } from "./pages/ProjectsPage.js";
-import { RunsPage } from "./pages/RunsPage.js";
-import { RunTimelinePage } from "./pages/RunTimelinePage.js";
-import { SettingsPage } from "./pages/SettingsPage.js";
+import { createApiClient } from "./api/client.ts";
+import { ApprovalsPage } from "./pages/ApprovalsPage.tsx";
+import { EconomyPage } from "./pages/EconomyPage.tsx";
+import { ModelsPage } from "./pages/ModelsPage.tsx";
+import { ProjectsPage } from "./pages/ProjectsPage.tsx";
+import { RunsPage } from "./pages/RunsPage.tsx";
+import { RunTimelinePage } from "./pages/RunTimelinePage.tsx";
+import { SettingsPage } from "./pages/SettingsPage.tsx";
 
 export type PageId =
   | "projects"

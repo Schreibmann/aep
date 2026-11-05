@@ -12,7 +12,7 @@ import {
   openDatabase,
   replayWorkflowRun,
   seedWorkflowRun,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const tempDirs: string[] = [];
 const NOW = "2026-11-05T01:00:00.000Z";

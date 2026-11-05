@@ -1,22 +1,22 @@
-export { QualityGatesError } from "./errors.js";
+export { QualityGatesError } from "./errors.ts";
 export type {
   GateClass,
   GateDefinition,
   GatePhase,
   ProjectGateProfile,
-} from "./gate-definitions.js";
+} from "./gate-definitions.ts";
 export {
   assertTrustedGateArgv,
   createGatesFromProjectProfile,
   selectGatesForPhase,
-} from "./gate-definitions.js";
+} from "./gate-definitions.ts";
 export type {
   GateCommandRunner,
   GateEngineResult,
   GateEvidence,
   GateRunStatus,
   RunGatesInput,
-} from "./gate-engine.js";
-export { runQualityGates } from "./gate-engine.js";
-export { loadGateDefinitions, loadProjectGateProfile } from "./project-profile.js";
-export { createGateCommandRegistry } from "./trusted-registry.js";
+} from "./gate-engine.ts";
+export { runQualityGates } from "./gate-engine.ts";
+export { loadGateDefinitions, loadProjectGateProfile } from "./project-profile.ts";
+export { createGateCommandRegistry } from "./trusted-registry.ts";

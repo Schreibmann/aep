@@ -15,16 +15,16 @@ import {
   resolveCursorApiKeyForSdk,
   type SecureCredentialSource,
 } from "@aep/security";
-import { LiveCursorSdkBridge } from "./live-sdk-bridge.js";
-import { BoundedEventBuffer, normalizeSdkStreamEvent } from "./normalize.js";
+import { LiveCursorSdkBridge } from "./live-sdk-bridge.ts";
+import { BoundedEventBuffer, normalizeSdkStreamEvent } from "./normalize.ts";
 import type {
   CursorSdkBridge,
   SdkAgentHandle,
   SdkCreateAgentInput,
   SdkRunHandle,
   SdkStreamEvent,
-} from "./sdk-bridge.js";
-import { AgentSessionRegistry, evaluateResumeSafety } from "./session-registry.js";
+} from "./sdk-bridge.ts";
+import { AgentSessionRegistry, evaluateResumeSafety } from "./session-registry.ts";
 
 export type CursorAgentRuntimeOptions = {
   readonly credentials: SecureCredentialSource;

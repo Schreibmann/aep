@@ -1,6 +1,6 @@
 {
   "name": "@aep/security",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "AEP security baseline: isolated env, role tool allowlists, sandbox policy",
   "type": "module",

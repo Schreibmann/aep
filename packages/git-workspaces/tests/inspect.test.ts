@@ -8,8 +8,8 @@ import {
   isWorkingTreeDirty,
   resolveGitRoot,
   runGit,
-} from "../src/index.js";
-import { samePath } from "./path-test-utils.js";
+} from "../src/index.ts";
+import { samePath } from "./path-test-utils.ts";
 
 const tempDirs: string[] = [];
 

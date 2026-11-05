@@ -9,7 +9,7 @@ import {
   recordRoleStart,
 } from "@aep/model-routing";
 import type { UsageResult } from "@aep/runtime-contracts";
-import { ApplicationError } from "./errors.js";
+import { ApplicationError } from "./errors.ts";
 
 export function budgetPolicyOrDefault(policy: RunBudgetPolicy | undefined): RunBudgetPolicy {
   return policy ?? DEFAULT_RUN_BUDGET_POLICY;

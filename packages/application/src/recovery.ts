@@ -4,9 +4,9 @@ import {
   reduceWorkflowAll,
   type WorkflowEvent,
 } from "@aep/domain";
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
-import type { ExecutionSnapshot, RecoveryOutcome, StoredRun } from "./run-store.js";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
+import type { ExecutionSnapshot, RecoveryOutcome, StoredRun } from "./run-store.ts";
 
 export type RecoveryClassification =
   | { readonly kind: "terminal"; readonly status: string }

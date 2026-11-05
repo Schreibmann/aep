@@ -14,7 +14,7 @@ import {
   type WorkflowEvent,
   type WorkflowEventType,
   type WorkflowRunStatus,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const NOW = "2026-11-05T00:00:00.000Z";
 

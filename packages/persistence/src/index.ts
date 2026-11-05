@@ -1,17 +1,17 @@
-export type { BackupResult } from "./backup.js";
-export { backupDatabase, exportDatabaseFile } from "./backup.js";
-export type { InsertCatalogSnapshotInput } from "./catalog-snapshots.js";
+export type { BackupResult } from "./backup.ts";
+export { backupDatabase, exportDatabaseFile } from "./backup.ts";
+export type { InsertCatalogSnapshotInput } from "./catalog-snapshots.ts";
 export {
   getLatestModelCatalogSnapshot,
   getModelCatalogSnapshotById,
   insertModelCatalogSnapshot,
-} from "./catalog-snapshots.js";
-export { decodeWorkflowEvent, encodeWorkflowEvent } from "./event-codec.js";
+} from "./catalog-snapshots.ts";
+export { decodeWorkflowEvent, encodeWorkflowEvent } from "./event-codec.ts";
 export type {
   AppendJournalEventInput,
   AppendJournalEventResult,
   SeedRunInput,
-} from "./journal.js";
+} from "./journal.ts";
 export {
   appendWorkflowEvent,
   EVENT_PAYLOAD_VERSION,
@@ -19,13 +19,13 @@ export {
   getWorkflowRunProjection,
   replayWorkflowRun,
   seedWorkflowRun,
-} from "./journal.js";
-export type { AppliedMigration } from "./migrate.js";
-export { listAppliedMigrations, migrate } from "./migrate.js";
-export type { AepDatabase, OpenDatabaseOptions } from "./open-database.js";
-export { openDatabase } from "./open-database.js";
-export type { EvidenceListItem, TaskListItem, TimelineEntry } from "./queries.js";
-export { listEvidence, listRunTimeline, listTasks } from "./queries.js";
+} from "./journal.ts";
+export type { AppliedMigration } from "./migrate.ts";
+export { listAppliedMigrations, migrate } from "./migrate.ts";
+export type { AepDatabase, OpenDatabaseOptions } from "./open-database.ts";
+export { openDatabase } from "./open-database.ts";
+export type { EvidenceListItem, TaskListItem, TimelineEntry } from "./queries.ts";
+export { listEvidence, listRunTimeline, listTasks } from "./queries.ts";
 export {
   aepSchema,
   agentSessions,
@@ -42,14 +42,14 @@ export {
   workflowEvents,
   workflowRuns,
   workspaces,
-} from "./schema.js";
+} from "./schema.ts";
 export type {
   InsertUsageRecordInput,
   SeedRoleExecutionInput,
   UsageRecordRow,
-} from "./usage-records.js";
+} from "./usage-records.ts";
 export {
   insertUsageRecord,
   listUsageRecordsForRun,
   seedRoleExecution,
-} from "./usage-records.js";
+} from "./usage-records.ts";

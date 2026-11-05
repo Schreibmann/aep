@@ -1,4 +1,4 @@
-import { GitWorkspacesError } from "./errors.js";
+import { GitWorkspacesError } from "./errors.ts";
 
 const SEGMENT = /^[a-zA-Z0-9._-]+$/;
 

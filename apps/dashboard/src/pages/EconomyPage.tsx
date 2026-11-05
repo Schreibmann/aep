@@ -4,8 +4,8 @@ import {
   DashboardApiError,
   parseUsageEntries,
   type UsageEntry,
-} from "../api/client.js";
-import { aggregateEconomy } from "../economy.js";
+} from "../api/client.ts";
+import { aggregateEconomy } from "../economy.ts";
 
 type Props = {
   readonly client: ApiClient;

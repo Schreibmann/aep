@@ -3,14 +3,14 @@ export {
   MemoryCredentialSource,
   resolveCursorApiKeyForSdk,
   type SecureCredentialSource,
-} from "./credentials.js";
-export { SecurityError } from "./errors.js";
+} from "./credentials.ts";
+export { SecurityError } from "./errors.ts";
 export {
   buildIsolatedAgentEnv,
   type IsolatedEnv,
   type IsolatedEnvInput,
   listBlockedEnvKeys,
-} from "./isolated-env.js";
+} from "./isolated-env.ts";
 export {
   assertPlannerReadOnly,
   assertReviewerReadOnly,
@@ -18,10 +18,10 @@ export {
   PLANNER_TOOLS,
   REVIEWER_TOOLS,
   toolPolicyForRole,
-} from "./role-tools.js";
+} from "./role-tools.ts";
 export {
   assertSandboxReady,
   REQUIRED_SANDBOX_OPTIONS,
   requireEnabledSandbox,
   type SandboxReadiness,
-} from "./sandbox-policy.js";
+} from "./sandbox-policy.ts";

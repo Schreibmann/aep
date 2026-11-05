@@ -1,6 +1,6 @@
 {
   "name": "@aep/api",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Authenticated loopback-only AEP local API",
   "type": "module",
@@ -10,7 +10,6 @@
   "bin": {
     "aep-api": "./bin/aep-api.mjs"
   },
-
   "scripts": {
     "start": "node --experimental-strip-types ./src/main.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",

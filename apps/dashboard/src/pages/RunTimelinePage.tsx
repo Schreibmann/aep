@@ -5,7 +5,7 @@ import {
   parseRuns,
   parseTimelineEvents,
   type TimelineEvent,
-} from "../api/client.js";
+} from "../api/client.ts";
 
 type Props = {
   readonly client: ApiClient;

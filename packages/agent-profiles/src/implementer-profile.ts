@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import type { AgentToolPolicy } from "@aep/runtime-contracts";
 import { IMPLEMENTER_TOOLS } from "@aep/security";
-import type { ReviewFinding } from "./review-schema.js";
+import type { ReviewFinding } from "./review-schema.ts";
 
 export const IMPLEMENTER_PROFILE_ID = "implementer" as const;
 export const IMPLEMENTER_PROFILE_PROMPT_VERSION = "1";

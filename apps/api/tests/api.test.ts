@@ -6,15 +6,15 @@ import {
   createWorkflowRunId,
 } from "@aep/domain";
 import { afterEach, describe, expect, it } from "vitest";
-import { assertSafeBindHost } from "../src/bind.js";
-import { LocalApiError } from "../src/errors.js";
+import { assertSafeBindHost } from "../src/bind.ts";
+import { LocalApiError } from "../src/errors.ts";
 import {
   createLocalApiAuth,
   createLocalApiServer,
   generateLocalApiToken,
   isLoopbackHost,
   projectRunTimeline,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const servers: Array<{ close(): Promise<void> }> = [];
 

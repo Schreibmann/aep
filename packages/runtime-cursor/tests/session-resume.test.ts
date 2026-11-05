@@ -1,8 +1,8 @@
 import { MemoryCredentialSource } from "@aep/security";
 import { describe, expect, it } from "vitest";
-import { CursorAgentRuntime } from "../src/cursor-agent-runtime.js";
-import { AgentSessionRegistry, evaluateResumeSafety } from "../src/session-registry.js";
-import { StubCursorSdkBridge } from "../src/stub-sdk-bridge.js";
+import { CursorAgentRuntime } from "../src/cursor-agent-runtime.ts";
+import { AgentSessionRegistry, evaluateResumeSafety } from "../src/session-registry.ts";
+import { StubCursorSdkBridge } from "../src/stub-sdk-bridge.ts";
 
 const REVIEWER_TOOLS = {
   tools: ["read", "grep", "glob", "ls"],

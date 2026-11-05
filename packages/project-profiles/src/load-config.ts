@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { type AepProjectConfig, parseAepProjectConfig } from "./config-schema.js";
-import { ProjectProfilesError } from "./errors.js";
+import { type AepProjectConfig, parseAepProjectConfig } from "./config-schema.ts";
+import { ProjectProfilesError } from "./errors.ts";
 
 function isPlainRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

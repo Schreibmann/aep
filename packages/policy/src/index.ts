@@ -4,22 +4,22 @@ export type {
   PendingApproval,
   RecordedApproval,
   SubjectHashCheck,
-} from "./approval-binding.js";
+} from "./approval-binding.ts";
 export {
   APPROVAL_SUBJECT_KINDS,
   checkSubjectHashUnchanged,
   hashApprovalSubject,
-} from "./approval-binding.js";
+} from "./approval-binding.ts";
 export type {
   MatchedRiskRule,
   RiskClassification,
   RiskClassifyInput,
-} from "./classify-risk.js";
-export { classifyRisk, listConfiguredRiskRules } from "./classify-risk.js";
-export type { PolicyRequirements, RiskPolicyResult } from "./evaluate-policy.js";
-export { evaluateRiskPolicy } from "./evaluate-policy.js";
-export { pathMatchesAny } from "./path-match.js";
-export type { RiskRule, RiskRuleKind } from "./risk-rules.js";
+} from "./classify-risk.ts";
+export { classifyRisk, listConfiguredRiskRules } from "./classify-risk.ts";
+export type { PolicyRequirements, RiskPolicyResult } from "./evaluate-policy.ts";
+export { evaluateRiskPolicy } from "./evaluate-policy.ts";
+export { pathMatchesAny } from "./path-match.ts";
+export type { RiskRule, RiskRuleKind } from "./risk-rules.ts";
 export {
   ALL_RISK_RULES,
   CRITICAL_PATH_RULES,
@@ -27,4 +27,4 @@ export {
   HIGH_RISK_PATH_RULES,
   HIGH_TASK_KEYWORD_RULES,
   LOW_PATH_RULES,
-} from "./risk-rules.js";
+} from "./risk-rules.ts";

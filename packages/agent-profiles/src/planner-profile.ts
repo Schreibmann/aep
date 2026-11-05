@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import type { AgentToolPolicy } from "@aep/runtime-contracts";
 import { PLANNER_TOOLS } from "@aep/security";
-import { PLAN_SCHEMA_VERSION } from "./plan-schema.js";
+import { PLAN_SCHEMA_VERSION } from "./plan-schema.ts";
 
 export const PLANNER_PROFILE_ID = "planner" as const;
 

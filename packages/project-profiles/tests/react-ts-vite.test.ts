@@ -10,7 +10,7 @@ import {
   resolveReactTsViteProfile,
   selectReviewerChecklist,
   tryLoadAepProjectConfig,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const tempDirs: string[] = [];
 const fixturesRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "fixtures");

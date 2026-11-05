@@ -7,10 +7,10 @@ import {
 } from "@aep/domain";
 import { FakeAgentRuntime } from "@aep/runtime-contracts";
 import { describe, expect, it } from "vitest";
-import { type ApplicationError, createApp } from "../src/index.js";
-import { classifyRunForRecovery, listNonTerminalRuns, resumeRun } from "../src/recovery.js";
-import { InMemoryRunStore, type StoredRun } from "../src/run-store.js";
-import { runTask } from "../src/run-task.js";
+import { type ApplicationError, createApp } from "../src/index.ts";
+import { classifyRunForRecovery, listNonTerminalRuns, resumeRun } from "../src/recovery.ts";
+import { InMemoryRunStore, type StoredRun } from "../src/run-store.ts";
+import { runTask } from "../src/run-task.ts";
 
 const NOW = "2026-11-05T12:00:00.000Z";
 

@@ -1,5 +1,5 @@
 import { createApp } from "@aep/application";
-import { createLocalApiAuth, createLocalApiServer, generateLocalApiToken } from "./index.js";
+import { createLocalApiAuth, createLocalApiServer, generateLocalApiToken } from "./index.ts";
 
 function readArg(name: string): string | undefined {
   const idx = process.argv.indexOf(name);
