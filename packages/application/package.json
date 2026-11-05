@@ -1,0 +1,26 @@
+{
+  "name": "@aep/application",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AEP application services and workflow orchestration (SDK-free)",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aep/agent-profiles": "workspace:*",
+    "@aep/domain": "workspace:*",
+    "@aep/git-workspaces": "workspace:*",
+    "@aep/model-routing": "workspace:*",
+    "@aep/policy": "workspace:*",
+    "@aep/process": "workspace:*",
+    "@aep/project-profiles": "workspace:*",
+    "@aep/quality-gates": "workspace:*",
+    "@aep/runtime-contracts": "workspace:*",
+    "@aep/security": "workspace:*"
+  }
+}

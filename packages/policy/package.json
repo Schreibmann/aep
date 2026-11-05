@@ -1,0 +1,17 @@
+{
+  "name": "@aep/policy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deterministic risk classification and approval policy rules",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aep/domain": "workspace:*"
+  }
+}

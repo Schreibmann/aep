@@ -1,6 +1,6 @@
 {
   "name": "@aep/runtime-cursor",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Cursor Agent SDK adapter package (sole AI runtime for AEP v1)",
   "type": "module",
@@ -18,6 +18,9 @@
     "node": ">=22.13.0"
   },
   "dependencies": {
+    "@aep/domain": "workspace:*",
+    "@aep/runtime-contracts": "workspace:*",
+    "@aep/security": "workspace:*",
     "@cursor/sdk": "1.3.1"
   }
 }

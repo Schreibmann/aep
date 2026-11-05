@@ -1,0 +1,19 @@
+{
+  "name": "@aep/security",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AEP security baseline: isolated env, role tool allowlists, sandbox policy",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aep/domain": "workspace:*",
+    "@aep/process": "workspace:*",
+    "@aep/runtime-contracts": "workspace:*"
+  }
+}

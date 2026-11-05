@@ -1,0 +1,23 @@
+{
+  "name": "@aep/cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AEP command-line interface",
+  "type": "module",
+  "bin": {
+    "aep": "./bin/aep.mjs"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types ./src/main.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "@aep/api": "workspace:*",
+    "@aep/application": "workspace:*",
+    "commander": "13.1.0"
+  }
+}

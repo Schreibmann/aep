@@ -1,0 +1,15 @@
+---
+description: Always run pnpm typecheck before creating or updating a pull request
+alwaysApply: true
+---
+
+# Typecheck before pull request
+
+Before every pull request create/update (`gh pr create`, `gh pr edit` that ships code, or pushing a branch intended for review):
+
+1. Run `pnpm typecheck` from the repository / worktree root (root `tsc` + all `packages/*` and `apps/*` package typechecks).
+2. If typecheck fails, fix the errors before opening or updating the PR. Do not rely on CI to discover missing modules or TS errors.
+3. Ensure every TypeScript import of a workspace package (`@aep/*`) is declared in that package’s `package.json` `dependencies` or `devDependencies`. Transitive deps are not enough for `tsc` under pnpm isolation.
+4. If `package.json` dependencies changed, refresh `pnpm-lock.yaml` and include it in the same commit set.
+
+Do not open or push a review PR with a red `pnpm typecheck`.

@@ -1,6 +1,6 @@
 {
   "name": "@aep/domain",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Pure AEP domain types, invariants, and value objects",
   "type": "module",

@@ -1,17 +1,47 @@
 # Architecture Decision Records
 
-| ADR                                              | Title                                     | Status                                |
-| ------------------------------------------------ | ----------------------------------------- | ------------------------------------- |
-| [ADR-001](./ADR-001-local-first-cli.md)          | Local-first CLI-first product scope       | Accepted                              |
-| [ADR-002](./ADR-002-cursor-only-runtime.md)      | Minimal `AgentRuntime`; Cursor-only v1    | Accepted                              |
-| [ADR-003](./ADR-003-cursor-auth.md)              | Cursor SDK local runtime and auth flow    | Accepted                              |
-| [ADR-004](./ADR-004-os-isolation.md)             | OS / security execution strategy          | Accepted (live sandbox proof pending) |
-| [ADR-005](./ADR-005-sqlite-driver.md)            | SQLite driver and migrations              | Accepted                              |
-| ADR-006                                          | AEP DB vs Cursor SDK session store        | Pending (AEP-020+)                    |
-| ADR-007                                          | Roles, sessions, reviewer assurance       | Pending                               |
-| ADR-008                                          | Git worktree lifecycle                    | Pending                               |
-| ADR-009                                          | Command runner and security policy        | Pending                               |
-| [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit          | Accepted                              |
-| [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend | Accepted (live proof pending)         |
-| ADR-012                                          | Cost provenance                           | Pending                               |
-| ADR-013                                          | Concurrency policy                        | Pending                               |
+| ADR                                              | Title                                      | Status                          |
+| ------------------------------------------------ | ------------------------------------------ | ------------------------------- |
+| [ADR-001](./ADR-001-local-first-cli.md)          | Local-first CLI-first product scope        | Accepted                        |
+| [ADR-002](./ADR-002-cursor-only-runtime.md)      | Minimal `AgentRuntime`; Cursor-only v1     | Accepted                        |
+| [ADR-003](./ADR-003-cursor-auth.md)              | Cursor SDK local runtime and auth flow     | Accepted                        |
+| [ADR-004](./ADR-004-os-isolation.md)             | OS / security execution strategy           | Accepted (WSL sandbox verified) |
+| [ADR-005](./ADR-005-sqlite-driver.md)            | SQLite driver and migrations               | Accepted                        |
+| ADR-006                                          | AEP DB vs Cursor SDK session store         | Pending (AEP-020+)              |
+| ADR-007                                          | Roles, sessions, reviewer assurance        | Pending                         |
+| [ADR-021](./ADR-021-worktree-manager.md)         | Git worktree lifecycle (AEP-031)           | Accepted (was ADR-008)          |
+| [ADR-022](./ADR-022-safe-command-runner.md)      | Safe command runner (AEP-032)              | Accepted (was ADR-009)          |
+| [ADR-023](./ADR-023-path-diff-policy.md)         | Path / diff policy (AEP-033)               | Accepted                        |
+| [ADR-024](./ADR-024-security-baseline.md)        | Security baseline (AEP-034)                | Accepted                        |
+| [ADR-025](./ADR-025-cursor-agent-runtime.md)     | CursorAgentRuntime (AEP-040)               | Accepted                        |
+| [ADR-026](./ADR-026-stream-normalization.md)     | Stream normalize / cancel (AEP-041)        | Accepted                        |
+| [ADR-027](./ADR-027-model-routing.md)            | Model catalog / role routing (AEP-042)     | Accepted                        |
+| [ADR-028](./ADR-028-session-resume.md)           | Session resume / permissions (AEP-043)     | Accepted                        |
+| [ADR-029](./ADR-029-usage-metering.md)           | Usage metering / diagnostics (AEP-044)     | Accepted                        |
+| [ADR-030](./ADR-030-planner-structured-plan.md)  | Planner profile / plan schema (AEP-050)    | Accepted                        |
+| [ADR-031](./ADR-031-risk-policy-engine.md)       | Risk / policy engine (AEP-051)             | Accepted                        |
+| [ADR-032](./ADR-032-human-approval-service.md)   | Human approval service (AEP-052)           | Accepted                        |
+| [ADR-033](./ADR-033-quality-gate-engine.md)      | Quality Gate Engine (AEP-053)              | Accepted                        |
+| [ADR-034](./ADR-034-reviewer-role.md)            | Reviewer role / findings (AEP-054)         | Accepted                        |
+| [ADR-035](./ADR-035-bounded-fix-cycle.md)        | Bounded fix cycle (AEP-055)                | Accepted                        |
+| [ADR-036](./ADR-036-cost-budget-enforcement.md)  | Cost / budget enforcement (AEP-056)        | Accepted                        |
+| [ADR-037](./ADR-037-e2e-mvp.md)                  | End-to-end MVP scenario (AEP-057)          | Accepted                        |
+| [ADR-038](./ADR-038-stack-detector.md)           | Stack detector (AEP-060)                   | Accepted                        |
+| [ADR-039](./ADR-039-aep-init.md)                 | aep init setup (AEP-061)                   | Accepted                        |
+| [ADR-040](./ADR-040-react-ts-vite-profile.md)    | React/TS/Vite profile (AEP-062)            | Accepted                        |
+| [ADR-041](./ADR-041-knowledge-packs.md)          | Knowledge packs (AEP-063)                  | Accepted                        |
+| [ADR-042](./ADR-042-local-api.md)                | Local API loopback auth (AEP-070)          | Accepted                        |
+| [ADR-043](./ADR-043-dashboard-skeleton.md)       | Dashboard skeleton (AEP-071)               | Accepted                        |
+| [ADR-044](./ADR-044-live-run-timeline.md)        | Live run timeline (AEP-072)                | Accepted                        |
+| [ADR-045](./ADR-045-economy-dashboard.md)        | Economy dashboard (AEP-073)                | Accepted                        |
+| [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
+| [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
+| ADR-012                                          | Cost provenance                            | Pending                         |
+| ADR-013                                          | Concurrency policy                         | Pending                         |
+| [ADR-014](./ADR-014-workflow-reducer.md)         | Deterministic workflow reducer (AEP-011)   | Accepted                        |
+| [ADR-015](./ADR-015-runtime-contracts.md)        | AgentRuntime + FakeAgentRuntime (AEP-012)  | Accepted                        |
+| [ADR-016](./ADR-016-cli-bootstrap.md)            | CLI + application DI (AEP-013)             | Accepted                        |
+| [ADR-017](./ADR-017-persistence-sqlite.md)       | Persistence package / migrations (AEP-020) | Accepted                        |
+| [ADR-018](./ADR-018-event-journal.md)            | Event journal + projections (AEP-021)      | Accepted                        |
+| [ADR-019](./ADR-019-recovery-resume.md)          | Recovery / resume after restart (AEP-022)  | Accepted                        |
+| [ADR-020](./ADR-020-repository-inspector.md)     | Repository inspector (AEP-030)             | Accepted                        |

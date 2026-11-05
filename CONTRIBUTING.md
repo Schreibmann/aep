@@ -33,8 +33,18 @@ Pin exact dependency versions. Do not use floating `latest` ranges.
 - Platform validation evidence → `docs/validation/`
 - Do not commit secrets, API keys, or live account dumps
 
+## Branches
+
+| Branch    | Role                                        |
+| --------- | ------------------------------------------- |
+| `main`    | Stable / release line                       |
+| `develop` | Integration line and **repository default** |
+
+Open pull requests from task branches (`aep/AEP-*`, etc.) into **`develop` only**. Do not target `main` or other task branches unless the maintainer explicitly asks.
+
 ## Pull requests
 
+- Base branch: `develop`
 - Reference the roadmap task ID in the PR title or description
 - Include test updates for behavior changes
 - Confirm CI green on Ubuntu and Windows
