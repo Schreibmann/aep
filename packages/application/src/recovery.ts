@@ -167,6 +167,10 @@ export async function resumeRun(
     tools: execution.tools,
     sandbox: { enabled: true },
     ...(execution.systemPrompt === undefined ? {} : { systemPrompt: execution.systemPrompt }),
+    ...(execution.modelParams === undefined ? {} : { modelParams: execution.modelParams }),
+    ...(execution.catalogSnapshotId === undefined
+      ? {}
+      : { catalogSnapshotId: execution.catalogSnapshotId }),
   });
 
   const result = await handle.wait();

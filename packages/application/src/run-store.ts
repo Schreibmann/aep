@@ -1,5 +1,5 @@
 import type { RoleId, WorkflowAggregate } from "@aep/domain";
-import type { AgentToolPolicy } from "@aep/runtime-contracts";
+import type { AgentToolPolicy, ModelParamSelection } from "@aep/runtime-contracts";
 
 /**
  * Snapshot required to reattach a Cursor/Fake session after process restart.
@@ -14,6 +14,9 @@ export type ExecutionSnapshot = {
   readonly systemPrompt?: string;
   readonly tools: AgentToolPolicy;
   readonly startedAt: string;
+  readonly catalogSnapshotId?: string;
+  readonly modelParams?: ReadonlyArray<ModelParamSelection>;
+  readonly modelSelectionRationale?: string;
 };
 
 export type ExecutionLifecycle = "idle" | "running" | "settled";

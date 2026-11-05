@@ -6,7 +6,17 @@
 export type SdkModelInfo = {
   readonly id: string;
   readonly label: string;
-  readonly params?: ReadonlyArray<{ readonly id: string; readonly values: ReadonlyArray<string> }>;
+  readonly params?: ReadonlyArray<{
+    readonly id: string;
+    readonly label?: string;
+    readonly values: ReadonlyArray<{ readonly value: string; readonly label?: string }>;
+  }>;
+  readonly variants?: ReadonlyArray<{
+    readonly label: string;
+    readonly params: ReadonlyArray<{ readonly id: string; readonly value: string }>;
+    readonly isDefault?: boolean;
+    readonly requiresMaxMode?: boolean;
+  }>;
 };
 
 export type SdkSandboxOptions = {
@@ -16,6 +26,7 @@ export type SdkSandboxOptions = {
 export type SdkCreateAgentInput = {
   readonly apiKey: string;
   readonly modelId: string;
+  readonly modelParams?: ReadonlyArray<{ readonly id: string; readonly value: string }>;
   readonly cwd: string;
   readonly systemPrompt?: string;
   readonly tools: ReadonlyArray<string>;

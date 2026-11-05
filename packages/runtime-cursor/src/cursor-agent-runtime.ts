@@ -137,12 +137,38 @@ export class CursorAgentRuntime implements AgentRuntime {
   async discoverModels(): Promise<ModelCatalogSnapshot> {
     const apiKey = resolveCursorApiKeyForSdk(this.credentials);
     const models = await this.sdk.listModels(apiKey);
+    const capturedAt = this.now();
     return {
-      capturedAt: this.now(),
+      snapshotId: `snap_${capturedAt.replace(/[^0-9A-Za-z]/g, "")}`,
+      capturedAt,
       models: models.map((model) => ({
         id: model.id,
         label: model.label,
         billingCategory: "unknown",
+        ...(model.params === undefined
+          ? {}
+          : {
+              parameters: model.params.map((parameter) => ({
+                id: parameter.id,
+                ...(parameter.label === undefined ? {} : { label: parameter.label }),
+                values: parameter.values.map((value) => ({
+                  value: value.value,
+                  ...(value.label === undefined ? {} : { label: value.label }),
+                })),
+              })),
+            }),
+        ...(model.variants === undefined
+          ? {}
+          : {
+              variants: model.variants.map((variant) => ({
+                label: variant.label,
+                params: variant.params,
+                ...(variant.isDefault === undefined ? {} : { isDefault: variant.isDefault }),
+                ...(variant.requiresMaxMode === undefined
+                  ? {}
+                  : { requiresMaxMode: variant.requiresMaxMode }),
+              })),
+            }),
       })),
     };
   }
@@ -164,6 +190,7 @@ export class CursorAgentRuntime implements AgentRuntime {
       disallowedTools: input.tools.disallowedTools,
       sandbox: { enabled: true },
       ...(input.systemPrompt === undefined ? {} : { systemPrompt: input.systemPrompt }),
+      ...(input.modelParams === undefined ? {} : { modelParams: input.modelParams }),
     });
 
     try {
@@ -193,6 +220,7 @@ export class CursorAgentRuntime implements AgentRuntime {
       disallowedTools: input.tools.disallowedTools,
       sandbox: { enabled: true },
       ...(input.systemPrompt === undefined ? {} : { systemPrompt: input.systemPrompt }),
+      ...(input.modelParams === undefined ? {} : { modelParams: input.modelParams }),
     });
 
     try {

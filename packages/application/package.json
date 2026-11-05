@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aep/domain": "workspace:*",
+    "@aep/model-routing": "workspace:*",
     "@aep/runtime-contracts": "workspace:*"
   }
 }

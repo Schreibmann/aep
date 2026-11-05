@@ -1,5 +1,6 @@
 import type { RoleId } from "@aep/domain";
 import type { AgentEvent } from "./events.js";
+import type { ModelParamSelection } from "./models.js";
 
 export type AgentToolPolicy = {
   readonly tools: ReadonlyArray<string>;
@@ -20,6 +21,8 @@ export type AgentExecutionInput = {
   readonly systemPrompt?: string;
   readonly tools: AgentToolPolicy;
   readonly sandbox: AgentSandboxOptions;
+  readonly modelParams?: ReadonlyArray<ModelParamSelection>;
+  readonly catalogSnapshotId?: string;
 };
 
 export type ResumeExecutionInput = {
@@ -32,6 +35,8 @@ export type ResumeExecutionInput = {
   readonly systemPrompt?: string;
   readonly tools: AgentToolPolicy;
   readonly sandbox: AgentSandboxOptions;
+  readonly modelParams?: ReadonlyArray<ModelParamSelection>;
+  readonly catalogSnapshotId?: string;
 };
 
 export type AgentExecutionResult = {

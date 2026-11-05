@@ -2,6 +2,7 @@ import type {
   CursorSdkBridge,
   SdkAgentHandle,
   SdkCreateAgentInput,
+  SdkModelInfo,
   SdkResumeAgentInput,
   SdkRunHandle,
   SdkRunResult,
@@ -12,7 +13,7 @@ import type {
 export type StubSdkBridgeOptions = {
   readonly sandboxSupported?: boolean;
   readonly sandboxDetail?: string;
-  readonly models?: ReadonlyArray<{ readonly id: string; readonly label: string }>;
+  readonly models?: ReadonlyArray<SdkModelInfo>;
   readonly runResult?: SdkRunResult;
   readonly streamEvents?: ReadonlyArray<SdkStreamEvent>;
   readonly createError?: { readonly code: string; readonly message: string };
@@ -29,7 +30,7 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
   readonly resumed: SdkResumeAgentInput[] = [];
   private readonly sandboxSupported: boolean;
   private readonly sandboxDetail: string;
-  private readonly models: ReadonlyArray<{ readonly id: string; readonly label: string }>;
+  private readonly models: ReadonlyArray<SdkModelInfo>;
   private readonly runResult: SdkRunResult;
   private readonly streamEvents: ReadonlyArray<SdkStreamEvent>;
   private readonly createError: { readonly code: string; readonly message: string } | undefined;
@@ -63,7 +64,7 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
     };
   }
 
-  async listModels(_apiKey: string): Promise<ReadonlyArray<{ id: string; label: string }>> {
+  async listModels(_apiKey: string): Promise<ReadonlyArray<SdkModelInfo>> {
     return this.models;
   }
 

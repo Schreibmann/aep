@@ -146,6 +146,7 @@ export class FakeAgentRuntime implements AgentRuntime {
       sandboxReady: true,
     };
     this.catalog = options.catalog ?? {
+      snapshotId: "snap_fake_default",
       capturedAt: "2026-11-05T00:00:00.000Z",
       models: [
         {

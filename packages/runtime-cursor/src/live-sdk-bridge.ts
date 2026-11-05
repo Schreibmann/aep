@@ -4,6 +4,7 @@ import type {
   CursorSdkBridge,
   SdkAgentHandle,
   SdkCreateAgentInput,
+  SdkModelInfo,
   SdkResumeAgentInput,
   SdkRunHandle,
   SdkRunResult,
@@ -94,9 +95,15 @@ function wrapSdkAgent(agent: SDKAgent): SdkAgentHandle {
 }
 
 function buildOptions(input: SdkCreateAgentInput) {
+  const modelParams = input.modelParams;
   return {
     apiKey: input.apiKey,
-    model: { id: input.modelId },
+    model: {
+      id: input.modelId,
+      ...(modelParams === undefined || modelParams.length === 0
+        ? {}
+        : { params: modelParams.map((param) => ({ id: param.id, value: param.value })) }),
+    },
     tools: toToolNames(input.tools),
     disallowedTools: toToolNames(input.disallowedTools),
     local: {
@@ -118,17 +125,42 @@ export class LiveCursorSdkBridge implements CursorSdkBridge {
     };
   }
 
-  async listModels(apiKey: string): Promise<ReadonlyArray<{ id: string; label: string }>> {
+  async listModels(apiKey: string): Promise<ReadonlyArray<SdkModelInfo>> {
     const listed = await Cursor.models.list({ apiKey });
-    const models: Array<{ id: string; label: string }> = [];
+    const models: SdkModelInfo[] = [];
     for (const entry of listed) {
       const id = entry.id;
-      if (typeof id === "string" && id.length > 0) {
-        models.push({
-          id,
-          label: typeof entry.displayName === "string" ? entry.displayName : id,
-        });
+      if (typeof id !== "string" || id.length === 0) {
+        continue;
       }
+      const parameters = entry.parameters;
+      const variants = entry.variants;
+      models.push({
+        id,
+        label: typeof entry.displayName === "string" ? entry.displayName : id,
+        ...(parameters === undefined
+          ? {}
+          : {
+              params: parameters.map((parameter) => ({
+                id: parameter.id,
+                ...(parameter.displayName === undefined ? {} : { label: parameter.displayName }),
+                values: parameter.values.map((value) => ({
+                  value: value.value,
+                  ...(value.displayName === undefined ? {} : { label: value.displayName }),
+                })),
+              })),
+            }),
+        ...(variants === undefined
+          ? {}
+          : {
+              variants: variants.map((variant) => ({
+                label: variant.displayName,
+                params: variant.params.map((param) => ({ id: param.id, value: param.value })),
+                ...(variant.isDefault === undefined ? {} : { isDefault: variant.isDefault }),
+                ...(variant.isMaxMode === undefined ? {} : { requiresMaxMode: variant.isMaxMode }),
+              })),
+            }),
+      });
     }
     return models;
   }
