@@ -158,6 +158,14 @@ export async function resumeRun(
     };
   }
 
+  // Reviewer must never continue a write-capable tool policy even if snapshot was corrupted.
+  const reviewerInheritedWriteTools =
+    execution.roleId === "reviewer" &&
+    (execution.tools.tools.includes("shell") ||
+      execution.tools.tools.includes("edit") ||
+      execution.tools.tools.includes("mcp") ||
+      execution.tools.tools.includes("task"));
+
   const handle = await app.runtime.resumeExecution({
     executionId: execution.executionId,
     opaqueAgentId: execution.opaqueAgentId,
@@ -167,16 +175,37 @@ export async function resumeRun(
     tools: execution.tools,
     sandbox: { enabled: true },
     ...(execution.systemPrompt === undefined ? {} : { systemPrompt: execution.systemPrompt }),
+    ...(execution.modelParams === undefined ? {} : { modelParams: execution.modelParams }),
+    ...(execution.catalogSnapshotId === undefined
+      ? {}
+      : { catalogSnapshotId: execution.catalogSnapshotId }),
+    ...(execution.contextReset === true || reviewerInheritedWriteTools
+      ? { forceFreshSession: true }
+      : {}),
   });
 
   const result = await handle.wait();
   const at = app.now();
+  const contextReset = handle.contextReset === true;
+  const contextResetReason = handle.contextResetReason;
+
+  const executionAfterResume: ExecutionSnapshot = {
+    ...execution,
+    opaqueAgentId: handle.agentId,
+    ...(contextReset
+      ? {
+          contextReset: true,
+          ...(contextResetReason === undefined ? {} : { contextResetReason }),
+        }
+      : {}),
+  };
 
   if (result.status === "cancelled") {
     const aggregate = reduceWorkflow(stored.aggregate, { type: "run_cancelled", at });
     const next: StoredRun = {
       ...stored,
       aggregate,
+      execution: executionAfterResume,
       executionLifecycle: "settled",
       recoveryOutcome: "cancelled",
       agentId: handle.agentId,
@@ -206,6 +235,7 @@ export async function resumeRun(
     const next: StoredRun = {
       ...stored,
       aggregate,
+      execution: executionAfterResume,
       executionLifecycle: "settled",
       recoveryOutcome: "resumed",
       agentId: handle.agentId,
@@ -237,6 +267,7 @@ export async function resumeRun(
   const next: StoredRun = {
     ...stored,
     aggregate,
+    execution: executionAfterResume,
     executionLifecycle: "settled",
     recoveryOutcome: "resumed",
     agentId: handle.agentId,

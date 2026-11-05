@@ -4,9 +4,14 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   backupDatabase,
+  insertModelCatalogSnapshot,
+  insertUsageRecord,
   listAppliedMigrations,
+  listUsageRecordsForRun,
   openDatabase,
   projects,
+  seedRoleExecution,
+  seedWorkflowRun,
   tasks,
 } from "../src/index.js";
 
@@ -170,6 +175,52 @@ describe("@aep/persistence", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]?.id).toBe("proj_backup");
     restored.close();
+  });
+
+  it("persists usage without inventing $0 and stores catalog snapshots", async () => {
+    const path = await tempDbPath("usage");
+    const opened = openDatabase(path);
+    const at = "2026-11-05T16:00:00.000Z";
+    seedWorkflowRun(opened, {
+      projectId: "proj_u",
+      taskId: "task_u",
+      runId: "run_u",
+      rootPath: "/tmp/aep",
+      description: "usage",
+      risk: "low",
+      createdAt: at,
+    });
+    seedRoleExecution(opened, {
+      id: "role_u",
+      workflowRunId: "run_u",
+      roleId: "planner",
+      status: "running",
+      attempt: 1,
+      createdAt: at,
+    });
+    insertUsageRecord(opened, {
+      id: "usage_u",
+      workflowRunId: "run_u",
+      roleExecutionId: "role_u",
+      costStatus: "unknown",
+      inputTokens: 11,
+      outputTokens: 7,
+      createdAt: at,
+    });
+    const listed = listUsageRecordsForRun(opened, "run_u");
+    expect(listed).toHaveLength(1);
+    expect(listed[0]?.costStatus).toBe("unknown");
+    expect(listed[0]?.chargedAmountMinor).toBeNull();
+    expect(listed[0]?.inputTokens).toBe(11);
+
+    insertModelCatalogSnapshot(opened, {
+      snapshot: {
+        snapshotId: "snap_u",
+        capturedAt: at,
+        models: [{ id: "m1", label: "M1", billingCategory: "unknown" }],
+      },
+    });
+    opened.close();
   });
 
   it("does not define secret-bearing column names", async () => {

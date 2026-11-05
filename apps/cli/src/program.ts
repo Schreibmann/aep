@@ -5,8 +5,10 @@ import {
   type AepApplication,
   ApplicationError,
   createApp,
+  getAuthStatus,
   getRunStatus,
   initProject,
+  listAccountModels,
   listNonTerminalRuns,
   resumeRun,
   runDoctor,
@@ -83,7 +85,7 @@ export function buildProgram(options: BuildProgramOptions = {}): Command {
 
   program
     .command("doctor")
-    .description("Check local host and injected agent runtime readiness")
+    .description("Check local host, auth, catalog, usage, and runtime readiness")
     .option("--json", "Machine-readable JSON output")
     .action(async function doctorAction(this: Command) {
       const mode = resolveMode(program, this);
@@ -99,6 +101,56 @@ export function buildProgram(options: BuildProgramOptions = {}): Command {
         if (!report.ok) {
           process.exitCode = 1;
         }
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  const auth = program.command("auth").description("Cursor authentication diagnostics");
+  auth
+    .command("status")
+    .description("Show whether runtime credentials are configured (never prints secrets)")
+    .option("--json", "Machine-readable JSON output")
+    .action(async function authStatusAction(this: Command) {
+      const mode = resolveMode(program, this);
+      try {
+        const status = await getAuthStatus(app);
+        writeSuccess(
+          mode,
+          status,
+          `runtime=${status.runtimeId} ok=${status.ok} credentialConfigured=${status.credentialConfigured} billingOwner=${status.billingOwner}`,
+        );
+        if (!status.ok) {
+          process.exitCode = 1;
+        }
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  program
+    .command("models")
+    .description("List models from the injected runtime account catalog snapshot")
+    .option("--json", "Machine-readable JSON output")
+    .action(async function modelsAction(this: Command) {
+      const mode = resolveMode(program, this);
+      try {
+        const report = await listAccountModels(app);
+        writeSuccess(
+          mode,
+          report,
+          report.models.length === 0
+            ? `snapshot=${report.snapshotId} (empty catalog)`
+            : report.models
+                .map(
+                  (model) =>
+                    `${model.id} label=${model.label} billing=${model.billingCategory}` +
+                    (model.optimizeForValues.length > 0
+                      ? ` optimize_for=[${model.optimizeForValues.join(",")}]`
+                      : ""),
+                )
+                .join("\n"),
+        );
       } catch (error) {
         reportFailure(mode, error);
       }

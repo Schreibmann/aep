@@ -1,9 +1,11 @@
 import { type AgentRuntime, FakeAgentRuntime } from "@aep/runtime-contracts";
 import { InMemoryRunStore } from "./run-store.js";
+import { InMemoryUsageLedger } from "./usage-ledger.js";
 
 export type AppDependencies = {
   readonly runtime: AgentRuntime;
   readonly runs: InMemoryRunStore;
+  readonly usage: InMemoryUsageLedger;
   readonly now: () => string;
   readonly createId: (prefix: string) => string;
 };
@@ -27,6 +29,7 @@ export function createApp(overrides: Partial<AppDependencies> = {}): AepApplicat
   return {
     runtime: overrides.runtime ?? new FakeAgentRuntime(),
     runs: overrides.runs ?? new InMemoryRunStore(),
+    usage: overrides.usage ?? new InMemoryUsageLedger(),
     now: overrides.now ?? defaultNow,
     createId: overrides.createId ?? defaultCreateId,
   };

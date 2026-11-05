@@ -1,6 +1,9 @@
 import { spawnSync } from "node:child_process";
+import { getAuthStatus } from "./auth-status.js";
 import type { AepApplication } from "./create-app.js";
+import { listAccountModels } from "./list-models.js";
 import { listNonTerminalRuns } from "./recovery.js";
+import { formatUsageDisplay } from "./usage-ledger.js";
 
 export type DoctorCheck = {
   readonly name: string;
@@ -55,8 +58,8 @@ function checkOs(): DoctorCheck {
 }
 
 /**
- * Initial doctor skeleton: local host + injected runtime health.
- * Cursor SDK auth/catalog/DB details arrive in later tasks.
+ * Expanded doctor: host, auth, catalog, usage capability, recoveries.
+ * Live Cursor SDK network checks remain opt-in.
  */
 export async function runDoctor(app: AepApplication): Promise<DoctorReport> {
   const checks: DoctorCheck[] = [checkNode(), checkGit(), checkOs()];
@@ -75,11 +78,35 @@ export async function runDoctor(app: AepApplication): Promise<DoctorReport> {
       : "runtime reports sandboxReady=false (fail closed for local agents)",
   });
 
-  const catalog = await app.runtime.discoverModels();
+  const auth = await getAuthStatus(app);
   checks.push({
-    name: "model_catalog",
-    ok: catalog.models.length > 0,
-    detail: `${catalog.models.length} model(s) in runtime catalog snapshot`,
+    name: "auth_status",
+    ok: auth.ok,
+    detail: `${auth.runtimeId}; credentialConfigured=${auth.credentialConfigured}; billingOwner=${auth.billingOwner}; ${auth.detail}`,
+  });
+
+  try {
+    const models = await listAccountModels(app);
+    checks.push({
+      name: "model_catalog",
+      ok: models.models.length > 0,
+      detail: `snapshot ${models.snapshotId}: ${models.models.length} model(s)`,
+    });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    checks.push({
+      name: "model_catalog",
+      ok: false,
+      detail,
+    });
+  }
+
+  const sampleUsage = await app.runtime.getUsage("__doctor_probe__");
+  const usageView = formatUsageDisplay(sampleUsage);
+  checks.push({
+    name: "usage_metering",
+    ok: true,
+    detail: `probe status=${usageView.status} costLabel=${usageView.costLabel}; ${usageView.note}`,
   });
 
   checks.push({
@@ -96,6 +123,16 @@ export async function runDoctor(app: AepApplication): Promise<DoctorReport> {
       nonTerminal.length === 0
         ? "no non-terminal workflow runs"
         : `${nonTerminal.length} non-terminal run(s); use aep recoveries / aep resume`,
+  });
+
+  const ledgerCount = app.usage.list().length;
+  checks.push({
+    name: "usage_ledger",
+    ok: true,
+    detail:
+      ledgerCount === 0
+        ? "no usage ledger entries yet"
+        : `${ledgerCount} usage ledger entr${ledgerCount === 1 ? "y" : "ies"} in memory`,
   });
 
   checks.push({

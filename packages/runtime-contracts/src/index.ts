@@ -5,6 +5,7 @@ export type {
   AgentExecutionInput,
   AgentExecutionResult,
   AgentSandboxOptions,
+  AgentSettingSource,
   AgentToolPolicy,
   ResumeExecutionInput,
 } from "./execution.js";
@@ -16,6 +17,10 @@ export {
 export type {
   ModelCatalogEntry,
   ModelCatalogSnapshot,
+  ModelParameterDefinition,
+  ModelParameterValueOption,
+  ModelParamSelection,
+  ModelVariantInfo,
   RuntimeHealth,
 } from "./models.js";
 export type { UsageResult, UsageTokenCounts } from "./usage.js";

@@ -9,8 +9,15 @@
 | [ADR-005](./ADR-005-sqlite-driver.md)            | SQLite driver and migrations               | Accepted                        |
 | ADR-006                                          | AEP DB vs Cursor SDK session store         | Pending (AEP-020+)              |
 | ADR-007                                          | Roles, sessions, reviewer assurance        | Pending                         |
-| ADR-008                                          | Git worktree lifecycle                     | Pending                         |
-| ADR-009                                          | Command runner and security policy         | Pending                         |
+| [ADR-021](./ADR-021-worktree-manager.md)         | Git worktree lifecycle (AEP-031)           | Accepted (was ADR-008)          |
+| [ADR-022](./ADR-022-safe-command-runner.md)      | Safe command runner (AEP-032)              | Accepted (was ADR-009)          |
+| [ADR-023](./ADR-023-path-diff-policy.md)         | Path / diff policy (AEP-033)               | Accepted                        |
+| [ADR-024](./ADR-024-security-baseline.md)        | Security baseline (AEP-034)                | Accepted                        |
+| [ADR-025](./ADR-025-cursor-agent-runtime.md)     | CursorAgentRuntime (AEP-040)               | Accepted                        |
+| [ADR-026](./ADR-026-stream-normalization.md)     | Stream normalize / cancel (AEP-041)        | Accepted                        |
+| [ADR-027](./ADR-027-model-routing.md)            | Model catalog / role routing (AEP-042)     | Accepted                        |
+| [ADR-028](./ADR-028-session-resume.md)           | Session resume / permissions (AEP-043)     | Accepted                        |
+| [ADR-029](./ADR-029-usage-metering.md)           | Usage metering / diagnostics (AEP-044)     | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |
@@ -20,3 +27,5 @@
 | [ADR-016](./ADR-016-cli-bootstrap.md)            | CLI + application DI (AEP-013)             | Accepted                        |
 | [ADR-017](./ADR-017-persistence-sqlite.md)       | Persistence package / migrations (AEP-020) | Accepted                        |
 | [ADR-018](./ADR-018-event-journal.md)            | Event journal + projections (AEP-021)      | Accepted                        |
+| [ADR-019](./ADR-019-recovery-resume.md)          | Recovery / resume after restart (AEP-022)  | Accepted                        |
+| [ADR-020](./ADR-020-repository-inspector.md)     | Repository inspector (AEP-030)             | Accepted                        |

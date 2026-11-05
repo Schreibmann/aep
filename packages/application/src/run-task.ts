@@ -6,6 +6,12 @@ import {
   reduceWorkflowAll,
   type WorkflowEvent,
 } from "@aep/domain";
+import {
+  ModelCatalogCache,
+  ModelRoutingError,
+  type ModelSelectionResult,
+  resolveModelForRole,
+} from "@aep/model-routing";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
 import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
@@ -64,10 +70,20 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     throw new ApplicationError("runtime_unavailable", `Agent runtime not ready: ${health.detail}`);
   }
 
-  const catalog = await app.runtime.discoverModels();
-  const model = catalog.models[0];
-  if (model === undefined) {
-    throw new ApplicationError("no_models", "Runtime model catalog is empty");
+  const catalogCache = new ModelCatalogCache();
+  let selection: ModelSelectionResult;
+  try {
+    const catalog = await catalogCache.refresh(() => app.runtime.discoverModels());
+    selection = resolveModelForRole({
+      roleId: "planner",
+      catalog,
+      config: { roles: [] },
+    });
+  } catch (error) {
+    if (error instanceof ModelRoutingError) {
+      throw new ApplicationError(error.code, error.message);
+    }
+    throw error;
   }
 
   const executionId = app.createId("exec");
@@ -75,10 +91,12 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     executionId,
     roleId: "planner",
     prompt: task,
-    modelId: model.id,
+    modelId: selection.modelId,
     cwd: input.cwd,
     tools: PLANNER_TOOLS,
     sandbox: { enabled: true },
+    catalogSnapshotId: selection.catalogSnapshotId,
+    ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
   });
 
   const startedAt = app.now();
@@ -86,10 +104,13 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     executionId,
     opaqueAgentId: handle.agentId,
     roleId: "planner",
-    modelId: model.id,
+    modelId: selection.modelId,
     cwd: input.cwd,
     tools: PLANNER_TOOLS,
     startedAt,
+    catalogSnapshotId: selection.catalogSnapshotId,
+    modelSelectionRationale: selection.rationale,
+    ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
   };
 
   // Crash window: non-terminal + running snapshot persisted before wait completes.
@@ -107,6 +128,19 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
   app.runs.save(checkpoint);
 
   const result = await handle.wait();
+  const usageObservedAt = app.now();
+  const usage = await app.runtime.getUsage(executionId);
+  app.usage.save({
+    id: app.createId("usage"),
+    executionId,
+    roleId: "planner",
+    modelId: selection.modelId,
+    catalogSnapshotId: selection.catalogSnapshotId,
+    usage,
+    source: "cursor_sdk_get_usage",
+    observedAt: usageObservedAt,
+  });
+
   if (result.status === "failed") {
     throw new ApplicationError(
       result.code ?? "execution_failed",

@@ -1,5 +1,11 @@
 export type { BackupResult } from "./backup.js";
 export { backupDatabase, exportDatabaseFile } from "./backup.js";
+export type { InsertCatalogSnapshotInput } from "./catalog-snapshots.js";
+export {
+  getLatestModelCatalogSnapshot,
+  getModelCatalogSnapshotById,
+  insertModelCatalogSnapshot,
+} from "./catalog-snapshots.js";
 export { decodeWorkflowEvent, encodeWorkflowEvent } from "./event-codec.js";
 export type {
   AppendJournalEventInput,
@@ -37,3 +43,13 @@ export {
   workflowRuns,
   workspaces,
 } from "./schema.js";
+export type {
+  InsertUsageRecordInput,
+  SeedRoleExecutionInput,
+  UsageRecordRow,
+} from "./usage-records.js";
+export {
+  insertUsageRecord,
+  listUsageRecordsForRun,
+  seedRoleExecution,
+} from "./usage-records.js";
