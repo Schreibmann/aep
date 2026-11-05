@@ -1,15 +1,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import type { AepProjectConfig } from "../config-schema.js";
-import { detectStack } from "../detect-stack.js";
-import { ProjectProfilesError } from "../errors.js";
-import { tryLoadAepProjectConfig } from "../load-config.js";
+import type { AepProjectConfig } from "../config-schema.ts";
+import { detectStack } from "../detect-stack.ts";
+import { ProjectProfilesError } from "../errors.ts";
+import { tryLoadAepProjectConfig } from "../load-config.ts";
 import {
   type ChecklistItem,
   formatChecklistForReviewer,
   selectReviewerChecklist,
-} from "../reviewer-checklist.js";
-import type { PackageManagerId, StackDetectionReport } from "../types.js";
+} from "../reviewer-checklist.ts";
+import type { PackageManagerId, StackDetectionReport } from "../types.ts";
 
 export const REACT_TS_VITE_PROFILE_ID = "react-ts-vite" as const;
 

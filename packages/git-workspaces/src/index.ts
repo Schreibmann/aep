@@ -1,19 +1,19 @@
-export { buildAepBranchName, buildWorktreeDirectoryName } from "./branch-names.js";
-export { GitWorkspacesError } from "./errors.js";
-export { runGit } from "./git-exec.js";
+export { buildAepBranchName, buildWorktreeDirectoryName } from "./branch-names.ts";
+export { GitWorkspacesError } from "./errors.ts";
+export { runGit } from "./git-exec.ts";
 export {
   inspectRepository,
   isWorkingTreeDirty,
   parentDirectory,
   resolveGitRoot,
-} from "./inspect.js";
+} from "./inspect.ts";
 export type {
   PathPolicyInput,
   PathPolicyLimits,
   PathPolicyResult,
   PathPolicyViolation,
-} from "./path-policy.js";
-export { evaluatePathPolicy, normalizeWorktreeRelativePath } from "./path-policy.js";
+} from "./path-policy.ts";
+export { evaluatePathPolicy, normalizeWorktreeRelativePath } from "./path-policy.ts";
 export type {
   DirtyEntry,
   GitRemote,
@@ -22,12 +22,12 @@ export type {
   RepositoryInspection,
   SubmoduleEntry,
   SymlinkEntry,
-} from "./types.js";
-export type { CreateManagedWorktreeInput, RemoveManagedWorktreeInput } from "./worktree-manager.js";
+} from "./types.ts";
+export type { CreateManagedWorktreeInput, RemoveManagedWorktreeInput } from "./worktree-manager.ts";
 export {
   createManagedWorktree,
   removeManagedWorktree,
   validateWorktreeBelongsToRepo,
-} from "./worktree-manager.js";
-export type { ManagedWorktreeMetadata } from "./worktree-meta.js";
-export { WorktreeMetadataStore } from "./worktree-meta.js";
+} from "./worktree-manager.ts";
+export type { ManagedWorktreeMetadata } from "./worktree-meta.ts";
+export { WorktreeMetadataStore } from "./worktree-meta.ts";

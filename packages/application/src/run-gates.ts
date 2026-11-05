@@ -11,9 +11,9 @@ import {
   QualityGatesError,
   runQualityGates,
 } from "@aep/quality-gates";
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
-import type { StoredRun } from "./run-store.js";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
+import type { StoredRun } from "./run-store.ts";
 
 export type RunGatesInput = {
   readonly runId: string;

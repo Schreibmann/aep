@@ -4,7 +4,7 @@ import {
   type PolicyVerdict,
   type RiskLevel,
 } from "@aep/domain";
-import type { RiskClassification } from "./classify-risk.js";
+import type { RiskClassification } from "./classify-risk.ts";
 
 export type PolicyRequirements = {
   readonly requireHumanApproval: boolean;

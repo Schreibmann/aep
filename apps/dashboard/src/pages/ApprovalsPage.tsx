@@ -4,7 +4,7 @@ import {
   DashboardApiError,
   type PendingApprovalView,
   parseApprovals,
-} from "../api/client.js";
+} from "../api/client.ts";
 
 type Props = {
   readonly client: ApiClient;

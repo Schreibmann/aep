@@ -1,6 +1,6 @@
 import { FakeAgentRuntime } from "@aep/runtime-contracts";
 import { describe, expect, it } from "vitest";
-import { createApp, runReview, runTask } from "../src/index.js";
+import { createApp, runReview, runTask } from "../src/index.ts";
 
 const approveReport = JSON.stringify({
   verdict: "approve",

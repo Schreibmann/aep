@@ -1,5 +1,5 @@
 import type { AgentEvent } from "@aep/runtime-contracts";
-import type { SdkStreamEvent } from "./sdk-bridge.js";
+import type { SdkStreamEvent } from "./sdk-bridge.ts";
 
 export type NormalizeContext = {
   readonly executionId: string;
@@ -125,11 +125,13 @@ function extractAssistantText(message: object): string {
 export class BoundedEventBuffer {
   private readonly items: AgentEvent[] = [];
   private dropped = 0;
+  private readonly maxEvents: number;
 
-  constructor(private readonly maxEvents: number) {
+  constructor(maxEvents: number) {
     if (!Number.isInteger(maxEvents) || maxEvents < 1) {
       throw new Error("maxEvents must be a positive integer");
     }
+    this.maxEvents = maxEvents;
   }
 
   push(event: AgentEvent): void {

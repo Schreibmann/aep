@@ -30,10 +30,10 @@ import {
 } from "@aep/policy";
 import { assembleKnowledgeContext } from "@aep/project-profiles";
 import { assertPlannerReadOnly } from "@aep/security";
-import { beginRoleUnderBudget, finishRoleUsage } from "./budget.js";
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
-import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
+import { beginRoleUnderBudget, finishRoleUsage } from "./budget.ts";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
+import type { ExecutionSnapshot, StoredRun } from "./run-store.ts";
 
 function projectContextWithKnowledge(cwd: string, task: string): string {
   const base = gatherPlannerProjectContext(cwd);

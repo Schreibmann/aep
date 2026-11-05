@@ -1,8 +1,8 @@
 import { lstatSync, readFileSync, realpathSync, type Stats } from "node:fs";
 import { isAbsolute, join, normalize, relative, resolve, sep } from "node:path";
-import { GitWorkspacesError } from "./errors.js";
-import { runGit } from "./git-exec.js";
-import { inspectRepository } from "./inspect.js";
+import { GitWorkspacesError } from "./errors.ts";
+import { runGit } from "./git-exec.ts";
+import { inspectRepository } from "./inspect.ts";
 
 export type PathPolicyLimits = {
   readonly maxChangedFiles: number;

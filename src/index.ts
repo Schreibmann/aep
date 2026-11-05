@@ -3,4 +3,4 @@ export {
   getWorkspaceName,
   TARGET_NODE_MAJOR,
   WORKSPACE_NAME,
-} from "./workspace.js";
+} from "./workspace.ts";

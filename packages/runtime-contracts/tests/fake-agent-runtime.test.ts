@@ -5,7 +5,7 @@ import {
   createFeatureUnavailableUsage,
   FakeAgentRuntime,
   type FakeExecutionScript,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const SANDBOX = { enabled: true } as const;
 

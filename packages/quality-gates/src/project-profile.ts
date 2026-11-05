@@ -1,11 +1,11 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { QualityGatesError } from "./errors.js";
+import { QualityGatesError } from "./errors.ts";
 import {
   createGatesFromProjectProfile,
   type GateDefinition,
   type ProjectGateProfile,
-} from "./gate-definitions.js";
+} from "./gate-definitions.ts";
 
 function readPackageScripts(cwd: string): Readonly<Record<string, string>> {
   const packagePath = join(cwd, "package.json");

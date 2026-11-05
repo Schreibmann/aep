@@ -7,8 +7,8 @@ import {
   type Stats,
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { GitWorkspacesError } from "./errors.js";
-import { runGit } from "./git-exec.js";
+import { GitWorkspacesError } from "./errors.ts";
+import { runGit } from "./git-exec.ts";
 import type {
   DirtyEntry,
   GitRemote,
@@ -17,7 +17,7 @@ import type {
   RepositoryInspection,
   SubmoduleEntry,
   SymlinkEntry,
-} from "./types.js";
+} from "./types.ts";
 
 const LOCKFILE_NAMES = [
   "pnpm-lock.yaml",

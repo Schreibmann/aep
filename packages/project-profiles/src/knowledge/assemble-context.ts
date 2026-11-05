@@ -1,5 +1,5 @@
-import { listKnowledgePacks } from "./build-packs.js";
-import type { KnowledgePack, KnowledgePackCategory } from "./schema.js";
+import { listKnowledgePacks } from "./build-packs.ts";
+import type { KnowledgePack, KnowledgePackCategory } from "./schema.ts";
 
 /** Rough token estimate (~4 chars/token) for budget accounting. */
 export function estimateTokens(text: string): number {

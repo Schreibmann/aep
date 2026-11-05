@@ -13,9 +13,9 @@ import {
   type WorkflowRunStatus,
 } from "@aep/domain";
 import { asc, eq, max } from "drizzle-orm";
-import { decodeWorkflowEvent, encodeWorkflowEvent } from "./event-codec.js";
-import type { AepDatabase } from "./open-database.js";
-import { evidence, projects, tasks, workflowEvents, workflowRuns } from "./schema.js";
+import { decodeWorkflowEvent, encodeWorkflowEvent } from "./event-codec.ts";
+import type { AepDatabase } from "./open-database.ts";
+import { evidence, projects, tasks, workflowEvents, workflowRuns } from "./schema.ts";
 
 export const EVENT_SCHEMA_VERSION = 1;
 export const EVENT_PAYLOAD_VERSION = 1;

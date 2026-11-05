@@ -12,7 +12,7 @@ export type {
   UsageRecord,
   WorkflowRun,
   Workspace,
-} from "./entities.js";
+} from "./entities.ts";
 export {
   createAgentSession,
   createApproval,
@@ -28,7 +28,7 @@ export {
   createWorkflowRun,
   createWorkspace,
   withWorkflowRunStatus,
-} from "./entities.js";
+} from "./entities.ts";
 export type {
   AgentSessionId,
   ApprovalId,
@@ -42,7 +42,7 @@ export type {
   UsageRecordId,
   WorkflowRunId,
   WorkspaceId,
-} from "./ids.js";
+} from "./ids.ts";
 export {
   createAgentSessionId,
   createApprovalId,
@@ -57,7 +57,7 @@ export {
   createWorkflowRunId,
   createWorkspaceId,
   DomainError,
-} from "./ids.js";
+} from "./ids.ts";
 export type {
   AuditActor,
   CostStatus,
@@ -70,7 +70,7 @@ export type {
   RoleId,
   TerminalWorkflowRunStatus,
   WorkflowRunStatus,
-} from "./statuses.js";
+} from "./statuses.ts";
 export {
   AUDIT_ACTORS,
   COST_STATUSES,
@@ -84,7 +84,7 @@ export {
   ROLE_IDS,
   TERMINAL_WORKFLOW_RUN_STATUSES,
   WORKFLOW_RUN_STATUSES,
-} from "./statuses.js";
+} from "./statuses.ts";
 export type {
   CompletionEvidence,
   RoleExecutionCounts,
@@ -92,7 +92,7 @@ export type {
   WorkflowEvent,
   WorkflowEventType,
   WorkflowLimits,
-} from "./workflow/index.js";
+} from "./workflow/index.ts";
 export {
   createInitialWorkflowAggregate,
   createWorkflowLimits,
@@ -101,4 +101,4 @@ export {
   reduceWorkflow,
   reduceWorkflowAll,
   WORKFLOW_EVENT_TYPES,
-} from "./workflow/index.js";
+} from "./workflow/index.ts";

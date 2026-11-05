@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type ApiClient, DashboardApiError, parseRuns, type RunSummary } from "../api/client.js";
+import { type ApiClient, DashboardApiError, parseRuns, type RunSummary } from "../api/client.ts";
 
 type Props = {
   readonly client: ApiClient;

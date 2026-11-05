@@ -4,7 +4,7 @@ import {
   getWorkspaceName,
   TARGET_NODE_MAJOR,
   WORKSPACE_NAME,
-} from "../src/workspace.js";
+} from "../src/workspace.ts";
 
 describe("workspace bootstrap", () => {
   it("exposes the repository codename", () => {

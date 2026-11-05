@@ -1,4 +1,4 @@
-export type { FixPromptInput, ImplementerProfile } from "./implementer-profile.js";
+export type { FixPromptInput, ImplementerProfile } from "./implementer-profile.ts";
 export {
   buildFixPromptFromFindings,
   createImplementerProfile,
@@ -6,48 +6,48 @@ export {
   IMPLEMENTER_PROFILE_ID,
   IMPLEMENTER_PROFILE_PROMPT_VERSION,
   IMPLEMENTER_SYSTEM_PROMPT,
-} from "./implementer-profile.js";
+} from "./implementer-profile.ts";
 export type {
   BoundedReviewParseInput,
   BoundedReviewParseResult,
-} from "./parse-review-with-retry.js";
-export { parseReviewReportWithBoundedRetry } from "./parse-review-with-retry.js";
+} from "./parse-review-with-retry.ts";
+export { parseReviewReportWithBoundedRetry } from "./parse-review-with-retry.ts";
 export type {
   BoundedPlanParseInput,
   BoundedPlanParseResult,
-} from "./parse-with-retry.js";
+} from "./parse-with-retry.ts";
 export {
   buildPlanRepairPrompt,
   parsePlannerPlanWithBoundedRetry,
-} from "./parse-with-retry.js";
+} from "./parse-with-retry.ts";
 export type {
   PlannerPlan,
   PlanParseFailure,
   PlanParseResult,
   PlanParseSuccess,
-} from "./plan-schema.js";
+} from "./plan-schema.ts";
 export {
   extractJsonObjectText,
   PLAN_SCHEMA_VERSION,
   parsePlannerPlan,
   plannerPlanSchema,
-} from "./plan-schema.js";
-export type { AgentProfile, PlannerPromptInput } from "./planner-profile.js";
+} from "./plan-schema.ts";
+export type { AgentProfile, PlannerPromptInput } from "./planner-profile.ts";
 export {
   buildPlannerUserPrompt,
   createPlannerProfile,
   PLANNER_PROFILE_ID,
   PLANNER_PROFILE_PROMPT_VERSION,
   PLANNER_SYSTEM_PROMPT,
-} from "./planner-profile.js";
-export { gatherPlannerProjectContext } from "./project-context.js";
+} from "./planner-profile.ts";
+export { gatherPlannerProjectContext } from "./project-context.ts";
 export type {
   ReviewFinding,
   ReviewParseFailure,
   ReviewParseResult,
   ReviewParseSuccess,
   ReviewReport,
-} from "./review-schema.js";
+} from "./review-schema.ts";
 export {
   advisoryFindings,
   blockingFindings,
@@ -57,8 +57,8 @@ export {
   reviewFindingSchema,
   reviewReportSchema,
   withReviewAssurance,
-} from "./review-schema.js";
-export type { ReviewerProfile, ReviewerPromptInput } from "./reviewer-profile.js";
+} from "./review-schema.ts";
+export type { ReviewerProfile, ReviewerPromptInput } from "./reviewer-profile.ts";
 export {
   buildReviewerUserPrompt,
   buildReviewRepairPrompt,
@@ -66,4 +66,4 @@ export {
   REVIEWER_PROFILE_ID,
   REVIEWER_PROFILE_PROMPT_VERSION,
   REVIEWER_SYSTEM_PROMPT,
-} from "./reviewer-profile.js";
+} from "./reviewer-profile.ts";

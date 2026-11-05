@@ -11,8 +11,8 @@ import {
 import type { RunCommandInput, RunCommandResult } from "@aep/process";
 import { FakeAgentRuntime } from "@aep/runtime-contracts";
 import { afterEach, describe, expect, it } from "vitest";
-import { createApp, runBoundedFixCycle } from "../src/index.js";
-import { findOutOfScopePaths } from "../src/scope-check.js";
+import { createApp, runBoundedFixCycle } from "../src/index.ts";
+import { findOutOfScopePaths } from "../src/scope-check.ts";
 
 const tempDirs: string[] = [];
 

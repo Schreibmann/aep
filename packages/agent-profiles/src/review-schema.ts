@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { extractJsonObjectText } from "./plan-schema.js";
+import { extractJsonObjectText } from "./plan-schema.ts";
 
 export const REVIEW_SCHEMA_VERSION = "1";
 

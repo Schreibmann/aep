@@ -1,9 +1,9 @@
 import { createServer, type Server } from "node:http";
 import type { AepApplication } from "@aep/application";
-import { assertAuthorized, type LocalApiAuth } from "./auth.js";
-import { assertSafeBindHost, isLoopbackHost } from "./bind.js";
-import { LocalApiError } from "./errors.js";
-import { handleApiRequest } from "./router.js";
+import { assertAuthorized, type LocalApiAuth } from "./auth.ts";
+import { assertSafeBindHost, isLoopbackHost } from "./bind.ts";
+import { LocalApiError } from "./errors.ts";
+import { handleApiRequest } from "./router.ts";
 
 export type LocalApiServerOptions = {
   readonly app: AepApplication;

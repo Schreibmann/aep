@@ -1,5 +1,5 @@
 import type { AgentExecutionHandle, AgentRuntime } from "@aep/runtime-contracts";
-import { type PlannerPlan, parsePlannerPlan } from "./plan-schema.js";
+import { type PlannerPlan, parsePlannerPlan } from "./plan-schema.ts";
 
 export type BoundedPlanParseInput = {
   readonly runtime: AgentRuntime;

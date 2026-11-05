@@ -1,9 +1,25 @@
+import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createApp } from "@aep/application";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { buildProgram } from "../src/program.js";
+import { buildProgram } from "../src/program.ts";
+
+function readCliPackageVersion(): string {
+  const packageJsonPath = join(dirname(fileURLToPath(import.meta.url)), "..", "package.json");
+  const parsed: unknown = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+  if (
+    typeof parsed === "object" &&
+    parsed !== null &&
+    "version" in parsed &&
+    typeof parsed.version === "string"
+  ) {
+    return parsed.version;
+  }
+  throw new Error("CLI package.json is missing a string version");
+}
 
 const tempDirs: string[] = [];
 
@@ -78,7 +94,7 @@ describe("@aep/cli", () => {
 
   it("prints version", async () => {
     const result = await runCli(["--version"]);
-    expect(result.stdout.trim()).toBe("0.0.0");
+    expect(result.stdout.trim()).toBe(readCliPackageVersion());
   });
 
   it("emits doctor JSON", async () => {

@@ -1,5 +1,5 @@
 import type { RiskLevel } from "@aep/domain";
-import { pathMatchesAny } from "./path-match.js";
+import { pathMatchesAny } from "./path-match.ts";
 import {
   ALL_RISK_RULES,
   CRITICAL_PATH_RULES,
@@ -8,7 +8,7 @@ import {
   HIGH_TASK_KEYWORD_RULES,
   LOW_PATH_RULES,
   type RiskRule,
-} from "./risk-rules.js";
+} from "./risk-rules.ts";
 
 export type MatchedRiskRule = {
   readonly id: string;

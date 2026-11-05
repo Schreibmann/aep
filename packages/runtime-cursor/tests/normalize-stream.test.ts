@@ -1,12 +1,12 @@
 import { MemoryCredentialSource } from "@aep/security";
 import { describe, expect, it } from "vitest";
-import { CursorAgentRuntime } from "../src/cursor-agent-runtime.js";
+import { CursorAgentRuntime } from "../src/cursor-agent-runtime.ts";
 import {
   BoundedEventBuffer,
   normalizeSdkStreamEvent,
   parseUnknownSdkMessage,
-} from "../src/normalize.js";
-import { StubCursorSdkBridge } from "../src/stub-sdk-bridge.js";
+} from "../src/normalize.ts";
+import { StubCursorSdkBridge } from "../src/stub-sdk-bridge.ts";
 
 describe("AEP-041 stream normalization", () => {
   it("drops thinking and never throws on unknown envelopes", () => {

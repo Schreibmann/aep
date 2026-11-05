@@ -1,4 +1,4 @@
-import { SecurityError } from "./errors.js";
+import { SecurityError } from "./errors.ts";
 
 export type SecureCredentialSource = {
   /** Returns API key material for SDK options only — never logged. */
@@ -9,7 +9,11 @@ export type SecureCredentialSource = {
  * In-memory credential source for tests / DI. Production wires OS secret store later.
  */
 export class MemoryCredentialSource implements SecureCredentialSource {
-  constructor(private readonly cursorApiKey: string | undefined) {}
+  private readonly cursorApiKey: string | undefined;
+
+  constructor(cursorApiKey: string | undefined) {
+    this.cursorApiKey = cursorApiKey;
+  }
 
   getCursorApiKey(): string | undefined {
     return this.cursorApiKey;

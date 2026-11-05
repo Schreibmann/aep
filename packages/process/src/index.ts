@@ -1,9 +1,9 @@
-export { ProcessError } from "./errors.js";
-export { killProcessTree } from "./kill-tree.js";
-export { redactText, truncateUtf8 } from "./redact.js";
-export { type TrustedCommand, TrustedCommandRegistry } from "./registry.js";
+export { ProcessError } from "./errors.ts";
+export { killProcessTree } from "./kill-tree.ts";
+export { redactText, truncateUtf8 } from "./redact.ts";
+export { type TrustedCommand, TrustedCommandRegistry } from "./registry.ts";
 export {
   type RunCommandInput,
   type RunCommandResult,
   SafeCommandRunner,
-} from "./runner.js";
+} from "./runner.ts";

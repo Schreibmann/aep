@@ -1,4 +1,4 @@
-import { QualityGatesError } from "./errors.js";
+import { QualityGatesError } from "./errors.ts";
 
 export type GateClass =
   | "lint"

@@ -1,5 +1,5 @@
 import { basename, isAbsolute, normalize } from "node:path";
-import { ProcessError } from "./errors.js";
+import { ProcessError } from "./errors.ts";
 
 export type TrustedCommand = {
   readonly id: string;

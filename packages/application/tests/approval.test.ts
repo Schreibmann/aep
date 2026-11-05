@@ -5,7 +5,7 @@ import {
   decidePlanApproval,
   requireExplicitApprovalDecision,
   runTask,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 describe("AEP-052 human approval service", () => {
   it("approves a plan bound to the plan hash and advances workflow", async () => {

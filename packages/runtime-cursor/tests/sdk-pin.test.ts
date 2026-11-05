@@ -7,7 +7,7 @@ import {
   CURSOR_SDK_MIN_NODE,
   CURSOR_SDK_PACKAGE,
   CURSOR_SDK_PINNED_VERSION,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const require = createRequire(import.meta.url);
 const pkgRoot = join(dirname(fileURLToPath(import.meta.url)), "..");

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import type { AgentToolPolicy } from "@aep/runtime-contracts";
 import { REVIEWER_TOOLS } from "@aep/security";
-import { REVIEW_SCHEMA_VERSION } from "./review-schema.js";
+import { REVIEW_SCHEMA_VERSION } from "./review-schema.ts";
 
 export const REVIEWER_PROFILE_ID = "reviewer" as const;
 

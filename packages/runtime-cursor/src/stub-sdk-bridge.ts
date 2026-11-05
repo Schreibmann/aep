@@ -8,7 +8,7 @@ import type {
   SdkRunResult,
   SdkSandboxProbe,
   SdkStreamEvent,
-} from "./sdk-bridge.js";
+} from "./sdk-bridge.ts";
 
 export type StubSdkBridgeOptions = {
   readonly sandboxSupported?: boolean;

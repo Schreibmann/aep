@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { GitWorkspacesError } from "./errors.js";
+import { GitWorkspacesError } from "./errors.ts";
 
 export type GitExecResult = {
   readonly stdout: string;

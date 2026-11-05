@@ -2,8 +2,8 @@ import {
   AEP_CONFIG_VERSION,
   type AepProjectConfig,
   parseAepProjectConfig,
-} from "./config-schema.js";
-import type { StackDetectionReport } from "./types.js";
+} from "./config-schema.ts";
+import type { StackDetectionReport } from "./types.ts";
 
 export type BuildConfigInput = {
   readonly detection: StackDetectionReport;

@@ -4,13 +4,13 @@ import type {
   ModelCatalogSnapshot,
   ModelParamSelection,
 } from "@aep/runtime-contracts";
-import { type CostPolicy, DEFAULT_COST_POLICY, isModelCostAllowed } from "./cost-policy.js";
-import { ModelRoutingError } from "./errors.js";
+import { type CostPolicy, DEFAULT_COST_POLICY, isModelCostAllowed } from "./cost-policy.ts";
+import { ModelRoutingError } from "./errors.ts";
 import {
   type ModelRoutingConfig,
   preferenceForRole,
   type RoleModelPreference,
-} from "./role-policy.js";
+} from "./role-policy.ts";
 
 export type ModelSelectionResult = {
   readonly modelId: string;

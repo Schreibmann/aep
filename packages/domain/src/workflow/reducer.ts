@@ -1,13 +1,13 @@
-import type { WorkflowRun } from "../entities.js";
-import { DomainError } from "../ids.js";
-import type { RoleId, WorkflowRunStatus } from "../statuses.js";
-import { isTerminalWorkflowRunStatus } from "../statuses.js";
-import type { WorkflowEvent } from "./events.js";
+import type { WorkflowRun } from "../entities.ts";
+import { DomainError } from "../ids.ts";
+import type { RoleId, WorkflowRunStatus } from "../statuses.ts";
+import { isTerminalWorkflowRunStatus } from "../statuses.ts";
+import type { WorkflowEvent } from "./events.ts";
 import {
   type CompletionEvidence,
   hasRequiredCompletionEvidence,
   type WorkflowAggregate,
-} from "./state.js";
+} from "./state.ts";
 
 function requireIsoTimestamp(value: string, label: string): string {
   const trimmed = value.trim();

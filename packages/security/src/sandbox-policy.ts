@@ -1,5 +1,5 @@
 import type { AgentSandboxOptions } from "@aep/runtime-contracts";
-import { SecurityError } from "./errors.js";
+import { SecurityError } from "./errors.ts";
 
 export type SandboxReadiness = {
   readonly sandboxSupported: boolean;

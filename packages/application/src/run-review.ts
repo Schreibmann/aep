@@ -16,9 +16,9 @@ import {
 } from "@aep/model-routing";
 import { resolveReactTsViteProfile } from "@aep/project-profiles";
 import { assertReviewerReadOnly } from "@aep/security";
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
-import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
+import type { ExecutionSnapshot, StoredRun } from "./run-store.ts";
 
 function architectureRulesForCwd(cwd: string, explicit?: string): string {
   if (explicit !== undefined && explicit.trim().length > 0) {

@@ -14,12 +14,12 @@ import {
   resolveModelForRole,
 } from "@aep/model-routing";
 import type { GateCommandRunner } from "@aep/quality-gates";
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
-import { runGatesForRun } from "./run-gates.js";
-import { runReview } from "./run-review.js";
-import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
-import { findOutOfScopePaths } from "./scope-check.js";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
+import { runGatesForRun } from "./run-gates.ts";
+import { runReview } from "./run-review.ts";
+import type { ExecutionSnapshot, StoredRun } from "./run-store.ts";
+import { findOutOfScopePaths } from "./scope-check.ts";
 
 export type FixCycleStopReason =
   | "approved"

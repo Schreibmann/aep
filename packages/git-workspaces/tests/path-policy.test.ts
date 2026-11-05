@@ -8,7 +8,7 @@ import {
   GitWorkspacesError,
   normalizeWorktreeRelativePath,
   runGit,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const tempDirs: string[] = [];
 

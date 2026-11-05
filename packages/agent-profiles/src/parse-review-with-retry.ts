@@ -1,5 +1,5 @@
 import type { AgentExecutionHandle, AgentRuntime } from "@aep/runtime-contracts";
-import { parseReviewReport, type ReviewReport } from "./review-schema.js";
+import { parseReviewReport, type ReviewReport } from "./review-schema.ts";
 
 export type BoundedReviewParseInput = {
   readonly runtime: AgentRuntime;

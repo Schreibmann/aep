@@ -1,7 +1,7 @@
 import { COST_STATUSES, type CostStatus, DomainError } from "@aep/domain";
 import { eq } from "drizzle-orm";
-import type { AepDatabase } from "./open-database.js";
-import { roleExecutions, usageRecords, workflowRuns } from "./schema.js";
+import type { AepDatabase } from "./open-database.ts";
+import { roleExecutions, usageRecords, workflowRuns } from "./schema.ts";
 
 export type InsertUsageRecordInput = {
   readonly id: string;

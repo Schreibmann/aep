@@ -1,6 +1,6 @@
 {
   "name": "@aep/policy",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Deterministic risk classification and approval policy rules",
   "type": "module",

@@ -1,11 +1,11 @@
 import type { RunCommandInput, RunCommandResult } from "@aep/process";
-import { QualityGatesError } from "./errors.js";
+import { QualityGatesError } from "./errors.ts";
 import {
   assertTrustedGateArgv,
   type GateDefinition,
   type GatePhase,
   selectGatesForPhase,
-} from "./gate-definitions.js";
+} from "./gate-definitions.ts";
 
 export type GateCommandRunner = {
   run(input: RunCommandInput): Promise<RunCommandResult>;

@@ -1,7 +1,7 @@
 import { MemoryCredentialSource } from "@aep/security";
 import { describe, expect, it } from "vitest";
-import { CursorAgentRuntime } from "../src/cursor-agent-runtime.js";
-import { StubCursorSdkBridge } from "../src/stub-sdk-bridge.js";
+import { CursorAgentRuntime } from "../src/cursor-agent-runtime.ts";
+import { StubCursorSdkBridge } from "../src/stub-sdk-bridge.ts";
 
 const SANDBOX = { enabled: true } as const;
 const TOOLS = {
@@ -109,7 +109,7 @@ describe("CursorAgentRuntime (AEP-040)", () => {
   });
 
   it("does not export SDK types from the public package surface", async () => {
-    const exported = await import("../src/index.js");
+    const exported = await import("../src/index.ts");
     expect(exported.CursorAgentRuntime).toBeTypeOf("function");
     expect(exported.StubCursorSdkBridge).toBeTypeOf("function");
     expect(exported.CURSOR_SDK_PINNED_VERSION).toBe("1.3.1");

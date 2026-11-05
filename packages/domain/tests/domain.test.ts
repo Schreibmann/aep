@@ -13,7 +13,7 @@ import {
   DomainError,
   isTerminalWorkflowRunStatus,
   withWorkflowRunStatus,
-} from "../src/index.js";
+} from "../src/index.ts";
 
 const NOW = "2026-11-04T20:00:00.000Z";
 

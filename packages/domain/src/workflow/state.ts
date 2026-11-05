@@ -1,8 +1,8 @@
-import type { WorkflowRun } from "../entities.js";
-import { createWorkflowRun } from "../entities.js";
-import type { ProjectId, TaskId, WorkflowRunId } from "../ids.js";
-import type { RoleId } from "../statuses.js";
-import { createWorkflowLimits, type WorkflowLimits } from "./limits.js";
+import type { WorkflowRun } from "../entities.ts";
+import { createWorkflowRun } from "../entities.ts";
+import type { ProjectId, TaskId, WorkflowRunId } from "../ids.ts";
+import type { RoleId } from "../statuses.ts";
+import { createWorkflowLimits, type WorkflowLimits } from "./limits.ts";
 
 export type CompletionEvidence = {
   readonly planApproved: boolean;

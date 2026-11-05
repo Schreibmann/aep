@@ -1,6 +1,6 @@
 {
   "name": "@aep/agent-profiles",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Versioned Agent Profiles, structured output schemas, and plan validation",
   "type": "module",

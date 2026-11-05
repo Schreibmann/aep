@@ -1,6 +1,6 @@
 import { listOptimizeForValues, ModelCatalogCache } from "@aep/model-routing";
-import type { AepApplication } from "./create-app.js";
-import { ApplicationError } from "./errors.js";
+import type { AepApplication } from "./create-app.ts";
+import { ApplicationError } from "./errors.ts";
 
 export type ListedModel = {
   readonly id: string;

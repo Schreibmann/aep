@@ -1,8 +1,8 @@
 import { spawn } from "node:child_process";
-import { ProcessError } from "./errors.js";
-import { killProcessTree } from "./kill-tree.js";
-import { redactText, truncateUtf8 } from "./redact.js";
-import type { TrustedCommandRegistry } from "./registry.js";
+import { ProcessError } from "./errors.ts";
+import { killProcessTree } from "./kill-tree.ts";
+import { redactText, truncateUtf8 } from "./redact.ts";
+import type { TrustedCommandRegistry } from "./registry.ts";
 
 export type RunCommandInput = {
   readonly commandId: string;
@@ -69,7 +69,11 @@ function buildEnv(
 }
 
 export class SafeCommandRunner {
-  constructor(private readonly registry: TrustedCommandRegistry) {}
+  private readonly registry: TrustedCommandRegistry;
+
+  constructor(registry: TrustedCommandRegistry) {
+    this.registry = registry;
+  }
 
   async run(input: RunCommandInput): Promise<RunCommandResult> {
     if (!Number.isFinite(input.timeoutMs) || input.timeoutMs <= 0) {

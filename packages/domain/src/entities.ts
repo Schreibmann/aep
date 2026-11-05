@@ -11,8 +11,8 @@ import type {
   UsageRecordId,
   WorkflowRunId,
   WorkspaceId,
-} from "./ids.js";
-import { DomainError } from "./ids.js";
+} from "./ids.ts";
+import { DomainError } from "./ids.ts";
 import type {
   AuditActor,
   CostStatus,
@@ -24,8 +24,8 @@ import type {
   RoleExecutionStatus,
   RoleId,
   WorkflowRunStatus,
-} from "./statuses.js";
-import { isTerminalWorkflowRunStatus } from "./statuses.js";
+} from "./statuses.ts";
+import { isTerminalWorkflowRunStatus } from "./statuses.ts";
 
 function requireIsoTimestamp(value: string, label: string): string {
   const trimmed = value.trim();

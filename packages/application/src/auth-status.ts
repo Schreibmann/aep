@@ -1,4 +1,4 @@
-import type { AepApplication } from "./create-app.js";
+import type { AepApplication } from "./create-app.ts";
 
 export type BillingOwnerHint = "unknown" | "user_plan" | "team_service_account";
 

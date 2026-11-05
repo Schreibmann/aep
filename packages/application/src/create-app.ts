@@ -1,6 +1,6 @@
 import { type AgentRuntime, FakeAgentRuntime } from "@aep/runtime-contracts";
-import { InMemoryRunStore } from "./run-store.js";
-import { InMemoryUsageLedger } from "./usage-ledger.js";
+import { InMemoryRunStore } from "./run-store.ts";
+import { InMemoryUsageLedger } from "./usage-ledger.ts";
 
 export type AppDependencies = {
   readonly runtime: AgentRuntime;

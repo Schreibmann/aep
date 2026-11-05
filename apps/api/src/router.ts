@@ -9,13 +9,13 @@ import {
   listAccountModels,
   requireExplicitApprovalDecision,
 } from "@aep/application";
-import { LocalApiError } from "./errors.js";
+import { LocalApiError } from "./errors.ts";
 import {
   listRunSummaries,
   listUsageForRun,
   listWorktreesFromRuns,
   projectRunTimeline,
-} from "./read-models.js";
+} from "./read-models.ts";
 
 export type RouteResult = {
   readonly status: number;
