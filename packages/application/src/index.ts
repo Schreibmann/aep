@@ -1,3 +1,5 @@
+export type { AuthStatusReport, BillingOwnerHint } from "./auth-status.js";
+export { getAuthStatus } from "./auth-status.js";
 export type { AepApplication, AppDependencies } from "./create-app.js";
 export { createApp } from "./create-app.js";
 export type { DoctorCheck, DoctorReport } from "./doctor.js";
@@ -5,6 +7,8 @@ export { runDoctor } from "./doctor.js";
 export { ApplicationError } from "./errors.js";
 export type { InitProjectResult } from "./init-project.js";
 export { initProject } from "./init-project.js";
+export type { ListedModel, ModelsReport } from "./list-models.js";
+export { listAccountModels } from "./list-models.js";
 export type {
   RecoveryClassification,
   ResumeRunInput,
@@ -22,3 +26,13 @@ export type { RunTaskInput, RunTaskResult } from "./run-task.js";
 export { runTask } from "./run-task.js";
 export type { RunStatusView } from "./status.js";
 export { getRunStatus } from "./status.js";
+export type {
+  UsageDisplay,
+  UsageLedgerEntry,
+  UsageSource,
+} from "./usage-ledger.js";
+export {
+  formatUsageDisplay,
+  InMemoryUsageLedger,
+  redactProviderError,
+} from "./usage-ledger.js";

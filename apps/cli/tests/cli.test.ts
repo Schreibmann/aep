@@ -61,6 +61,18 @@ describe("@aep/cli", () => {
     expect(result.stdout).toContain("status");
     expect(result.stdout).toContain("resume");
     expect(result.stdout).toContain("recoveries");
+    expect(result.stdout).toContain("auth");
+    expect(result.stdout).toContain("models");
+  });
+
+  it("emits auth status and models JSON", async () => {
+    const auth = await runCli(["--json", "auth", "status"]);
+    expect(auth.code).toBe(0);
+    expect(auth.stdout).toContain("fake");
+
+    const models = await runCli(["--json", "models"]);
+    expect(models.code).toBe(0);
+    expect(models.stdout).toContain("fake-model");
   });
 
   it("prints version", async () => {

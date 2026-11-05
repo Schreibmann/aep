@@ -128,6 +128,19 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
   app.runs.save(checkpoint);
 
   const result = await handle.wait();
+  const usageObservedAt = app.now();
+  const usage = await app.runtime.getUsage(executionId);
+  app.usage.save({
+    id: app.createId("usage"),
+    executionId,
+    roleId: "planner",
+    modelId: selection.modelId,
+    catalogSnapshotId: selection.catalogSnapshotId,
+    usage,
+    source: "cursor_sdk_get_usage",
+    observedAt: usageObservedAt,
+  });
+
   if (result.status === "failed") {
     throw new ApplicationError(
       result.code ?? "execution_failed",
