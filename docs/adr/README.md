@@ -22,6 +22,7 @@
 | [ADR-031](./ADR-031-risk-policy-engine.md)       | Risk / policy engine (AEP-051)             | Accepted                        |
 | [ADR-032](./ADR-032-human-approval-service.md)   | Human approval service (AEP-052)           | Accepted                        |
 | [ADR-033](./ADR-033-quality-gate-engine.md)      | Quality Gate Engine (AEP-053)              | Accepted                        |
+| [ADR-034](./ADR-034-reviewer-role.md)            | Reviewer role / findings (AEP-054)         | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |

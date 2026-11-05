@@ -1,4 +1,9 @@
 export type {
+  BoundedReviewParseInput,
+  BoundedReviewParseResult,
+} from "./parse-review-with-retry.js";
+export { parseReviewReportWithBoundedRetry } from "./parse-review-with-retry.js";
+export type {
   BoundedPlanParseInput,
   BoundedPlanParseResult,
 } from "./parse-with-retry.js";
@@ -27,3 +32,29 @@ export {
   PLANNER_SYSTEM_PROMPT,
 } from "./planner-profile.js";
 export { gatherPlannerProjectContext } from "./project-context.js";
+export type {
+  ReviewFinding,
+  ReviewParseFailure,
+  ReviewParseResult,
+  ReviewParseSuccess,
+  ReviewReport,
+} from "./review-schema.js";
+export {
+  advisoryFindings,
+  blockingFindings,
+  isBlockingFinding,
+  parseReviewReport,
+  REVIEW_SCHEMA_VERSION,
+  reviewFindingSchema,
+  reviewReportSchema,
+  withReviewAssurance,
+} from "./review-schema.js";
+export type { ReviewerProfile, ReviewerPromptInput } from "./reviewer-profile.js";
+export {
+  buildReviewerUserPrompt,
+  buildReviewRepairPrompt,
+  createReviewerProfile,
+  REVIEWER_PROFILE_ID,
+  REVIEWER_PROFILE_PROMPT_VERSION,
+  REVIEWER_SYSTEM_PROMPT,
+} from "./reviewer-profile.js";
