@@ -14,6 +14,7 @@
 | [ADR-023](./ADR-023-path-diff-policy.md)         | Path / diff policy (AEP-033)               | Accepted                        |
 | [ADR-024](./ADR-024-security-baseline.md)        | Security baseline (AEP-034)                | Accepted                        |
 | [ADR-025](./ADR-025-cursor-agent-runtime.md)     | CursorAgentRuntime (AEP-040)               | Accepted                        |
+| [ADR-026](./ADR-026-stream-normalization.md)     | Stream normalize / cancel (AEP-041)        | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |

@@ -1,4 +1,5 @@
 import { Agent, Cursor, type SDKAgent, type ToolName } from "@cursor/sdk";
+import { parseUnknownSdkMessage } from "./normalize.js";
 import type {
   CursorSdkBridge,
   SdkAgentHandle,
@@ -19,34 +20,6 @@ function toToolNames(names: ReadonlyArray<string>): ToolName[] {
   return out;
 }
 
-function mapStreamEvent(message: unknown): SdkStreamEvent {
-  if (typeof message !== "object" || message === null || !("type" in message)) {
-    return { type: "unknown", rawType: "non_object" };
-  }
-  const typeValue = message.type;
-  if (typeValue === "assistant") {
-    return { type: "assistant", text: "" };
-  }
-  if (typeValue === "tool_call") {
-    const name = "name" in message && typeof message.name === "string" ? message.name : "unknown";
-    const status =
-      "status" in message && typeof message.status === "string" ? message.status : "unknown";
-    return { type: "tool_call", name, status };
-  }
-  if (typeValue === "status") {
-    const status =
-      "status" in message && typeof message.status === "string" ? message.status : "unknown";
-    return { type: "status", status };
-  }
-  if (typeValue === "thinking") {
-    return { type: "thinking", text: "" };
-  }
-  return {
-    type: "unknown",
-    rawType: typeof typeValue === "string" ? typeValue : "unknown",
-  };
-}
-
 function wrapSdkAgent(agent: SDKAgent): SdkAgentHandle {
   return {
     agentId: agent.agentId,
@@ -57,7 +30,7 @@ function wrapSdkAgent(agent: SDKAgent): SdkAgentHandle {
         agentId: run.agentId,
         async *stream(): AsyncIterable<SdkStreamEvent> {
           for await (const message of run.stream()) {
-            yield mapStreamEvent(message);
+            yield parseUnknownSdkMessage(message);
           }
         },
         async wait(): Promise<SdkRunResult> {

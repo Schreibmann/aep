@@ -17,6 +17,8 @@ export type StubSdkBridgeOptions = {
   readonly streamEvents?: ReadonlyArray<SdkStreamEvent>;
   readonly createError?: { readonly code: string; readonly message: string };
   readonly usageStatus?: "ok" | "feature_unavailable" | "unknown";
+  /** Artificial wait latency for cancel/timeout contract tests. */
+  readonly waitDelayMs?: number;
 };
 
 /**
@@ -32,6 +34,7 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
   private readonly streamEvents: ReadonlyArray<SdkStreamEvent>;
   private readonly createError: { readonly code: string; readonly message: string } | undefined;
   private readonly usageStatus: "ok" | "feature_unavailable" | "unknown";
+  private readonly waitDelayMs: number;
   private nextAgentSeq = 1;
 
   constructor(options: StubSdkBridgeOptions = {}) {
@@ -50,6 +53,7 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
     ];
     this.createError = options.createError;
     this.usageStatus = options.usageStatus ?? "unknown";
+    this.waitDelayMs = options.waitDelayMs ?? 0;
   }
 
   async probeSandbox(): Promise<SdkSandboxProbe> {
@@ -118,6 +122,11 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
             }
           },
           async wait(): Promise<SdkRunResult> {
+            if (bridge.waitDelayMs > 0) {
+              await new Promise<void>((resolve) => {
+                setTimeout(resolve, bridge.waitDelayMs);
+              });
+            }
             if (cancelled) {
               return { id: runId, status: "cancelled" };
             }

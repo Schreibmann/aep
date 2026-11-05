@@ -16,63 +16,62 @@ import {
   type SecureCredentialSource,
 } from "@aep/security";
 import { LiveCursorSdkBridge } from "./live-sdk-bridge.js";
-import type { CursorSdkBridge, SdkAgentHandle, SdkRunHandle } from "./sdk-bridge.js";
+import { BoundedEventBuffer, normalizeSdkStreamEvent } from "./normalize.js";
+import type {
+  CursorSdkBridge,
+  SdkAgentHandle,
+  SdkRunHandle,
+  SdkStreamEvent,
+} from "./sdk-bridge.js";
 
 export type CursorAgentRuntimeOptions = {
   readonly credentials: SecureCredentialSource;
   readonly sdk?: CursorSdkBridge;
   readonly now?: () => string;
+  /** Max retained normalized events per execution (ordered; oldest dropped). */
+  readonly maxBufferedEvents?: number;
+  /** Optional default wait timeout; cancel+fail closed when exceeded. */
+  readonly defaultTimeoutMs?: number;
 };
 
 type ActiveExecution = {
   readonly agent: SdkAgentHandle;
   readonly run: SdkRunHandle;
-  readonly events: AgentEvent[];
+  readonly buffer: BoundedEventBuffer;
   cancelled: boolean;
+  timedOut: boolean;
   waitPromise?: Promise<AgentExecutionResult>;
 };
 
 function mapSdkEventsToAgentEvents(
-  executionId: string,
-  agentId: string,
-  runId: string,
-  events: AsyncIterable<{
-    readonly type: string;
-    readonly text?: string;
-    readonly name?: string;
-    readonly status?: string;
-    readonly rawType?: string;
-  }>,
+  ctx: { readonly executionId: string; readonly agentId: string; readonly runId: string },
+  events: AsyncIterable<SdkStreamEvent>,
+  buffer: BoundedEventBuffer,
+  isCancelled: () => boolean,
 ): AsyncIterable<AgentEvent> {
   return {
     async *[Symbol.asyncIterator](): AsyncIterator<AgentEvent> {
-      yield { type: "started", executionId, agentId, runId };
+      const started: AgentEvent = {
+        type: "started",
+        executionId: ctx.executionId,
+        agentId: ctx.agentId,
+        runId: ctx.runId,
+      };
+      buffer.push(started);
+      yield started;
       for await (const event of events) {
-        if (event.type === "assistant" && event.text !== undefined) {
-          yield { type: "assistant_text", executionId, text: event.text };
+        if (isCancelled()) {
+          const cancelled: AgentEvent = { type: "cancelled", executionId: ctx.executionId };
+          buffer.push(cancelled);
+          yield cancelled;
+          return;
+        }
+        const normalized = normalizeSdkStreamEvent(ctx, event);
+        if (normalized === undefined) {
           continue;
         }
-        if (event.type === "tool_call" && event.name !== undefined) {
-          yield {
-            type: "tool_activity",
-            executionId,
-            toolName: event.name,
-            status: event.status ?? "unknown",
-          };
-          continue;
-        }
-        if (event.type === "status" && event.status !== undefined) {
-          yield { type: "status", executionId, status: event.status };
-          continue;
-        }
-        // thinking / unknown: skip private reasoning; emit opaque status only for unknown
-        if (event.type === "unknown") {
-          yield {
-            type: "status",
-            executionId,
-            status: `unknown_event:${event.rawType ?? "n/a"}`,
-          };
-        }
+        buffer.push(normalized);
+        yield normalized;
       }
     },
   };
@@ -86,12 +85,24 @@ export class CursorAgentRuntime implements AgentRuntime {
   private readonly credentials: SecureCredentialSource;
   private readonly sdk: CursorSdkBridge;
   private readonly now: () => string;
+  private readonly maxBufferedEvents: number;
+  private readonly defaultTimeoutMs: number | undefined;
   private readonly active = new Map<string, ActiveExecution>();
 
   constructor(options: CursorAgentRuntimeOptions) {
     this.credentials = options.credentials;
     this.sdk = options.sdk ?? new LiveCursorSdkBridge();
     this.now = options.now ?? (() => new Date().toISOString());
+    this.maxBufferedEvents = options.maxBufferedEvents ?? 500;
+    this.defaultTimeoutMs = options.defaultTimeoutMs;
+  }
+
+  /**
+   * Important normalized events retained for the execution (ordered).
+   * Empty after wait() finalizes and the agent is disposed.
+   */
+  getRecordedEvents(executionId: string): ReadonlyArray<AgentEvent> {
+    return this.active.get(executionId)?.buffer.snapshot() ?? [];
   }
 
   async checkAvailability(): Promise<RuntimeHealth> {
@@ -244,8 +255,9 @@ export class CursorAgentRuntime implements AgentRuntime {
     const active: ActiveExecution = {
       agent,
       run,
-      events: [],
+      buffer: new BoundedEventBuffer(this.maxBufferedEvents),
       cancelled: false,
+      timedOut: false,
     };
     this.active.set(executionId, active);
 
@@ -261,21 +273,52 @@ export class CursorAgentRuntime implements AgentRuntime {
       executionId,
       agentId: agent.agentId,
       runId: run.id,
-      stream: () => mapSdkEventsToAgentEvents(executionId, agent.agentId, run.id, run.stream()),
+      stream: () =>
+        mapSdkEventsToAgentEvents(
+          { executionId, agentId: agent.agentId, runId: run.id },
+          run.stream(),
+          active.buffer,
+          () => active.cancelled || active.timedOut,
+        ),
       wait: async (): Promise<AgentExecutionResult> => {
         if (active.waitPromise !== undefined) {
           return active.waitPromise;
         }
         active.waitPromise = (async () => {
+          let timer: ReturnType<typeof setTimeout> | undefined;
           try {
             if (active.cancelled) {
+              active.buffer.push({ type: "cancelled", executionId });
               return { executionId, status: "cancelled" };
             }
-            const result = await run.wait();
+
+            const waitPromise = run.wait();
+            const result =
+              this.defaultTimeoutMs === undefined
+                ? await waitPromise
+                : await Promise.race([
+                    waitPromise,
+                    new Promise<never>((_, reject) => {
+                      timer = setTimeout(() => {
+                        active.timedOut = true;
+                        void run.cancel();
+                        reject(new Error(`execution_timeout:${this.defaultTimeoutMs}`));
+                      }, this.defaultTimeoutMs);
+                    }),
+                  ]);
+
             if (result.status === "cancelled" || active.cancelled) {
+              active.buffer.push({ type: "cancelled", executionId });
               return { executionId, status: "cancelled" };
             }
             if (result.status === "error") {
+              const failed: AgentEvent = {
+                type: "failed",
+                executionId,
+                safeMessage: result.errorMessage ?? "Cursor agent run failed",
+                ...(result.errorCode === undefined ? {} : { code: result.errorCode }),
+              };
+              active.buffer.push(failed);
               return {
                 executionId,
                 status: "failed",
@@ -283,12 +326,37 @@ export class CursorAgentRuntime implements AgentRuntime {
                 safeMessage: result.errorMessage ?? "Cursor agent run failed",
               };
             }
+            const completed: AgentEvent = {
+              type: "completed",
+              executionId,
+              ...(result.resultText === undefined ? {} : { resultText: result.resultText }),
+            };
+            active.buffer.push(completed);
             return {
               executionId,
               status: "completed",
               ...(result.resultText === undefined ? {} : { resultText: result.resultText }),
             };
+          } catch (error) {
+            if (active.timedOut) {
+              active.buffer.push({
+                type: "failed",
+                executionId,
+                code: "execution_timeout",
+                safeMessage: "Cursor agent execution timed out",
+              });
+              return {
+                executionId,
+                status: "failed",
+                code: "execution_timeout",
+                safeMessage: "Cursor agent execution timed out",
+              };
+            }
+            throw error;
           } finally {
+            if (timer !== undefined) {
+              clearTimeout(timer);
+            }
             await finalize();
           }
         })();

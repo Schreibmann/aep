@@ -12,6 +12,11 @@ export const CURSOR_SDK_MIN_NODE = "22.13.0";
 
 export type { CursorAgentRuntimeOptions } from "./cursor-agent-runtime.js";
 export { CursorAgentRuntime } from "./cursor-agent-runtime.js";
+export {
+  BoundedEventBuffer,
+  normalizeSdkStreamEvent,
+  parseUnknownSdkMessage,
+} from "./normalize.js";
 export type { CursorSdkBridge } from "./sdk-bridge.js";
 export type { StubSdkBridgeOptions } from "./stub-sdk-bridge.js";
 export { StubCursorSdkBridge } from "./stub-sdk-bridge.js";
