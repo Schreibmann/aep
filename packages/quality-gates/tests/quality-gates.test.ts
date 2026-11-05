@@ -129,4 +129,19 @@ describe("AEP-053 quality gate engine", () => {
     expect(gates.some((gate) => gate.argv.includes(modelHint))).toBe(false);
     expect(gates[0]?.argv).toEqual(["run", "lint"]);
   });
+
+  it("runs only explicitly approved script names when allowlist is set", () => {
+    const gates = createGatesFromProjectProfile({
+      packageManagerCommandId: "pnpm",
+      scripts: {
+        lint: "eslint .",
+        typecheck: "tsc -p tsconfig.json --noEmit",
+        test: "vitest run",
+        build: "vite build",
+      },
+      approvedScriptNames: ["lint", "typecheck"],
+    });
+    expect(gates.map((gate) => gate.id)).toEqual(["lint", "typecheck"]);
+    expect(gates.every((gate) => gate.argv[0] === "run")).toBe(true);
+  });
 });

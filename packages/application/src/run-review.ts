@@ -14,10 +14,27 @@ import {
   type ModelSelectionResult,
   resolveModelForRole,
 } from "@aep/model-routing";
+import { resolveReactTsViteProfile } from "@aep/project-profiles";
 import { assertReviewerReadOnly } from "@aep/security";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
 import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
+
+function architectureRulesForCwd(cwd: string, explicit?: string): string {
+  if (explicit !== undefined && explicit.trim().length > 0) {
+    return explicit;
+  }
+  try {
+    const profile = resolveReactTsViteProfile(cwd);
+    const checklist = profile.checklistText.trim();
+    if (checklist.length > 0) {
+      return `Follow AEP security and scope rules.\n\n${checklist}`;
+    }
+  } catch {
+    // Project may not be a Node package; fall through.
+  }
+  return "Follow AEP security and scope rules.";
+}
 
 export type RunReviewInput = {
   readonly runId: string;
@@ -115,7 +132,7 @@ export async function runReview(
     changedFiles: input.changedFiles ?? stored.plan.touchedPaths,
     diffSummary: input.diffSummary ?? "(diff not attached; inspect changed files with read tools)",
     gateEvidenceJson,
-    architectureRules: input.architectureRules ?? "Follow AEP security and scope rules.",
+    architectureRules: architectureRulesForCwd(input.cwd, input.architectureRules),
   });
 
   let activeExecutionId = app.createId("exec");

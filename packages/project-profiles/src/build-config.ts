@@ -75,28 +75,28 @@ export function renderProjectConfigYaml(config: AepProjectConfig): string {
   }
   lines.push("limits:", `  maxFixCycles: ${config.limits.maxFixCycles}`);
   lines.push("gates:");
-  lines.push("  approvedScriptNames:");
   if (config.gates.approvedScriptNames.length === 0) {
-    lines.push("    []");
+    lines.push("  approvedScriptNames: []");
   } else {
+    lines.push("  approvedScriptNames:");
     for (const name of config.gates.approvedScriptNames) {
       lines.push(`    - ${JSON.stringify(name)}`);
     }
   }
-  lines.push("  pendingConfirmation:");
   if (config.gates.pendingConfirmation.length === 0) {
-    lines.push("    []");
+    lines.push("  pendingConfirmation: []");
   } else {
+    lines.push("  pendingConfirmation:");
     for (const name of config.gates.pendingConfirmation) {
       lines.push(`    - ${JSON.stringify(name)}`);
     }
   }
   lines.push("models:");
   lines.push("  allowPotentialExtraCharge: false");
-  lines.push("  allowlistedModelIds:");
   if (config.models.allowlistedModelIds.length === 0) {
-    lines.push("    []");
+    lines.push("  allowlistedModelIds: []");
   } else {
+    lines.push("  allowlistedModelIds:");
     for (const id of config.models.allowlistedModelIds) {
       lines.push(`    - ${JSON.stringify(id)}`);
     }
@@ -106,10 +106,10 @@ export function renderProjectConfigYaml(config: AepProjectConfig): string {
     if (config.detection.packageName !== undefined) {
       lines.push(`  packageName: ${JSON.stringify(config.detection.packageName)}`);
     }
-    lines.push("  frameworks:");
     if (config.detection.frameworks.length === 0) {
-      lines.push("    []");
+      lines.push("  frameworks: []");
     } else {
+      lines.push("  frameworks:");
       for (const id of config.detection.frameworks) {
         lines.push(`    - ${JSON.stringify(id)}`);
       }

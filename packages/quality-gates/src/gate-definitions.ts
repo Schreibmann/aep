@@ -74,6 +74,11 @@ const SCRIPT_GATE_MAP: ReadonlyArray<{
 export type ProjectGateProfile = {
   readonly packageManagerCommandId: "pnpm" | "npm" | "yarn";
   readonly scripts: Readonly<Record<string, string>>;
+  /**
+   * When set, only these package.json script names may become gates.
+   * Pending / unapproved scripts are never executed.
+   */
+  readonly approvedScriptNames?: ReadonlyArray<string>;
 };
 
 /**
@@ -84,10 +89,20 @@ export function createGatesFromProjectProfile(
   profile: ProjectGateProfile,
 ): ReadonlyArray<GateDefinition> {
   const scriptNames = new Set(Object.keys(profile.scripts));
+  const approved =
+    profile.approvedScriptNames === undefined ? undefined : new Set(profile.approvedScriptNames);
   const gates: GateDefinition[] = [];
 
   for (const mapping of SCRIPT_GATE_MAP) {
-    const matched = mapping.scriptNames.find((name) => scriptNames.has(name));
+    const matched = mapping.scriptNames.find((name) => {
+      if (!scriptNames.has(name)) {
+        return false;
+      }
+      if (approved !== undefined && !approved.has(name)) {
+        return false;
+      }
+      return true;
+    });
     if (matched === undefined) {
       continue;
     }

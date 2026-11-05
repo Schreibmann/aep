@@ -1,5 +1,6 @@
 import { reduceWorkflowAll } from "@aep/domain";
 import { SafeCommandRunner } from "@aep/process";
+import { tryLoadAepProjectConfig } from "@aep/project-profiles";
 import {
   createGateCommandRegistry,
   type GateCommandRunner,
@@ -47,9 +48,13 @@ export async function runGatesForRun(
   }
 
   const phase = input.phase ?? "fast";
+  const config = tryLoadAepProjectConfig(input.cwd);
   let definitions: ReadonlyArray<GateDefinition>;
   try {
-    definitions = loadGateDefinitions(input.cwd);
+    definitions = loadGateDefinitions(
+      input.cwd,
+      config === undefined ? undefined : { approvedScriptNames: config.gates.approvedScriptNames },
+    );
   } catch (error) {
     if (error instanceof QualityGatesError) {
       throw new ApplicationError(error.code, error.message);

@@ -52,16 +52,29 @@ function detectPackageManagerCommandId(cwd: string): ProjectGateProfile["package
   return "npm";
 }
 
+export type LoadProjectGateProfileOptions = {
+  readonly approvedScriptNames?: ReadonlyArray<string>;
+};
+
 /**
  * Load a trusted gate profile from the project directory (package.json + lockfile).
  */
-export function loadProjectGateProfile(cwd: string): ProjectGateProfile {
+export function loadProjectGateProfile(
+  cwd: string,
+  options?: LoadProjectGateProfileOptions,
+): ProjectGateProfile {
   return {
     packageManagerCommandId: detectPackageManagerCommandId(cwd),
     scripts: readPackageScripts(cwd),
+    ...(options?.approvedScriptNames === undefined
+      ? {}
+      : { approvedScriptNames: options.approvedScriptNames }),
   };
 }
 
-export function loadGateDefinitions(cwd: string): ReadonlyArray<GateDefinition> {
-  return createGatesFromProjectProfile(loadProjectGateProfile(cwd));
+export function loadGateDefinitions(
+  cwd: string,
+  options?: LoadProjectGateProfileOptions,
+): ReadonlyArray<GateDefinition> {
+  return createGatesFromProjectProfile(loadProjectGateProfile(cwd, options));
 }
