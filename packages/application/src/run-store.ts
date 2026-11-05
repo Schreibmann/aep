@@ -1,6 +1,6 @@
 import type { PlannerPlan } from "@aep/agent-profiles";
 import type { RoleId, WorkflowAggregate } from "@aep/domain";
-import type { RiskPolicyResult } from "@aep/policy";
+import type { PendingApproval, RecordedApproval, RiskPolicyResult } from "@aep/policy";
 import type { AgentToolPolicy, ModelParamSelection } from "@aep/runtime-contracts";
 
 /**
@@ -49,6 +49,9 @@ export type StoredRun = {
   readonly planSchemaVersion?: string;
   /** Deterministic risk/policy evaluation (AEP-051). */
   readonly policy?: RiskPolicyResult;
+  /** Pending human approval bound to a subject hash (AEP-052). */
+  readonly pendingApproval?: PendingApproval;
+  readonly approvals?: ReadonlyArray<RecordedApproval>;
   readonly recoveryOutcome?: RecoveryOutcome;
   readonly createdAt: string;
   readonly updatedAt: string;

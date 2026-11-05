@@ -1,4 +1,16 @@
 export type {
+  ApprovalDecision,
+  ApprovalSubjectKind,
+  PendingApproval,
+  RecordedApproval,
+  SubjectHashCheck,
+} from "./approval-binding.js";
+export {
+  APPROVAL_SUBJECT_KINDS,
+  checkSubjectHashUnchanged,
+  hashApprovalSubject,
+} from "./approval-binding.js";
+export type {
   MatchedRiskRule,
   RiskClassification,
   RiskClassifyInput,

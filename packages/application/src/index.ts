@@ -1,3 +1,5 @@
+export type { DecideApprovalInput, DecideApprovalResult } from "./approve-plan.js";
+export { decidePlanApproval, requireExplicitApprovalDecision } from "./approve-plan.js";
 export type { AuthStatusReport, BillingOwnerHint } from "./auth-status.js";
 export { getAuthStatus } from "./auth-status.js";
 export type { AepApplication, AppDependencies } from "./create-app.js";

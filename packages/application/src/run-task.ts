@@ -20,7 +20,12 @@ import {
   type ModelSelectionResult,
   resolveModelForRole,
 } from "@aep/model-routing";
-import { classifyRisk, evaluateRiskPolicy, type RiskPolicyResult } from "@aep/policy";
+import {
+  classifyRisk,
+  evaluateRiskPolicy,
+  hashApprovalSubject,
+  type RiskPolicyResult,
+} from "@aep/policy";
 import { assertPlannerReadOnly } from "@aep/security";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
@@ -240,6 +245,8 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
 
   const stored = app.runs.get(runId);
   const execution = stored?.execution;
+  const planHash = hashApprovalSubject(parsed.plan);
+  const awaitingApproval = aggregate.run.status === "awaiting_plan_approval";
   const next: StoredRun = {
     runId,
     taskDescription: task,
@@ -253,6 +260,16 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     plannerProfileVersionHash: profile.profileVersionHash,
     planSchemaVersion: profile.schemaVersion,
     policy,
+    ...(awaitingApproval
+      ? {
+          pendingApproval: {
+            kind: "plan" as const,
+            subjectHash: planHash,
+            scope: `plan:${planHash}`,
+            createdAt: app.now(),
+          },
+        }
+      : {}),
     createdAt: at,
     updatedAt: app.now(),
   };

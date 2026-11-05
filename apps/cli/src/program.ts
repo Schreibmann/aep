@@ -5,11 +5,13 @@ import {
   type AepApplication,
   ApplicationError,
   createApp,
+  decidePlanApproval,
   getAuthStatus,
   getRunStatus,
   initProject,
   listAccountModels,
   listNonTerminalRuns,
+  requireExplicitApprovalDecision,
   resumeRun,
   runDoctor,
   runTask,
@@ -206,6 +208,45 @@ export function buildProgram(options: BuildProgramOptions = {}): Command {
           mode,
           status,
           `runId=${status.runId} status=${status.status} recovery=${status.recoveryClassification} task=${status.taskDescription}`,
+        );
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  program
+    .command("approve")
+    .description("Approve or reject a pending plan (bound to plan hash)")
+    .argument("<run-id>", "Workflow run id")
+    .option("--approve", "Approve the pending plan")
+    .option("--reject", "Reject the pending plan")
+    .option("--approver <name>", "Approver identity", "local-user")
+    .option("--rationale <text>", "Decision rationale", "CLI decision")
+    .option("--json", "Machine-readable JSON output")
+    .action(async function approveAction(this: Command, runIdArg: string) {
+      const mode = resolveMode(program, this);
+      const opts = this.opts();
+      try {
+        const approve = opts.approve === true;
+        const reject = opts.reject === true;
+        if (approve && reject) {
+          throw new ApplicationError(
+            "invalid_approval_flags",
+            "Use only one of --approve or --reject",
+          );
+        }
+        requireExplicitApprovalDecision(approve || reject);
+        const result = decidePlanApproval(app, {
+          runId: requireNonEmpty(runIdArg, "run-id"),
+          decision: approve ? "allow" : "deny",
+          decidedBy: requireNonEmpty(String(opts.approver), "approver"),
+          rationale: requireNonEmpty(String(opts.rationale), "rationale"),
+          nonInteractive: true,
+        });
+        writeSuccess(
+          mode,
+          result,
+          `runId=${result.runId} status=${result.status} decision=${result.approval.decision} hash=${result.approval.subjectHash}`,
         );
       } catch (error) {
         reportFailure(mode, error);

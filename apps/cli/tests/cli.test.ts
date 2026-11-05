@@ -59,6 +59,7 @@ describe("@aep/cli", () => {
     expect(result.stdout).toContain("init");
     expect(result.stdout).toContain("run");
     expect(result.stdout).toContain("status");
+    expect(result.stdout).toContain("approve");
     expect(result.stdout).toContain("resume");
     expect(result.stdout).toContain("recoveries");
     expect(result.stdout).toContain("auth");

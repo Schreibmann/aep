@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { classifyRisk, evaluateRiskPolicy, pathMatchesAny } from "../src/index.js";
+import {
+  checkSubjectHashUnchanged,
+  classifyRisk,
+  evaluateRiskPolicy,
+  hashApprovalSubject,
+  pathMatchesAny,
+} from "../src/index.js";
 
 describe("AEP-051 risk and policy engine", () => {
   it("classifies auth/secret/payment/migration/CI/infra paths as high", () => {
@@ -87,5 +93,15 @@ describe("AEP-051 risk and policy engine", () => {
     });
     expect(policy.classification.risk).toBe("medium");
     expect(policy.verdict.decision).toBe("require_approval");
+  });
+
+  it("binds approvals to a stable subject hash", () => {
+    const hashA = hashApprovalSubject({ objective: "x", steps: [1, 2] });
+    const hashB = hashApprovalSubject({ steps: [1, 2], objective: "x" });
+    expect(hashA).toBe(hashB);
+    expect(checkSubjectHashUnchanged(hashA, hashB).ok).toBe(true);
+    expect(checkSubjectHashUnchanged(hashA, hashApprovalSubject({ objective: "y" })).ok).toBe(
+      false,
+    );
   });
 });

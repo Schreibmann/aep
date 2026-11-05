@@ -20,6 +20,7 @@
 | [ADR-029](./ADR-029-usage-metering.md)           | Usage metering / diagnostics (AEP-044)     | Accepted                        |
 | [ADR-030](./ADR-030-planner-structured-plan.md)  | Planner profile / plan schema (AEP-050)    | Accepted                        |
 | [ADR-031](./ADR-031-risk-policy-engine.md)       | Risk / policy engine (AEP-051)             | Accepted                        |
+| [ADR-032](./ADR-032-human-approval-service.md)   | Human approval service (AEP-052)           | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |
