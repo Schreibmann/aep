@@ -15,9 +15,11 @@ import {
   type WorkflowEvent,
 } from "@aep/domain";
 import {
+  DEFAULT_RUN_BUDGET_POLICY,
   ModelCatalogCache,
   ModelRoutingError,
   type ModelSelectionResult,
+  type RunBudgetState,
   resolveModelForRole,
 } from "@aep/model-routing";
 import {
@@ -27,6 +29,7 @@ import {
   type RiskPolicyResult,
 } from "@aep/policy";
 import { assertPlannerReadOnly } from "@aep/security";
+import { beginRoleUnderBudget, finishRoleUsage } from "./budget.js";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
 import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
@@ -46,6 +49,7 @@ export type RunTaskResult = {
   readonly plannerProfileVersionHash?: string;
   readonly planSchemaVersion?: string;
   readonly policy?: RiskPolicyResult;
+  readonly budget?: RunBudgetState;
 };
 
 /**
@@ -103,6 +107,12 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
 
   const projectContext = gatherPlannerProjectContext(input.cwd);
   const userPrompt = buildPlannerUserPrompt({ task, projectContext });
+
+  let budget = beginRoleUnderBudget({
+    state: undefined,
+    policy: DEFAULT_RUN_BUDGET_POLICY,
+    roleId: "planner",
+  });
 
   let activeExecutionId = app.createId("exec");
   let checkpointSaved = false;
@@ -208,6 +218,11 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     source: "cursor_sdk_get_usage",
     observedAt: usageObservedAt,
   });
+  budget = finishRoleUsage({
+    state: budget,
+    policy: DEFAULT_RUN_BUDGET_POLICY,
+    usage,
+  });
 
   if (!parsed.ok) {
     throw new ApplicationError(
@@ -260,6 +275,8 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     plannerProfileVersionHash: profile.profileVersionHash,
     planSchemaVersion: profile.schemaVersion,
     policy,
+    budget,
+    budgetPolicy: DEFAULT_RUN_BUDGET_POLICY,
     ...(awaitingApproval
       ? {
           pendingApproval: {
@@ -282,6 +299,7 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     status: aggregate.run.status,
     resultText: parsed.rawText,
     plan: parsed.plan,
+    budget,
     plannerProfileVersionHash: profile.profileVersionHash,
     planSchemaVersion: profile.schemaVersion,
     policy,

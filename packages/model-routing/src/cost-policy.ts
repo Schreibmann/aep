@@ -12,11 +12,17 @@ export type CostPolicy = {
   readonly mode: "no_unapproved_extra_spend" | "allow_all_catalog_models";
   /** Explicit user approval for potentially chargeable model IDs. */
   readonly approvedExtraSpendModelIds: ReadonlyArray<string>;
+  /**
+   * When true, `extra_spend_possible` models are eligible without per-id approval.
+   * Default false — never silently select a paid fallback.
+   */
+  readonly allowPotentialExtraCharge?: boolean;
 };
 
 export const DEFAULT_COST_POLICY: CostPolicy = {
   mode: "no_unapproved_extra_spend",
   approvedExtraSpendModelIds: [],
+  allowPotentialExtraCharge: false,
 };
 
 export function isModelCostAllowed(entry: ModelCatalogEntry, policy: CostPolicy): boolean {
@@ -24,6 +30,9 @@ export function isModelCostAllowed(entry: ModelCatalogEntry, policy: CostPolicy)
     return true;
   }
   if (entry.billingCategory !== "extra_spend_possible") {
+    return true;
+  }
+  if (policy.allowPotentialExtraCharge === true) {
     return true;
   }
   return policy.approvedExtraSpendModelIds.includes(entry.id);

@@ -2,6 +2,12 @@ export type { DecideApprovalInput, DecideApprovalResult } from "./approve-plan.j
 export { decidePlanApproval, requireExplicitApprovalDecision } from "./approve-plan.js";
 export type { AuthStatusReport, BillingOwnerHint } from "./auth-status.js";
 export { getAuthStatus } from "./auth-status.js";
+export {
+  beginRoleUnderBudget,
+  budgetPolicyOrDefault,
+  budgetStateOrEmpty,
+  finishRoleUsage,
+} from "./budget.js";
 export type { AepApplication, AppDependencies } from "./create-app.js";
 export { createApp } from "./create-app.js";
 export type { DoctorCheck, DoctorReport } from "./doctor.js";

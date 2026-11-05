@@ -1,5 +1,6 @@
 import type { PlannerPlan, ReviewReport } from "@aep/agent-profiles";
 import type { ReviewAssurance, RoleId, WorkflowAggregate } from "@aep/domain";
+import type { RunBudgetPolicy, RunBudgetState } from "@aep/model-routing";
 import type { PendingApproval, RecordedApproval, RiskPolicyResult } from "@aep/policy";
 import type { GateEngineResult } from "@aep/quality-gates";
 import type { AgentToolPolicy, ModelParamSelection } from "@aep/runtime-contracts";
@@ -59,6 +60,9 @@ export type StoredRun = {
   readonly reviewReport?: ReviewReport;
   readonly reviewAssurance?: ReviewAssurance;
   readonly reviewModelId?: string;
+  /** Per-run budget tracker (AEP-056). */
+  readonly budget?: RunBudgetState;
+  readonly budgetPolicy?: RunBudgetPolicy;
   readonly recoveryOutcome?: RecoveryOutcome;
   readonly createdAt: string;
   readonly updatedAt: string;
