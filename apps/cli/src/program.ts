@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createLocalApiAuth, createLocalApiServer, generateLocalApiToken } from "@aep/api";
 import {
   type AepApplication,
   ApplicationError,
@@ -380,6 +381,54 @@ export function buildProgram(options: BuildProgramOptions = {}): Command {
                 )
                 .join("\n"),
         );
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  program
+    .command("serve")
+    .description("Start authenticated loopback local API (dashboard backend)")
+    .option("--host <host>", "Bind host", "127.0.0.1")
+    .option("--port <port>", "Bind port", "7432")
+    .option("--allow-lan", "Allow non-loopback bind (still requires Bearer auth)")
+    .option("--json", "Machine-readable JSON output")
+    .action(async function serveAction(this: Command) {
+      const mode = resolveMode(program, this);
+      const opts = this.opts();
+      try {
+        const host = requireNonEmpty(String(opts.host), "host");
+        const port = Number(opts.port);
+        if (!Number.isInteger(port) || port < 0 || port > 65535) {
+          throw new ApplicationError("invalid_port", "port must be 0..65535");
+        }
+        const token = process.env.AEP_API_TOKEN?.trim() || generateLocalApiToken();
+        const generated = process.env.AEP_API_TOKEN === undefined;
+        const server = createLocalApiServer({
+          app,
+          auth: createLocalApiAuth(token),
+          host,
+          port,
+          allowLan: opts.allowLan === true,
+        });
+        const bound = await server.listen();
+        const payload = {
+          host: bound.host,
+          port: bound.port,
+          allowLan: opts.allowLan === true,
+          tokenGenerated: generated,
+          ...(generated ? { token } : {}),
+        };
+        writeSuccess(
+          mode,
+          payload,
+          generated
+            ? `Listening on http://${bound.host}:${bound.port}\nBearer token (set AEP_API_TOKEN to reuse):\n${token}`
+            : `Listening on http://${bound.host}:${bound.port}\nUsing AEP_API_TOKEN from environment`,
+        );
+        await new Promise<void>(() => {
+          // Keep process alive until interrupted.
+        });
       } catch (error) {
         reportFailure(mode, error);
       }

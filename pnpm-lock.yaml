@@ -30,8 +30,20 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(@types/node@26.6.6)(vite@8.3.5(@types/node@26.6.6))
 
+  apps/api:
+    dependencies:
+      '@aep/application':
+        specifier: workspace:*
+        version: link:../../packages/application
+      '@aep/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
+
   apps/cli:
     dependencies:
+      '@aep/api':
+        specifier: workspace:*
+        version: link:../api
       '@aep/application':
         specifier: workspace:*
         version: link:../../packages/application
