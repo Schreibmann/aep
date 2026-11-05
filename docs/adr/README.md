@@ -18,6 +18,22 @@
 | [ADR-027](./ADR-027-model-routing.md)            | Model catalog / role routing (AEP-042)     | Accepted                        |
 | [ADR-028](./ADR-028-session-resume.md)           | Session resume / permissions (AEP-043)     | Accepted                        |
 | [ADR-029](./ADR-029-usage-metering.md)           | Usage metering / diagnostics (AEP-044)     | Accepted                        |
+| [ADR-030](./ADR-030-planner-structured-plan.md)  | Planner profile / plan schema (AEP-050)    | Accepted                        |
+| [ADR-031](./ADR-031-risk-policy-engine.md)       | Risk / policy engine (AEP-051)             | Accepted                        |
+| [ADR-032](./ADR-032-human-approval-service.md)   | Human approval service (AEP-052)           | Accepted                        |
+| [ADR-033](./ADR-033-quality-gate-engine.md)      | Quality Gate Engine (AEP-053)              | Accepted                        |
+| [ADR-034](./ADR-034-reviewer-role.md)            | Reviewer role / findings (AEP-054)         | Accepted                        |
+| [ADR-035](./ADR-035-bounded-fix-cycle.md)        | Bounded fix cycle (AEP-055)                | Accepted                        |
+| [ADR-036](./ADR-036-cost-budget-enforcement.md)  | Cost / budget enforcement (AEP-056)        | Accepted                        |
+| [ADR-037](./ADR-037-e2e-mvp.md)                  | End-to-end MVP scenario (AEP-057)          | Accepted                        |
+| [ADR-038](./ADR-038-stack-detector.md)           | Stack detector (AEP-060)                   | Accepted                        |
+| [ADR-039](./ADR-039-aep-init.md)                 | aep init setup (AEP-061)                   | Accepted                        |
+| [ADR-040](./ADR-040-react-ts-vite-profile.md)    | React/TS/Vite profile (AEP-062)            | Accepted                        |
+| [ADR-041](./ADR-041-knowledge-packs.md)          | Knowledge packs (AEP-063)                  | Accepted                        |
+| [ADR-042](./ADR-042-local-api.md)                | Local API loopback auth (AEP-070)          | Accepted                        |
+| [ADR-043](./ADR-043-dashboard-skeleton.md)       | Dashboard skeleton (AEP-071)               | Accepted                        |
+| [ADR-044](./ADR-044-live-run-timeline.md)        | Live run timeline (AEP-072)                | Accepted                        |
+| [ADR-045](./ADR-045-economy-dashboard.md)        | Economy dashboard (AEP-073)                | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |

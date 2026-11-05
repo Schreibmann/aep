@@ -47,3 +47,20 @@ export function assertReviewerReadOnly(policy: AgentToolPolicy): void {
     );
   }
 }
+
+export function assertPlannerReadOnly(policy: AgentToolPolicy): void {
+  const forbidden = policy.tools.filter(
+    (tool) => tool === "shell" || tool === "edit" || tool === "mcp" || tool === "task",
+  );
+  if (forbidden.length > 0) {
+    throw new SecurityError(
+      "planner_write_tools",
+      `Planner must not receive write/shell tools: ${forbidden.join(", ")}`,
+    );
+  }
+  for (const name of ["shell", "edit"] as const) {
+    if (!policy.disallowedTools.includes(name)) {
+      throw new SecurityError("planner_write_tools", `Planner must disallow ${name}`);
+    }
+  }
+}

@@ -100,13 +100,30 @@ class FakeExecutionHandle implements AgentExecutionHandle {
   }
 }
 
+const DEFAULT_PLANNER_PLAN_JSON = JSON.stringify({
+  objective: "Complete the requested task",
+  summary: "FakeAgentRuntime default structured plan",
+  assumptions: ["Fixture environment"],
+  touchedPaths: ["src/example.ts"],
+  steps: [{ id: "s1", description: "Implement the change", paths: ["src/example.ts"] }],
+  risks: ["none identified"],
+  gates: [{ id: "test", commandHint: "pnpm test", required: true }],
+  validationCommands: ["pnpm test"],
+  estimate: { complexity: "low" },
+  approvalFlags: {
+    requiresHumanApprovalBeforeWrite: true,
+    mayTouchSecretsOrAuth: false,
+    mayNeedNetwork: false,
+  },
+});
+
 function defaultCompletedScript(executionId: string): FakeExecutionScript {
   const agentId = `fake-agent-${executionId}`;
   const runId = `fake-run-${executionId}`;
   return {
     events: [
       { type: "started", executionId, agentId, runId },
-      { type: "assistant_text", executionId, text: "OK" },
+      { type: "assistant_text", executionId, text: DEFAULT_PLANNER_PLAN_JSON },
       {
         type: "usage",
         executionId,
@@ -115,12 +132,12 @@ function defaultCompletedScript(executionId: string): FakeExecutionScript {
         cacheReadTokens: 0,
         cacheWriteTokens: 0,
       },
-      { type: "completed", executionId, resultText: "OK" },
+      { type: "completed", executionId, resultText: DEFAULT_PLANNER_PLAN_JSON },
     ],
     result: {
       executionId,
       status: "completed",
-      resultText: "OK",
+      resultText: DEFAULT_PLANNER_PLAN_JSON,
     },
     usage: {
       status: "unknown",

@@ -1,0 +1,20 @@
+{
+  "name": "@aep/agent-profiles",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Versioned Agent Profiles, structured output schemas, and plan validation",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@aep/domain": "workspace:*",
+    "@aep/runtime-contracts": "workspace:*",
+    "@aep/security": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

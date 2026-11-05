@@ -16,6 +16,7 @@
     "node": ">=22.13.0"
   },
   "dependencies": {
+    "@aep/api": "workspace:*",
     "@aep/application": "workspace:*",
     "commander": "13.1.0"
   }

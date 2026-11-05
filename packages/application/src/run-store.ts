@@ -1,4 +1,8 @@
-import type { RoleId, WorkflowAggregate } from "@aep/domain";
+import type { PlannerPlan, ReviewReport } from "@aep/agent-profiles";
+import type { ReviewAssurance, RoleId, WorkflowAggregate } from "@aep/domain";
+import type { RunBudgetPolicy, RunBudgetState } from "@aep/model-routing";
+import type { PendingApproval, RecordedApproval, RiskPolicyResult } from "@aep/policy";
+import type { GateEngineResult } from "@aep/quality-gates";
 import type { AgentToolPolicy, ModelParamSelection } from "@aep/runtime-contracts";
 
 /**
@@ -41,6 +45,27 @@ export type StoredRun = {
   readonly executionId?: string;
   readonly agentId?: string;
   readonly lastResultText?: string;
+  /** Validated Planner plan (AEP-050); set only after schema acceptance. */
+  readonly plan?: PlannerPlan;
+  readonly plannerProfileVersionHash?: string;
+  readonly planSchemaVersion?: string;
+  /** Deterministic risk/policy evaluation (AEP-051). */
+  readonly policy?: RiskPolicyResult;
+  /** Pending human approval bound to a subject hash (AEP-052). */
+  readonly pendingApproval?: PendingApproval;
+  readonly approvals?: ReadonlyArray<RecordedApproval>;
+  /** Quality gate evidence for Reviewer / reports (AEP-053). */
+  readonly gateResults?: GateEngineResult;
+  /** Structured Reviewer report (AEP-054). */
+  readonly reviewReport?: ReviewReport;
+  readonly reviewAssurance?: ReviewAssurance;
+  readonly reviewModelId?: string;
+  /** Per-run budget tracker (AEP-056). */
+  readonly budget?: RunBudgetState;
+  readonly budgetPolicy?: RunBudgetPolicy;
+  /** Isolated worktree created for writing agents (AEP-057). */
+  readonly worktreePath?: string;
+  readonly worktreeBranch?: string;
   readonly recoveryOutcome?: RecoveryOutcome;
   readonly createdAt: string;
   readonly updatedAt: string;

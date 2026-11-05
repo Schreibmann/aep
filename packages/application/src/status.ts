@@ -13,6 +13,9 @@ export type RunStatusView = {
   readonly agentId?: string;
   readonly lastResultText?: string;
   readonly recoveryOutcome?: string;
+  readonly pendingApprovalKind?: string;
+  readonly pendingApprovalHash?: string;
+  readonly risk?: string;
   readonly createdAt: string;
   readonly updatedAt: string;
 };
@@ -38,6 +41,13 @@ export function getRunStatus(app: AepApplication, runId: string): RunStatusView 
     ...(stored.agentId === undefined ? {} : { agentId: stored.agentId }),
     ...(stored.lastResultText === undefined ? {} : { lastResultText: stored.lastResultText }),
     ...(stored.recoveryOutcome === undefined ? {} : { recoveryOutcome: stored.recoveryOutcome }),
+    ...(stored.pendingApproval === undefined
+      ? {}
+      : {
+          pendingApprovalKind: stored.pendingApproval.kind,
+          pendingApprovalHash: stored.pendingApproval.subjectHash,
+        }),
+    ...(stored.policy === undefined ? {} : { risk: stored.policy.classification.risk }),
     createdAt: stored.createdAt,
     updatedAt: stored.updatedAt,
   };

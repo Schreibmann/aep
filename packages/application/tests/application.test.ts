@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -36,10 +36,20 @@ describe("@aep/application", () => {
   it("initializes .aep/config.yaml once without overwrite", async () => {
     const dir = await mkdtemp(join(tmpdir(), "aep-init-"));
     tempDirs.push(dir);
-    const first = await initProject(dir);
+    await writeFile(
+      join(dir, "package.json"),
+      JSON.stringify({ name: "init-demo", scripts: { lint: "eslint .", test: "vitest" } }),
+      "utf8",
+    );
+    await writeFile(join(dir, "AGENTS.md"), "keep me\n", "utf8");
+    const first = await initProject({ targetPath: dir, autoApproveExactGates: true });
     expect(first.created).toBe(true);
+    expect(first.preservedInstructionFiles).toContain("AGENTS.md");
     const body = await readFile(first.configPath, "utf8");
     expect(body).toContain("sandbox:");
+    expect(body).toContain("approvedScriptNames:");
+    expect(body).not.toMatch(/sk-[A-Za-z0-9]/);
+    expect(await readFile(join(dir, "AGENTS.md"), "utf8")).toBe("keep me\n");
     await expect(initProject(dir)).rejects.toBeInstanceOf(ApplicationError);
   });
 
@@ -54,9 +64,19 @@ describe("@aep/application", () => {
     });
     expect(result.runId).toBe("run_1");
     expect(result.status).toBe("awaiting_plan_approval");
+    expect(result.plan?.touchedPaths.length).toBeGreaterThan(0);
+    expect(result.plan?.validationCommands.length).toBeGreaterThan(0);
+    expect(result.plannerProfileVersionHash?.length).toBe(16);
+    expect(result.policy?.verdict.decision).toBe("require_approval");
+    expect(result.policy?.classification.risk).not.toBe("low");
 
     const status = getRunStatus(app, result.runId);
     expect(status.taskDescription).toContain("registration");
     expect(status.status).toBe("awaiting_plan_approval");
+
+    const stored = app.runs.get(result.runId);
+    expect(stored?.plan?.objective.length).toBeGreaterThan(0);
+    expect(stored?.planSchemaVersion).toBe(result.planSchemaVersion);
+    expect(stored?.policy?.requirements.requireHumanApproval).toBe(true);
   });
 });
