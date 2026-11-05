@@ -53,6 +53,10 @@ function normalizePath(path: string): string {
 /**
  * Expand Windows 8.3 / junction forms so callers can compare paths stably.
  * Falls back to resolve() when the path does not exist yet.
+ *
+ * Note: GitHub Actions Windows often keeps 8.3 forms through realpathSync;
+ * callers that compare user paths to gitRoot should use filesystem identity
+ * (tests: samePath), not string equality.
  */
 function canonicalizePath(path: string): string {
   const absolute = normalizePath(path);

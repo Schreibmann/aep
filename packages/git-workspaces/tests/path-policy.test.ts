@@ -1,4 +1,3 @@
-import { realpathSync } from "node:fs";
 import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -24,9 +23,8 @@ afterEach(async () => {
 
 async function createTempDir(prefix: string): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), prefix));
-  const canonical = realpathSync(dir);
-  tempDirs.push(canonical);
-  return canonical;
+  tempDirs.push(dir);
+  return dir;
 }
 
 async function initRepoWithWorktree(): Promise<{ repo: string; worktreePath: string }> {

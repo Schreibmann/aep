@@ -1,7 +1,6 @@
-import { realpathSync } from "node:fs";
 import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   GitWorkspacesError,
@@ -10,6 +9,7 @@ import {
   resolveGitRoot,
   runGit,
 } from "../src/index.js";
+import { samePath } from "./path-test-utils.js";
 
 const tempDirs: string[] = [];
 
@@ -24,9 +24,8 @@ afterEach(async () => {
 
 async function createTempDir(prefix: string): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), prefix));
-  const canonical = realpathSync(dir);
-  tempDirs.push(canonical);
-  return canonical;
+  tempDirs.push(dir);
+  return dir;
 }
 
 function git(cwd: string, args: ReadonlyArray<string>): void {
@@ -72,7 +71,7 @@ describe("@aep/git-workspaces inspectRepository", () => {
     git(dir, ["remote", "add", "origin", "https://example.com/aep-fixture.git"]);
 
     const inspection = inspectRepository(dir);
-    expect(inspection.gitRoot).toBe(dir);
+    expect(samePath(inspection.gitRoot, dir)).toBe(true);
     expect(inspection.headSha).toMatch(/^[0-9a-f]{40}$/);
     expect(inspection.branch).not.toBeNull();
     expect(inspection.isDirty).toBe(false);
@@ -80,8 +79,8 @@ describe("@aep/git-workspaces inspectRepository", () => {
     expect(inspection.projectFiles).toContain("package.json");
     expect(inspection.scripts.some((script) => script.name === "test")).toBe(true);
     expect(inspection.remotes.some((remote) => remote.name === "origin")).toBe(true);
-    expect(inspection.worktrees.some((wt) => resolve(wt.path) === resolve(dir))).toBe(true);
-    expect(resolve(resolveGitRoot(join(dir, "README.md")))).toBe(resolve(dir));
+    expect(inspection.worktrees.some((wt) => samePath(wt.path, dir))).toBe(true);
+    expect(samePath(resolveGitRoot(join(dir, "README.md")), dir)).toBe(true);
   });
 
   it("detects dirty working tree without mutating it", async () => {
