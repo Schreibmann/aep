@@ -217,6 +217,23 @@ export function evaluatePathPolicy(input: PathPolicyInput): PathPolicyResult {
         violations.push({ code: "path_traversal", path: raw });
         continue;
       }
+      // Symlink targets resolved by realpath during normalize — record as policy
+      // violation instead of crashing evaluatePathPolicy (Linux CI).
+      if (error instanceof GitWorkspacesError && error.code === "symlink_escape") {
+        const absolute = join(worktreeRoot, raw);
+        let realPath = absolute;
+        try {
+          realPath = realpathSync(absolute);
+        } catch {
+          realPath = error.message;
+        }
+        violations.push({
+          code: "symlink_escape",
+          path: toPosix(raw),
+          realPath,
+        });
+        continue;
+      }
       throw error;
     }
   }
