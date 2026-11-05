@@ -1,4 +1,11 @@
-import { existsSync, lstatSync, readFileSync, readlinkSync, type Stats } from "node:fs";
+import {
+  existsSync,
+  lstatSync,
+  readFileSync,
+  readlinkSync,
+  realpathSync,
+  type Stats,
+} from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { GitWorkspacesError } from "./errors.js";
 import { runGit } from "./git-exec.js";
@@ -41,6 +48,19 @@ const PROJECT_FILE_NAMES = [
 
 function normalizePath(path: string): string {
   return resolve(path);
+}
+
+/**
+ * Expand Windows 8.3 / junction forms so callers can compare paths stably.
+ * Falls back to resolve() when the path does not exist yet.
+ */
+function canonicalizePath(path: string): string {
+  const absolute = normalizePath(path);
+  try {
+    return realpathSync(absolute);
+  } catch {
+    return absolute;
+  }
 }
 
 /**
@@ -309,9 +329,11 @@ export function inspectRepository(pathInput: string): RepositoryInspection {
   const startDir = resolveExistingDirectory(requestedPath);
   assertGitRepository(startDir);
 
-  const gitRoot = normalizePath(runGit(startDir, ["rev-parse", "--show-toplevel"]).stdout.trim());
+  const gitRoot = canonicalizePath(
+    runGit(startDir, ["rev-parse", "--show-toplevel"]).stdout.trim(),
+  );
   const commonDirRaw = runGit(gitRoot, ["rev-parse", "--git-common-dir"]).stdout.trim();
-  const commonDir = normalizePath(
+  const commonDir = canonicalizePath(
     commonDirRaw.startsWith("/") || /^[A-Za-z]:[\\/]/.test(commonDirRaw)
       ? commonDirRaw
       : join(gitRoot, commonDirRaw),
@@ -367,7 +389,7 @@ export function inspectRepository(pathInput: string): RepositoryInspection {
 export function resolveGitRoot(pathInput: string): string {
   const startDir = resolveExistingDirectory(pathInput);
   assertGitRepository(startDir);
-  return normalizePath(runGit(startDir, ["rev-parse", "--show-toplevel"]).stdout.trim());
+  return canonicalizePath(runGit(startDir, ["rev-parse", "--show-toplevel"]).stdout.trim());
 }
 
 /**

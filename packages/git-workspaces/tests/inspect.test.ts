@@ -1,3 +1,4 @@
+import { realpathSync } from "node:fs";
 import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -23,8 +24,9 @@ afterEach(async () => {
 
 async function createTempDir(prefix: string): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), prefix));
-  tempDirs.push(dir);
-  return dir;
+  const canonical = realpathSync(dir);
+  tempDirs.push(canonical);
+  return canonical;
 }
 
 function git(cwd: string, args: ReadonlyArray<string>): void {
@@ -36,6 +38,8 @@ async function initRepo(): Promise<string> {
   git(dir, ["init"]);
   git(dir, ["config", "user.email", "aep@example.com"]);
   git(dir, ["config", "user.name", "AEP Test"]);
+  // Keep LF in fixtures so Windows CI with core.autocrlf=true does not diverge checkouts.
+  git(dir, ["config", "core.autocrlf", "false"]);
   await writeFile(join(dir, "README.md"), "# fixture\n", "utf8");
   await writeFile(
     join(dir, "package.json"),

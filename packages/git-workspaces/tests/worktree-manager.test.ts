@@ -1,3 +1,4 @@
+import { realpathSync } from "node:fs";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -24,8 +25,9 @@ afterEach(async () => {
 
 async function createTempDir(prefix: string): Promise<string> {
   const dir = await mkdtemp(join(tmpdir(), prefix));
-  tempDirs.push(dir);
-  return dir;
+  const canonical = realpathSync(dir);
+  tempDirs.push(canonical);
+  return canonical;
 }
 
 async function initRepo(): Promise<string> {
@@ -33,6 +35,7 @@ async function initRepo(): Promise<string> {
   runGit(dir, ["init"]);
   runGit(dir, ["config", "user.email", "aep@example.com"]);
   runGit(dir, ["config", "user.name", "AEP Test"]);
+  runGit(dir, ["config", "core.autocrlf", "false"]);
   await writeFile(join(dir, "README.md"), "# fixture\n", "utf8");
   runGit(dir, ["add", "."]);
   runGit(dir, ["commit", "-m", "init"]);
