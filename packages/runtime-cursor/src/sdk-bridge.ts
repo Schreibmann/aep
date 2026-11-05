@@ -23,6 +23,8 @@ export type SdkSandboxOptions = {
   readonly enabled: true;
 };
 
+export type SdkSettingSource = "project" | "user" | "team" | "mdm" | "plugins" | "all";
+
 export type SdkCreateAgentInput = {
   readonly apiKey: string;
   readonly modelId: string;
@@ -32,6 +34,7 @@ export type SdkCreateAgentInput = {
   readonly tools: ReadonlyArray<string>;
   readonly disallowedTools: ReadonlyArray<string>;
   readonly sandbox: SdkSandboxOptions;
+  readonly settingSources?: ReadonlyArray<SdkSettingSource>;
 };
 
 export type SdkResumeAgentInput = SdkCreateAgentInput & {

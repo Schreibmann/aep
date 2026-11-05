@@ -12,6 +12,9 @@ export type AgentSandboxOptions = {
   readonly enabled: true;
 };
 
+/** Mirrors Cursor SettingSource without importing @cursor/sdk. */
+export type AgentSettingSource = "project" | "user" | "team" | "mdm" | "plugins" | "all";
+
 export type AgentExecutionInput = {
   readonly executionId: string;
   readonly roleId: RoleId;
@@ -23,6 +26,7 @@ export type AgentExecutionInput = {
   readonly sandbox: AgentSandboxOptions;
   readonly modelParams?: ReadonlyArray<ModelParamSelection>;
   readonly catalogSnapshotId?: string;
+  readonly settingSources?: ReadonlyArray<AgentSettingSource>;
 };
 
 export type ResumeExecutionInput = {
@@ -37,6 +41,12 @@ export type ResumeExecutionInput = {
   readonly sandbox: AgentSandboxOptions;
   readonly modelParams?: ReadonlyArray<ModelParamSelection>;
   readonly catalogSnapshotId?: string;
+  readonly settingSources?: ReadonlyArray<AgentSettingSource>;
+  /**
+   * When true, skip Agent.resume and open a fresh session, marking context reset.
+   * Used when prior role isolation would be violated (e.g. Reviewer vs Implementer).
+   */
+  readonly forceFreshSession?: boolean;
 };
 
 export type AgentExecutionResult = {
@@ -51,6 +61,12 @@ export type AgentExecutionHandle = {
   readonly executionId: string;
   readonly agentId: string;
   readonly runId: string;
+  /**
+   * True when continuity was not preserved (resume failed or role isolation forced a new session).
+   * Callers MUST NOT pretend prior context is still available.
+   */
+  readonly contextReset?: boolean;
+  readonly contextResetReason?: string;
   stream(): AsyncIterable<AgentEvent>;
   wait(): Promise<AgentExecutionResult>;
 };

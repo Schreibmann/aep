@@ -16,6 +16,7 @@
 | [ADR-025](./ADR-025-cursor-agent-runtime.md)     | CursorAgentRuntime (AEP-040)               | Accepted                        |
 | [ADR-026](./ADR-026-stream-normalization.md)     | Stream normalize / cancel (AEP-041)        | Accepted                        |
 | [ADR-027](./ADR-027-model-routing.md)            | Model catalog / role routing (AEP-042)     | Accepted                        |
+| [ADR-028](./ADR-028-session-resume.md)           | Session resume / permissions (AEP-043)     | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |

@@ -35,6 +35,8 @@ class FakeExecutionHandle implements AgentExecutionHandle {
   readonly executionId: string;
   readonly agentId: string;
   readonly runId: string;
+  readonly contextReset?: boolean;
+  readonly contextResetReason?: string;
   private readonly events: ReadonlyArray<AgentEvent>;
   private readonly result: AgentExecutionResult;
   private readonly cancelled: () => boolean;
@@ -50,6 +52,8 @@ class FakeExecutionHandle implements AgentExecutionHandle {
     cancelled: () => boolean;
     beforeWait?: () => Promise<void>;
     markConsumed: () => void;
+    contextReset?: boolean;
+    contextResetReason?: string;
   }) {
     this.executionId = input.executionId;
     this.agentId = input.agentId;
@@ -59,6 +63,12 @@ class FakeExecutionHandle implements AgentExecutionHandle {
     this.cancelled = input.cancelled;
     this.beforeWait = input.beforeWait;
     this.markConsumed = input.markConsumed;
+    if (input.contextReset === true) {
+      this.contextReset = true;
+    }
+    if (input.contextResetReason !== undefined) {
+      this.contextResetReason = input.contextResetReason;
+    }
   }
 
   async *stream(): AsyncIterable<AgentEvent> {
@@ -182,6 +192,12 @@ export class FakeAgentRuntime implements AgentRuntime {
     this.resumedIds.add(input.executionId);
     // A resumed session must not stay blocked on a pre-crash wait gate.
     this.releaseWait(input.executionId);
+    if (input.forceFreshSession === true) {
+      return this.createHandle(input.executionId, true, {
+        contextReset: true,
+        contextResetReason: "force_fresh_session",
+      });
+    }
     return this.createHandle(input.executionId, true);
   }
 
@@ -235,7 +251,11 @@ export class FakeAgentRuntime implements AgentRuntime {
     return defaultCompletedScript(executionId);
   }
 
-  private createHandle(executionId: string, resumed: boolean): AgentExecutionHandle {
+  private createHandle(
+    executionId: string,
+    resumed: boolean,
+    continuity?: { readonly contextReset: true; readonly contextResetReason: string },
+  ): AgentExecutionHandle {
     const script = this.resolveScript(executionId);
     if (script.startError !== undefined) {
       throw new Error(`${script.startError.code}: ${script.startError.message}`);
@@ -283,6 +303,12 @@ export class FakeAgentRuntime implements AgentRuntime {
       markConsumed: () => {
         // reserved for future bookkeeping
       },
+      ...(continuity === undefined
+        ? {}
+        : {
+            contextReset: continuity.contextReset,
+            contextResetReason: continuity.contextResetReason,
+          }),
     });
   }
 }

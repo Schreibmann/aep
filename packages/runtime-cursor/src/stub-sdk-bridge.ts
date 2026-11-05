@@ -20,6 +20,8 @@ export type StubSdkBridgeOptions = {
   readonly usageStatus?: "ok" | "feature_unavailable" | "unknown";
   /** Artificial wait latency for cancel/timeout contract tests. */
   readonly waitDelayMs?: number;
+  /** When set, resumeAgent throws so runtime can fall back to a fresh session. */
+  readonly resumeError?: { readonly code: string; readonly message: string };
 };
 
 /**
@@ -36,6 +38,7 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
   private readonly createError: { readonly code: string; readonly message: string } | undefined;
   private readonly usageStatus: "ok" | "feature_unavailable" | "unknown";
   private readonly waitDelayMs: number;
+  private readonly resumeError: { readonly code: string; readonly message: string } | undefined;
   private nextAgentSeq = 1;
 
   constructor(options: StubSdkBridgeOptions = {}) {
@@ -55,6 +58,7 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
     this.createError = options.createError;
     this.usageStatus = options.usageStatus ?? "unknown";
     this.waitDelayMs = options.waitDelayMs ?? 0;
+    this.resumeError = options.resumeError;
   }
 
   async probeSandbox(): Promise<SdkSandboxProbe> {
@@ -83,6 +87,9 @@ export class StubCursorSdkBridge implements CursorSdkBridge {
     this.assertSandbox(input);
     if (input.agentId.trim().length === 0) {
       throw new Error("resume requires agentId");
+    }
+    if (this.resumeError !== undefined) {
+      throw new Error(`${this.resumeError.code}: ${this.resumeError.message}`);
     }
     this.resumed.push(input);
     return this.makeAgent(input.agentId, input);

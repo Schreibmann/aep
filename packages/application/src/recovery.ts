@@ -171,16 +171,31 @@ export async function resumeRun(
     ...(execution.catalogSnapshotId === undefined
       ? {}
       : { catalogSnapshotId: execution.catalogSnapshotId }),
+    ...(execution.contextReset === true ? { forceFreshSession: true } : {}),
   });
 
   const result = await handle.wait();
   const at = app.now();
+  const contextReset = handle.contextReset === true;
+  const contextResetReason = handle.contextResetReason;
+
+  const executionAfterResume: ExecutionSnapshot = {
+    ...execution,
+    opaqueAgentId: handle.agentId,
+    ...(contextReset
+      ? {
+          contextReset: true,
+          ...(contextResetReason === undefined ? {} : { contextResetReason }),
+        }
+      : {}),
+  };
 
   if (result.status === "cancelled") {
     const aggregate = reduceWorkflow(stored.aggregate, { type: "run_cancelled", at });
     const next: StoredRun = {
       ...stored,
       aggregate,
+      execution: executionAfterResume,
       executionLifecycle: "settled",
       recoveryOutcome: "cancelled",
       agentId: handle.agentId,
@@ -210,6 +225,7 @@ export async function resumeRun(
     const next: StoredRun = {
       ...stored,
       aggregate,
+      execution: executionAfterResume,
       executionLifecycle: "settled",
       recoveryOutcome: "resumed",
       agentId: handle.agentId,
@@ -241,6 +257,7 @@ export async function resumeRun(
   const next: StoredRun = {
     ...stored,
     aggregate,
+    execution: executionAfterResume,
     executionLifecycle: "settled",
     recoveryOutcome: "resumed",
     agentId: handle.agentId,

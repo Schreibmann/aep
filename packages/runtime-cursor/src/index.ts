@@ -18,5 +18,7 @@ export {
   parseUnknownSdkMessage,
 } from "./normalize.js";
 export type { CursorSdkBridge } from "./sdk-bridge.js";
+export type { RecordedAgentSession, ResumeSafetyDecision } from "./session-registry.js";
+export { AgentSessionRegistry, evaluateResumeSafety } from "./session-registry.js";
 export type { StubSdkBridgeOptions } from "./stub-sdk-bridge.js";
 export { StubCursorSdkBridge } from "./stub-sdk-bridge.js";

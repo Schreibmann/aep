@@ -20,9 +20,11 @@ import { BoundedEventBuffer, normalizeSdkStreamEvent } from "./normalize.js";
 import type {
   CursorSdkBridge,
   SdkAgentHandle,
+  SdkCreateAgentInput,
   SdkRunHandle,
   SdkStreamEvent,
 } from "./sdk-bridge.js";
+import { AgentSessionRegistry, evaluateResumeSafety } from "./session-registry.js";
 
 export type CursorAgentRuntimeOptions = {
   readonly credentials: SecureCredentialSource;
@@ -32,6 +34,7 @@ export type CursorAgentRuntimeOptions = {
   readonly maxBufferedEvents?: number;
   /** Optional default wait timeout; cancel+fail closed when exceeded. */
   readonly defaultTimeoutMs?: number;
+  readonly sessions?: AgentSessionRegistry;
 };
 
 type ActiveExecution = {
@@ -87,6 +90,7 @@ export class CursorAgentRuntime implements AgentRuntime {
   private readonly now: () => string;
   private readonly maxBufferedEvents: number;
   private readonly defaultTimeoutMs: number | undefined;
+  private readonly sessions: AgentSessionRegistry;
   private readonly active = new Map<string, ActiveExecution>();
 
   constructor(options: CursorAgentRuntimeOptions) {
@@ -95,6 +99,7 @@ export class CursorAgentRuntime implements AgentRuntime {
     this.now = options.now ?? (() => new Date().toISOString());
     this.maxBufferedEvents = options.maxBufferedEvents ?? 500;
     this.defaultTimeoutMs = options.defaultTimeoutMs;
+    this.sessions = options.sessions ?? new AgentSessionRegistry();
   }
 
   /**
@@ -182,18 +187,11 @@ export class CursorAgentRuntime implements AgentRuntime {
     });
 
     const apiKey = resolveCursorApiKeyForSdk(this.credentials);
-    const agent = await this.sdk.createAgent({
-      apiKey,
-      modelId: input.modelId,
-      cwd: input.cwd,
-      tools: input.tools.tools,
-      disallowedTools: input.tools.disallowedTools,
-      sandbox: { enabled: true },
-      ...(input.systemPrompt === undefined ? {} : { systemPrompt: input.systemPrompt }),
-      ...(input.modelParams === undefined ? {} : { modelParams: input.modelParams }),
-    });
+    const createInput = this.toCreateInput(apiKey, input);
+    const agent = await this.sdk.createAgent(createInput);
 
     try {
+      this.rememberSession(agent.agentId, input);
       const run = await agent.send(input.prompt);
       return this.attachHandle(input.executionId, agent, run);
     } catch (error) {
@@ -211,25 +209,38 @@ export class CursorAgentRuntime implements AgentRuntime {
     });
 
     const apiKey = resolveCursorApiKeyForSdk(this.credentials);
-    const agent = await this.sdk.resumeAgent({
-      agentId: input.opaqueAgentId,
-      apiKey,
-      modelId: input.modelId,
-      cwd: input.cwd,
-      tools: input.tools.tools,
-      disallowedTools: input.tools.disallowedTools,
-      sandbox: { enabled: true },
-      ...(input.systemPrompt === undefined ? {} : { systemPrompt: input.systemPrompt }),
-      ...(input.modelParams === undefined ? {} : { modelParams: input.modelParams }),
+    const recorded = this.sessions.get(input.opaqueAgentId);
+    const safety = evaluateResumeSafety({
+      requestedRoleId: input.roleId,
+      recorded,
+      ...(input.forceFreshSession === undefined
+        ? {}
+        : { forceFreshSession: input.forceFreshSession }),
     });
 
+    if (!safety.ok) {
+      return this.startFreshAfterUnsafeResume(apiKey, input, safety.reason);
+    }
+
+    const resumeInput = {
+      ...this.toCreateInput(apiKey, input),
+      agentId: input.opaqueAgentId,
+    };
+
     try {
-      const prompt = input.prompt ?? "";
-      const run = await agent.send(prompt.length > 0 ? prompt : "Continue the previous task.");
-      return this.attachHandle(input.executionId, agent, run);
+      const agent = await this.sdk.resumeAgent(resumeInput);
+      try {
+        this.rememberSession(agent.agentId, input);
+        const prompt = input.prompt ?? "";
+        const run = await agent.send(prompt.length > 0 ? prompt : "Continue the previous task.");
+        return this.attachHandle(input.executionId, agent, run);
+      } catch (error) {
+        await agent.close();
+        throw error;
+      }
     } catch (error) {
-      await agent.close();
-      throw error;
+      const detail = error instanceof Error ? error.message : String(error);
+      return this.startFreshAfterUnsafeResume(apiKey, input, `resume_failed:${detail}`);
     }
   }
 
@@ -275,10 +286,65 @@ export class CursorAgentRuntime implements AgentRuntime {
     return { status: "unknown", costStatus: "unknown", tokens: {} };
   }
 
+  private toCreateInput(
+    apiKey: string,
+    input: AgentExecutionInput | ResumeExecutionInput,
+  ): SdkCreateAgentInput {
+    return {
+      apiKey,
+      modelId: input.modelId,
+      cwd: input.cwd,
+      tools: input.tools.tools,
+      disallowedTools: input.tools.disallowedTools,
+      sandbox: { enabled: true },
+      ...(input.systemPrompt === undefined ? {} : { systemPrompt: input.systemPrompt }),
+      ...(input.modelParams === undefined ? {} : { modelParams: input.modelParams }),
+      ...(input.settingSources === undefined ? {} : { settingSources: input.settingSources }),
+    };
+  }
+
+  private rememberSession(
+    agentId: string,
+    input: AgentExecutionInput | ResumeExecutionInput,
+  ): void {
+    this.sessions.remember({
+      agentId,
+      roleId: input.roleId,
+      tools: input.tools,
+      modelId: input.modelId,
+      cwd: input.cwd,
+    });
+  }
+
+  private async startFreshAfterUnsafeResume(
+    apiKey: string,
+    input: ResumeExecutionInput,
+    reason: string,
+  ): Promise<AgentExecutionHandle> {
+    const agent = await this.sdk.createAgent(this.toCreateInput(apiKey, input));
+    try {
+      this.rememberSession(agent.agentId, input);
+      const prompt = input.prompt ?? "";
+      const run = await agent.send(
+        prompt.length > 0
+          ? prompt
+          : "Continue with a fresh session; prior agent context was not safely resumable.",
+      );
+      return this.attachHandle(input.executionId, agent, run, {
+        contextReset: true,
+        contextResetReason: reason,
+      });
+    } catch (error) {
+      await agent.close();
+      throw error;
+    }
+  }
+
   private attachHandle(
     executionId: string,
     agent: SdkAgentHandle,
     run: SdkRunHandle,
+    continuity?: { readonly contextReset: true; readonly contextResetReason: string },
   ): AgentExecutionHandle {
     const active: ActiveExecution = {
       agent,
@@ -301,6 +367,12 @@ export class CursorAgentRuntime implements AgentRuntime {
       executionId,
       agentId: agent.agentId,
       runId: run.id,
+      ...(continuity === undefined
+        ? {}
+        : {
+            contextReset: continuity.contextReset,
+            contextResetReason: continuity.contextResetReason,
+          }),
       stream: () =>
         mapSdkEventsToAgentEvents(
           { executionId, agentId: agent.agentId, runId: run.id },

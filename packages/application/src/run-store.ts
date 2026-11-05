@@ -17,6 +17,9 @@ export type ExecutionSnapshot = {
   readonly catalogSnapshotId?: string;
   readonly modelParams?: ReadonlyArray<ModelParamSelection>;
   readonly modelSelectionRationale?: string;
+  /** True when the last attach used a fresh session instead of Agent.resume continuity. */
+  readonly contextReset?: boolean;
+  readonly contextResetReason?: string;
 };
 
 export type ExecutionLifecycle = "idle" | "running" | "settled";

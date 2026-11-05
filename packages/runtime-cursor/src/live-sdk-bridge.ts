@@ -111,6 +111,7 @@ function buildOptions(input: SdkCreateAgentInput) {
       sandboxOptions: { enabled: true as const },
     },
     ...(input.systemPrompt === undefined ? {} : { systemPrompt: input.systemPrompt }),
+    ...(input.settingSources === undefined ? {} : { settingSources: [...input.settingSources] }),
   };
 }
 

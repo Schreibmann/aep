@@ -5,6 +5,7 @@ export type {
   AgentExecutionInput,
   AgentExecutionResult,
   AgentSandboxOptions,
+  AgentSettingSource,
   AgentToolPolicy,
   ResumeExecutionInput,
 } from "./execution.js";
