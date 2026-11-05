@@ -11,6 +11,38 @@ export {
 } from "./config-schema.js";
 export { detectStack, packageManagerIdOrUnknown } from "./detect-stack.js";
 export { ProjectProfilesError } from "./errors.js";
+export type {
+  AssembledKnowledgeChunk,
+  AssembledKnowledgeContext,
+  AssembleKnowledgeContextInput,
+} from "./knowledge/assemble-context.js";
+export {
+  assembleKnowledgeContext,
+  estimateTokens,
+} from "./knowledge/assemble-context.js";
+export type {
+  BuildKnowledgePacksInput,
+  BuildKnowledgePacksResult,
+  UpdateKnowledgePackInput,
+} from "./knowledge/build-packs.js";
+export {
+  buildKnowledgePacks,
+  listKnowledgePacks,
+  updateKnowledgePack,
+} from "./knowledge/build-packs.js";
+export {
+  isExcludedKnowledgePath,
+  KNOWLEDGE_SOURCE_CANDIDATES,
+  knowledgePackPath,
+  knowledgePacksDir,
+} from "./knowledge/paths.js";
+export type { KnowledgePack, KnowledgePackCategory } from "./knowledge/schema.js";
+export {
+  KNOWLEDGE_PACK_SCHEMA_VERSION,
+  knowledgePackCategorySchema,
+  knowledgePackSchema,
+  parseKnowledgePack,
+} from "./knowledge/schema.js";
 export {
   aepConfigPath,
   loadAepProjectConfig,

@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import {
   type AepApplication,
   ApplicationError,
+  buildProjectKnowledgePacks,
   createApp,
   decidePlanApproval,
   getAuthStatus,
@@ -11,6 +12,7 @@ import {
   initProject,
   listAccountModels,
   listNonTerminalRuns,
+  listProjectKnowledgePacks,
   requireExplicitApprovalDecision,
   resumeRun,
   runDoctor,
@@ -191,6 +193,57 @@ export function buildProgram(options: BuildProgramOptions = {}): Command {
             ? "no pending gate confirmations"
             : `pending gate confirmations: ${result.pendingGateConfirmations.join(", ")}`;
         writeSuccess(mode, result, `Initialized AEP config at ${result.configPath}\n${pending}`);
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  const knowledge = program
+    .command("knowledge")
+    .description("Project knowledge packs (versioned, source-hashed, maintainer-editable)");
+
+  knowledge
+    .command("build")
+    .description("Create knowledge packs from real project docs (skips secrets/generated paths)")
+    .argument("[path]", "Project directory", ".")
+    .option("--json", "Machine-readable JSON output")
+    .option("--overwrite", "Overwrite existing packs (destroys maintainer edits)")
+    .action(async function knowledgeBuildAction(this: Command, pathArg: string) {
+      const mode = resolveMode(program, this);
+      const opts = this.opts();
+      try {
+        const result = await buildProjectKnowledgePacks({
+          projectRoot: requireNonEmpty(pathArg, "path"),
+          overwriteExisting: opts.overwrite === true,
+        });
+        writeSuccess(
+          mode,
+          result,
+          `Created ${result.created.length} pack(s); skipped existing ${result.skippedExisting.length}; missing ${result.skippedMissing.length}; excluded ${result.skippedExcluded.length}`,
+        );
+      } catch (error) {
+        reportFailure(mode, error);
+      }
+    });
+
+  knowledge
+    .command("list")
+    .description("List knowledge packs for a project")
+    .argument("[path]", "Project directory", ".")
+    .option("--json", "Machine-readable JSON output")
+    .action(async function knowledgeListAction(this: Command, pathArg: string) {
+      const mode = resolveMode(program, this);
+      try {
+        const packs = await listProjectKnowledgePacks(requireNonEmpty(pathArg, "path"));
+        writeSuccess(
+          mode,
+          { packs },
+          packs.length === 0
+            ? "No knowledge packs"
+            : packs
+                .map((pack) => `${pack.id} [${pack.category}] reviewed=${pack.reviewed}`)
+                .join("\n"),
+        );
       } catch (error) {
         reportFailure(mode, error);
       }

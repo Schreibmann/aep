@@ -28,11 +28,31 @@ import {
   hashApprovalSubject,
   type RiskPolicyResult,
 } from "@aep/policy";
+import { assembleKnowledgeContext } from "@aep/project-profiles";
 import { assertPlannerReadOnly } from "@aep/security";
 import { beginRoleUnderBudget, finishRoleUsage } from "./budget.js";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
 import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
+
+function projectContextWithKnowledge(cwd: string, task: string): string {
+  const base = gatherPlannerProjectContext(cwd);
+  try {
+    const knowledge = assembleKnowledgeContext({
+      projectRoot: cwd,
+      query: task,
+      tokenBudget: 2_500,
+      preferCategories: ["architecture", "conventions", "api_patterns"],
+    });
+    if (knowledge.text.trim().length === 0) {
+      return base;
+    }
+    const block = `### Knowledge packs\n${knowledge.text}`;
+    return base.trim().length === 0 ? block : `${base}\n\n${block}`;
+  } catch {
+    return base;
+  }
+}
 
 export type RunTaskInput = {
   readonly task: string;
@@ -105,7 +125,7 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     throw error;
   }
 
-  const projectContext = gatherPlannerProjectContext(input.cwd);
+  const projectContext = projectContextWithKnowledge(input.cwd, task);
   const userPrompt = buildPlannerUserPrompt({ task, projectContext });
 
   let budget = beginRoleUnderBudget({
