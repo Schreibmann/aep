@@ -39,8 +39,26 @@ importers:
         specifier: 13.1.0
         version: 13.1.0
 
+  packages/agent-profiles:
+    dependencies:
+      '@aep/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@aep/runtime-contracts':
+        specifier: workspace:*
+        version: link:../runtime-contracts
+      '@aep/security':
+        specifier: workspace:*
+        version: link:../security
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
+
   packages/application:
     dependencies:
+      '@aep/agent-profiles':
+        specifier: workspace:*
+        version: link:../agent-profiles
       '@aep/domain':
         specifier: workspace:*
         version: link:../domain
@@ -50,6 +68,9 @@ importers:
       '@aep/runtime-contracts':
         specifier: workspace:*
         version: link:../runtime-contracts
+      '@aep/security':
+        specifier: workspace:*
+        version: link:../security
 
   packages/domain: {}
 

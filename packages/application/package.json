@@ -12,8 +12,10 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@aep/agent-profiles": "workspace:*",
     "@aep/domain": "workspace:*",
     "@aep/model-routing": "workspace:*",
-    "@aep/runtime-contracts": "workspace:*"
+    "@aep/runtime-contracts": "workspace:*",
+    "@aep/security": "workspace:*"
   }
 }

@@ -1,3 +1,4 @@
+import type { PlannerPlan } from "@aep/agent-profiles";
 import type { RoleId, WorkflowAggregate } from "@aep/domain";
 import type { AgentToolPolicy, ModelParamSelection } from "@aep/runtime-contracts";
 
@@ -41,6 +42,10 @@ export type StoredRun = {
   readonly executionId?: string;
   readonly agentId?: string;
   readonly lastResultText?: string;
+  /** Validated Planner plan (AEP-050); set only after schema acceptance. */
+  readonly plan?: PlannerPlan;
+  readonly plannerProfileVersionHash?: string;
+  readonly planSchemaVersion?: string;
   readonly recoveryOutcome?: RecoveryOutcome;
   readonly createdAt: string;
   readonly updatedAt: string;

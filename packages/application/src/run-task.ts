@@ -1,4 +1,12 @@
 import {
+  buildPlannerUserPrompt,
+  buildPlanRepairPrompt,
+  createPlannerProfile,
+  gatherPlannerProjectContext,
+  type PlannerPlan,
+  parsePlannerPlanWithBoundedRetry,
+} from "@aep/agent-profiles";
+import {
   createInitialWorkflowAggregate,
   createProjectId,
   createTaskId,
@@ -12,6 +20,7 @@ import {
   type ModelSelectionResult,
   resolveModelForRole,
 } from "@aep/model-routing";
+import { assertPlannerReadOnly } from "@aep/security";
 import type { AepApplication } from "./create-app.js";
 import { ApplicationError } from "./errors.js";
 import type { ExecutionSnapshot, StoredRun } from "./run-store.js";
@@ -27,17 +36,14 @@ export type RunTaskResult = {
   readonly agentId: string;
   readonly status: string;
   readonly resultText?: string;
+  readonly plan?: PlannerPlan;
+  readonly plannerProfileVersionHash?: string;
+  readonly planSchemaVersion?: string;
 };
 
-const PLANNER_TOOLS = {
-  tools: ["read", "grep", "glob", "ls"],
-  disallowedTools: ["shell", "edit", "mcp", "task"],
-} as const;
-
 /**
- * Skeleton `aep run`: advances a workflow aggregate through plan approval
- * placeholders and executes one FakeAgentRuntime planner session.
- * Checkpoints a running execution snapshot before wait so AEP-022 can resume after crash.
+ * `aep run` planner path: read-only Planner profile, structured plan validation
+ * with bounded retry, then await_plan_approval workflow state.
  */
 export async function runTask(app: AepApplication, input: RunTaskInput): Promise<RunTaskResult> {
   const task = input.task.trim();
@@ -50,6 +56,8 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
   const projectId = createProjectId(app.createId("proj"));
   const taskId = createTaskId(app.createId("task"));
   const workflowRunId = createWorkflowRunId(runId);
+  const profile = createPlannerProfile();
+  assertPlannerReadOnly(profile.tools);
 
   let aggregate = createInitialWorkflowAggregate({
     id: workflowRunId,
@@ -86,53 +94,106 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     throw error;
   }
 
-  const executionId = app.createId("exec");
-  const handle = await app.runtime.startExecution({
-    executionId,
-    roleId: "planner",
-    prompt: task,
-    modelId: selection.modelId,
-    cwd: input.cwd,
-    tools: PLANNER_TOOLS,
-    sandbox: { enabled: true },
-    catalogSnapshotId: selection.catalogSnapshotId,
-    ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
+  const projectContext = gatherPlannerProjectContext(input.cwd);
+  const userPrompt = buildPlannerUserPrompt({ task, projectContext });
+
+  let activeExecutionId = app.createId("exec");
+  let checkpointSaved = false;
+
+  const parsed = await parsePlannerPlanWithBoundedRetry({
+    runtime: app.runtime,
+    maxAttempts: 2,
+    start: async () => {
+      const handle = await app.runtime.startExecution({
+        executionId: activeExecutionId,
+        roleId: "planner",
+        prompt: userPrompt,
+        modelId: selection.modelId,
+        cwd: input.cwd,
+        tools: profile.tools,
+        sandbox: { enabled: true },
+        systemPrompt: profile.systemPrompt,
+        catalogSnapshotId: selection.catalogSnapshotId,
+        ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
+      });
+      const startedAt = app.now();
+      const execution: ExecutionSnapshot = {
+        executionId: activeExecutionId,
+        opaqueAgentId: handle.agentId,
+        roleId: "planner",
+        modelId: selection.modelId,
+        cwd: input.cwd,
+        tools: profile.tools,
+        systemPrompt: profile.systemPrompt,
+        startedAt,
+        catalogSnapshotId: selection.catalogSnapshotId,
+        modelSelectionRationale: selection.rationale,
+        ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
+      };
+      const checkpoint: StoredRun = {
+        runId,
+        taskDescription: task,
+        aggregate,
+        executionLifecycle: "running",
+        execution,
+        executionId: activeExecutionId,
+        agentId: handle.agentId,
+        createdAt: at,
+        updatedAt: startedAt,
+      };
+      app.runs.save(checkpoint);
+      checkpointSaved = true;
+      return handle;
+    },
+    retry: async (issues) => {
+      activeExecutionId = app.createId("exec");
+      const handle = await app.runtime.startExecution({
+        executionId: activeExecutionId,
+        roleId: "planner",
+        prompt: buildPlanRepairPrompt(task, issues),
+        modelId: selection.modelId,
+        cwd: input.cwd,
+        tools: profile.tools,
+        sandbox: { enabled: true },
+        systemPrompt: profile.systemPrompt,
+        catalogSnapshotId: selection.catalogSnapshotId,
+        ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
+      });
+      const startedAt = app.now();
+      const execution: ExecutionSnapshot = {
+        executionId: activeExecutionId,
+        opaqueAgentId: handle.agentId,
+        roleId: "planner",
+        modelId: selection.modelId,
+        cwd: input.cwd,
+        tools: profile.tools,
+        systemPrompt: profile.systemPrompt,
+        startedAt,
+        catalogSnapshotId: selection.catalogSnapshotId,
+        modelSelectionRationale: selection.rationale,
+        ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
+      };
+      app.runs.save({
+        runId,
+        taskDescription: task,
+        aggregate,
+        executionLifecycle: "running",
+        execution,
+        executionId: activeExecutionId,
+        agentId: handle.agentId,
+        createdAt: at,
+        updatedAt: startedAt,
+      });
+      checkpointSaved = true;
+      return handle;
+    },
   });
 
-  const startedAt = app.now();
-  const execution: ExecutionSnapshot = {
-    executionId,
-    opaqueAgentId: handle.agentId,
-    roleId: "planner",
-    modelId: selection.modelId,
-    cwd: input.cwd,
-    tools: PLANNER_TOOLS,
-    startedAt,
-    catalogSnapshotId: selection.catalogSnapshotId,
-    modelSelectionRationale: selection.rationale,
-    ...(selection.modelParams.length === 0 ? {} : { modelParams: selection.modelParams }),
-  };
-
-  // Crash window: non-terminal + running snapshot persisted before wait completes.
-  const checkpoint: StoredRun = {
-    runId,
-    taskDescription: task,
-    aggregate,
-    executionLifecycle: "running",
-    execution,
-    executionId,
-    agentId: handle.agentId,
-    createdAt: at,
-    updatedAt: startedAt,
-  };
-  app.runs.save(checkpoint);
-
-  const result = await handle.wait();
   const usageObservedAt = app.now();
-  const usage = await app.runtime.getUsage(executionId);
+  const usage = await app.runtime.getUsage(activeExecutionId);
   app.usage.save({
     id: app.createId("usage"),
-    executionId,
+    executionId: activeExecutionId,
     roleId: "planner",
     modelId: selection.modelId,
     catalogSnapshotId: selection.catalogSnapshotId,
@@ -141,14 +202,15 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     observedAt: usageObservedAt,
   });
 
-  if (result.status === "failed") {
+  if (!parsed.ok) {
     throw new ApplicationError(
-      result.code ?? "execution_failed",
-      result.safeMessage ?? "Agent execution failed",
+      "invalid_planner_plan",
+      `Planner plan invalid after ${parsed.attempts} attempt(s): ${parsed.lastIssues.join("; ")}`,
     );
   }
-  if (result.status === "cancelled") {
-    throw new ApplicationError("execution_cancelled", "Agent execution was cancelled");
+
+  if (!checkpointSaved) {
+    throw new ApplicationError("internal_error", "Planner checkpoint was not saved");
   }
 
   aggregate = reduceWorkflowAll(aggregate, [
@@ -157,25 +219,33 @@ export async function runTask(app: AepApplication, input: RunTaskInput): Promise
     { type: "plan_proposed", at: app.now() },
   ]);
 
-  const stored: StoredRun = {
+  const stored = app.runs.get(runId);
+  const execution = stored?.execution;
+  const next: StoredRun = {
     runId,
     taskDescription: task,
     aggregate,
     executionLifecycle: "settled",
-    execution,
-    executionId,
-    agentId: handle.agentId,
-    ...(result.resultText === undefined ? {} : { lastResultText: result.resultText }),
+    ...(execution === undefined ? {} : { execution }),
+    executionId: parsed.executionId,
+    agentId: parsed.agentId,
+    lastResultText: parsed.rawText,
+    plan: parsed.plan,
+    plannerProfileVersionHash: profile.profileVersionHash,
+    planSchemaVersion: profile.schemaVersion,
     createdAt: at,
     updatedAt: app.now(),
   };
-  app.runs.save(stored);
+  app.runs.save(next);
 
   return {
     runId,
-    executionId,
-    agentId: handle.agentId,
+    executionId: parsed.executionId,
+    agentId: parsed.agentId,
     status: aggregate.run.status,
-    ...(result.resultText === undefined ? {} : { resultText: result.resultText }),
+    resultText: parsed.rawText,
+    plan: parsed.plan,
+    plannerProfileVersionHash: profile.profileVersionHash,
+    planSchemaVersion: profile.schemaVersion,
   };
 }

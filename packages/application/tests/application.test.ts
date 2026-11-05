@@ -54,9 +54,16 @@ describe("@aep/application", () => {
     });
     expect(result.runId).toBe("run_1");
     expect(result.status).toBe("awaiting_plan_approval");
+    expect(result.plan?.touchedPaths.length).toBeGreaterThan(0);
+    expect(result.plan?.validationCommands.length).toBeGreaterThan(0);
+    expect(result.plannerProfileVersionHash?.length).toBe(16);
 
     const status = getRunStatus(app, result.runId);
     expect(status.taskDescription).toContain("registration");
     expect(status.status).toBe("awaiting_plan_approval");
+
+    const stored = app.runs.get(result.runId);
+    expect(stored?.plan?.objective.length).toBeGreaterThan(0);
+    expect(stored?.planSchemaVersion).toBe(result.planSchemaVersion);
   });
 });

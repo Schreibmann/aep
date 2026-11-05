@@ -12,6 +12,7 @@ export {
   listBlockedEnvKeys,
 } from "./isolated-env.js";
 export {
+  assertPlannerReadOnly,
   assertReviewerReadOnly,
   IMPLEMENTER_TOOLS,
   PLANNER_TOOLS,

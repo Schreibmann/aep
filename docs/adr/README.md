@@ -18,6 +18,7 @@
 | [ADR-027](./ADR-027-model-routing.md)            | Model catalog / role routing (AEP-042)     | Accepted                        |
 | [ADR-028](./ADR-028-session-resume.md)           | Session resume / permissions (AEP-043)     | Accepted                        |
 | [ADR-029](./ADR-029-usage-metering.md)           | Usage metering / diagnostics (AEP-044)     | Accepted                        |
+| [ADR-030](./ADR-030-planner-structured-plan.md)  | Planner profile / plan schema (AEP-050)    | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |
