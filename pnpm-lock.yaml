@@ -93,6 +93,9 @@ importers:
 
   packages/runtime-cursor:
     dependencies:
+      '@aep/domain':
+        specifier: workspace:*
+        version: link:../domain
       '@aep/runtime-contracts':
         specifier: workspace:*
         version: link:../runtime-contracts
