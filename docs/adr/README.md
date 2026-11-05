@@ -27,6 +27,7 @@
 | [ADR-036](./ADR-036-cost-budget-enforcement.md)  | Cost / budget enforcement (AEP-056)        | Accepted                        |
 | [ADR-037](./ADR-037-e2e-mvp.md)                  | End-to-end MVP scenario (AEP-057)          | Accepted                        |
 | [ADR-038](./ADR-038-stack-detector.md)           | Stack detector (AEP-060)                   | Accepted                        |
+| [ADR-039](./ADR-039-aep-init.md)                 | aep init setup (AEP-061)                   | Accepted                        |
 | [ADR-010](./ADR-010-pavan-workflow-reference.md) | Pavan's Workflow reference audit           | Accepted                        |
 | [ADR-011](./ADR-011-model-cost-policy.md)        | Model catalog / no-unapproved-extra-spend  | Accepted (live proof pending)   |
 | ADR-012                                          | Cost provenance                            | Pending                         |

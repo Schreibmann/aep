@@ -160,14 +160,37 @@ export function buildProgram(options: BuildProgramOptions = {}): Command {
 
   program
     .command("init")
-    .description("Create .aep/config.yaml without overwriting existing files")
+    .description("Detect stack and create .aep/config.yaml without overwriting user files")
     .argument("[path]", "Project directory", ".")
     .option("--json", "Machine-readable JSON output")
+    .option(
+      "--approve-gate <name>",
+      "Approve an ambiguous gate script name (repeatable)",
+      (value: string, previous: string[]) => [...previous, value],
+      [] as string[],
+    )
+    .option(
+      "--no-auto-approve-exact",
+      "Do not auto-approve exact lint/typecheck/test/build scripts",
+    )
     .action(async function initAction(this: Command, pathArg: string) {
       const mode = resolveMode(program, this);
+      const opts = this.opts();
       try {
-        const result = await initProject(requireNonEmpty(pathArg, "path"));
-        writeSuccess(mode, result, `Initialized AEP config at ${result.configPath}`);
+        const approvedRaw = opts.approveGate;
+        const approvedGateScripts = Array.isArray(approvedRaw)
+          ? approvedRaw.filter((item): item is string => typeof item === "string")
+          : [];
+        const result = await initProject({
+          targetPath: requireNonEmpty(pathArg, "path"),
+          approvedGateScripts,
+          autoApproveExactGates: opts.autoApproveExact !== false,
+        });
+        const pending =
+          result.pendingGateConfirmations.length === 0
+            ? "no pending gate confirmations"
+            : `pending gate confirmations: ${result.pendingGateConfirmations.join(", ")}`;
+        writeSuccess(mode, result, `Initialized AEP config at ${result.configPath}\n${pending}`);
       } catch (error) {
         reportFailure(mode, error);
       }

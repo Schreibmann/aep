@@ -19,7 +19,7 @@ export type {
   RunFixCycleInput,
 } from "./fix-cycle.js";
 export { runBoundedFixCycle } from "./fix-cycle.js";
-export type { InitProjectResult } from "./init-project.js";
+export type { InitProjectInput, InitProjectResult } from "./init-project.js";
 export { initProject } from "./init-project.js";
 export type { ListedModel, ModelsReport } from "./list-models.js";
 export { listAccountModels } from "./list-models.js";
