@@ -158,6 +158,14 @@ export async function resumeRun(
     };
   }
 
+  // Reviewer must never continue a write-capable tool policy even if snapshot was corrupted.
+  const reviewerInheritedWriteTools =
+    execution.roleId === "reviewer" &&
+    (execution.tools.tools.includes("shell") ||
+      execution.tools.tools.includes("edit") ||
+      execution.tools.tools.includes("mcp") ||
+      execution.tools.tools.includes("task"));
+
   const handle = await app.runtime.resumeExecution({
     executionId: execution.executionId,
     opaqueAgentId: execution.opaqueAgentId,
@@ -171,7 +179,9 @@ export async function resumeRun(
     ...(execution.catalogSnapshotId === undefined
       ? {}
       : { catalogSnapshotId: execution.catalogSnapshotId }),
-    ...(execution.contextReset === true ? { forceFreshSession: true } : {}),
+    ...(execution.contextReset === true || reviewerInheritedWriteTools
+      ? { forceFreshSession: true }
+      : {}),
   });
 
   const result = await handle.wait();
