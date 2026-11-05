@@ -124,6 +124,12 @@ importers:
 
   packages/process: {}
 
+  packages/project-profiles:
+    dependencies:
+      '@aep/domain':
+        specifier: workspace:*
+        version: link:../domain
+
   packages/quality-gates:
     dependencies:
       '@aep/domain':
