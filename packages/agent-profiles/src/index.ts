@@ -1,3 +1,12 @@
+export type { FixPromptInput, ImplementerProfile } from "./implementer-profile.js";
+export {
+  buildFixPromptFromFindings,
+  createImplementerProfile,
+  detectRepeatedFindings,
+  IMPLEMENTER_PROFILE_ID,
+  IMPLEMENTER_PROFILE_PROMPT_VERSION,
+  IMPLEMENTER_SYSTEM_PROMPT,
+} from "./implementer-profile.js";
 export type {
   BoundedReviewParseInput,
   BoundedReviewParseResult,
